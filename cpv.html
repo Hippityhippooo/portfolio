@@ -1,0 +1,1733 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CPV engine</title>
+<meta name="description" content="The catalyst projection and implied valuation engine (v4.10-lean) as a live page: one invented company, every input on a control, every chart recomputed through the rules the skill states.">
+<!-- HEAD v1 start -->
+<script>(function(){try{var t=localStorage.getItem('fl-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<!-- HEAD v1 end -->
+<style>
+/* BASE v1 start */
+:root {
+  --paper: #F6F1EA; --surface: #FFFDF9; --ink: #141210; --ink-2: #3E3832; --muted: #6E6660; --line: #DED5CA; --line-strong: #141210;
+  --accent: #1F4FD6; --accent-ink: #FFFFFF; --bench: #9A8C7D; --flag: #B8741A; --tint: #EFE6DA;
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif; --sans: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif; --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme: dark; --paper: #15120F; --surface: #1D1915; --ink: #F1EBE3; --ink-2: #CFC6BB; --muted: #9B9187; --line: #332C26; --line-strong: #F1EBE3; --accent: #8DB0FF; --accent-ink: #0B1220; --bench: #7A6E63; --flag: #E0A04A; --tint: #27211B; } }
+:root[data-theme="dark"] { color-scheme: dark; --paper: #15120F; --surface: #1D1915; --ink: #F1EBE3; --ink-2: #CFC6BB; --muted: #9B9187; --line: #332C26; --line-strong: #F1EBE3; --accent: #8DB0FF; --accent-ink: #0B1220; --bench: #7A6E63; --flag: #E0A04A; --tint: #27211B; }
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 72px; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--flag); outline-offset: 3px; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+img { max-width: 100%; height: auto; }
+table { border-collapse: collapse; }
+button { font: inherit; color: inherit; }
+.mono { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.num { font-variant-numeric: tabular-nums; }
+.page { max-width: 1040px; margin: 0 auto; padding-inline: 24px; padding-block: 0 80px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Site bar */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding-block: 12px; }
+.bar .who { font-family: var(--serif); font-size: 18px; font-weight: 500; color: var(--ink); text-decoration: none; display: inline-flex; align-items: baseline; gap: 10px; }
+.bar .who .desk { font-size: 10.5px; }
+.bar nav { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; }
+.bar nav a { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.bar nav a:hover, .bar nav a[aria-current] { color: var(--ink); }
+.bar nav a[aria-current] { border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+.bar .theme { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 4px 8px; cursor: pointer; color: var(--muted); font-size: 10.5px; }
+.bar .theme:hover { color: var(--ink); border-color: var(--line-strong); }
+.onpage { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 48px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.onpage span { color: var(--muted); }
+.onpage a { color: var(--muted); text-decoration: none; }
+.onpage a:hover { color: var(--ink); }
+
+/* Masthead */
+.mast { padding-block: 56px 36px; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 40px; align-items: end; }
+.mast.narrow { grid-template-columns: minmax(0, 1fr) 260px; }
+.wordmark { font-family: var(--serif); font-weight: 500; font-size: clamp(64px, 11vw, 132px); line-height: 0.88; letter-spacing: -0.04em; }
+.wordmark span { color: var(--bench); }
+.wordmark em { font-style: italic; font-weight: 400; color: var(--accent); }
+.mast .back { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; display: inline-block; margin-bottom: 18px; }
+.mast .thesis, .thesis { margin-top: 22px; font-family: var(--serif); font-size: clamp(20px, 2.4vw, 25px); line-height: 1.35; max-width: 34ch; color: var(--ink-2); border-left: 2px solid var(--line-strong); padding-left: 18px; }
+.mast .role { font-family: var(--mono); font-size: 12px; color: var(--ink); margin-top: 18px; max-width: 60ch; line-height: 1.6; }
+.mast figure { margin: 0; }
+.mast figure img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; display: block; border-radius: 2px; }
+.mast figcaption { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+.sheet { border-top: 2px solid var(--line-strong); font-size: 13.5px; margin-top: 28px; }
+.sheet > div { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding-block: 8px; border-bottom: 1px solid var(--line); }
+.sheet > div > span:first-child { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+.sheet code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); user-select: all; }
+.copy { font: 500 10.5px var(--mono); letter-spacing: 0.05em; text-transform: uppercase; border: 0; background: transparent; color: var(--accent); cursor: pointer; padding: 0; margin-left: 8px; }
+.tiles { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 2px solid var(--line-strong); border-left: 1px solid var(--line); }
+.tiles > div { padding: 16px 14px 18px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+.tiles strong { font-family: var(--serif); font-size: 38px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.tiles.row4 { grid-template-columns: repeat(4, 1fr); }
+
+.price { display: flex; align-items: baseline; gap: 14px; margin-top: 18px; border-left: 2px solid var(--line-strong); padding-left: 18px; }
+.price strong { font-family: var(--serif); font-size: 56px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.price span { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+
+/* Figures tape */
+.figures { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 2px solid var(--line-strong); border-bottom: 1px solid var(--line); margin-bottom: 56px; }
+.figures.four { grid-template-columns: repeat(4, 1fr); }
+.figures > * { color: inherit; text-decoration: none; padding: 18px 18px 18px 0; border-left: 1px solid var(--line); padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.figures > *:first-child { border-left: 0; padding-left: 0; }
+.figures a:hover strong { color: var(--accent); }
+.figures strong { font-family: var(--serif); font-size: 38px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.figures .mono { line-height: 1.35; }
+
+/* Sections and text */
+section { margin-bottom: 64px; }
+section > header { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; align-items: baseline; padding-bottom: 12px; border-bottom: 2px solid var(--line-strong); margin-bottom: 24px; }
+section > header h2 { font-family: var(--serif); font-size: 34px; font-weight: 400; letter-spacing: -0.02em; line-height: 1; }
+.lede { font-size: 17px; color: var(--ink-2); max-width: 66ch; }
+.lede b { color: var(--ink); font-weight: 600; }
+.note { font-size: 13px; color: var(--muted); max-width: 70ch; margin-top: 10px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; align-items: start; }
+.block h3, h3.h { font-family: var(--serif); font-size: 22px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 10px; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 36px; margin: 18px 0; }
+.stats > div { display: flex; flex-direction: column; gap: 2px; }
+.stats strong { font-family: var(--serif); font-size: 32px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.stats strong.up { color: var(--accent); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
+.steps.five { grid-template-columns: repeat(5, 1fr); }
+.step { border-top: 2px solid var(--line-strong); padding-top: 10px; }
+.step .mono { color: var(--ink); }
+.step strong { display: block; font-family: var(--serif); font-size: 20px; font-weight: 500; margin: 4px 0 6px; }
+.step p { font-size: 14px; color: var(--ink-2); }
+.t { width: 100%; font-size: 14px; }
+.t th, .t td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.t th { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.t th button { background: transparent; border: 0; padding: 0; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.t th button:hover { color: var(--ink); }
+.t td.n, .t th.n { text-align: right; font-variant-numeric: tabular-nums; }
+.t td.m { font-family: var(--mono); font-size: 12px; }
+.t tr.hi td { font-weight: 600; color: var(--ink); background: var(--tint); }
+.t tr.sum td { border-top: 2px solid var(--line-strong); font-weight: 600; }
+.tscroll { overflow-x: auto; }
+.chart { margin-top: 8px; }
+.chart .ttl { font-size: 13.5px; font-weight: 600; margin-bottom: 8px; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .src { font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+.bands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.band { border: 1px solid var(--line); background: var(--surface); padding: 12px 14px; border-radius: 3px; }
+.band strong { display: block; font-family: var(--serif); font-size: 20px; font-weight: 500; }
+.band .act { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--flag); margin-top: 6px; display: block; }
+.band p { font-size: 13.5px; color: var(--ink-2); margin-top: 6px; }
+.bullets { margin: 12px 0 0; padding-left: 18px; max-width: 64ch; display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: var(--ink-2); }
+.bullets li::marker { color: var(--accent); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.tag { font-family: var(--mono); font-size: 11.5px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 2px 8px; text-decoration: none; }
+.tag:hover { border-color: var(--line-strong); }
+.more { display: inline-block; margin-top: 18px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.more.big { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 22px; padding: 14px 16px; border: 1px solid var(--line-strong); color: var(--ink); text-decoration: none; max-width: 760px; font-family: var(--serif); font-size: 19px; letter-spacing: 0; text-transform: none; }
+.more.big span { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.more.big:hover { background: var(--tint); }
+
+/* Entries (experience ledger) */
+.entry { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; padding-block: 30px; border-bottom: 1px solid var(--line); }
+.entry > *, .claim > * { min-width: 0; }
+.entry .side { display: flex; flex-direction: column; gap: 4px; }
+.entry .side .when { font-family: var(--mono); font-size: 12px; color: var(--ink); }
+.entry h3 { font-family: var(--serif); font-size: 26px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.15; }
+.entry .org { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.entry .what { margin-top: 14px; max-width: 62ch; font-size: 16px; color: var(--ink-2); }
+.entry .what b { color: var(--ink); font-weight: 600; }
+
+/* Photos */
+.slides { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 8px; }
+.slides.portrait { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+.slide { margin: 0; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; cursor: zoom-in; padding: 0; text-align: left; font: inherit; color: inherit; display: block; width: 100%; }
+.slide img { width: 100%; display: block; aspect-ratio: 16 / 9; object-fit: cover; }
+.slides.portrait .slide img { aspect-ratio: 3 / 4; }
+.slide span { display: block; padding: 6px 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--line); }
+.wall { columns: 3; column-gap: 8px; margin-top: 8px; }
+.wall figure { margin: 0 0 8px; break-inside: avoid; }
+.wall img { width: 100%; display: block; border-radius: 2px; }
+.wall figcaption { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.dl { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; font-size: 14px; }
+.strip { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 22px; max-width: 760px; }
+.strip figure { margin: 0; }
+.strip img { width: 100%; height: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; border-radius: 2px; }
+.strip figure.tall img { aspect-ratio: 3 / 4; }
+.strip figcaption { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+.sheet-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; max-width: 760px; }
+.sheet-row figure { margin: 0; }
+.sheet-row img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; border-radius: 2px; }
+.sheet-row .wide img { aspect-ratio: 3 / 2; }
+.sheet-row figcaption { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+/* Exhibits */
+.exhibits { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; max-width: 760px; }
+.ex { border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; display: flex; flex-direction: column; margin: 0; }
+.ex .lab { display: flex; justify-content: space-between; gap: 8px; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+.ex .lab .mono { color: var(--ink); }
+.ex .lab .flag { color: var(--flag); }
+.ex img { display: block; width: 100%; height: 150px; object-fit: cover; }
+.ex .empty { height: 150px; background: repeating-linear-gradient(135deg, transparent 0 9px, var(--line) 9px 10px); opacity: 0.6; }
+.ex .cap { padding: 8px 10px; font-size: 13px; color: var(--ink-2); line-height: 1.4; }
+.ex.todo { border-style: dashed; background: transparent; }
+.ex.todo .cap { color: var(--muted); }
+.ex a, .ex button.slide { cursor: zoom-in; }
+
+/* Stamps, banners, chips */
+.stamp { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--flag); border: 1px solid var(--flag); padding: 2px 6px; border-radius: 2px; background: var(--surface); white-space: nowrap; }
+.banner { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--tint); border: 1px solid var(--line); padding: 10px 14px; font-size: 13.5px; color: var(--ink-2); margin-bottom: 24px; }
+.tk { display: inline-block; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line); padding: 1px 6px; border-radius: 2px; color: var(--ink); text-decoration: none; }
+a.tk:hover { color: var(--accent); border-color: var(--accent); }
+.rating { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.chip { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 2px; border: 1px solid var(--bench); color: var(--ink-2); white-space: nowrap; }
+.chip.ent { border-color: var(--accent); color: var(--accent); }
+.rating .px { font-family: var(--mono); font-size: 11.5px; color: var(--ink); }
+.rating .none { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--muted); }
+
+/* Document cards */
+.shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.doc { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; padding: 0 0 12px; display: flex; flex-direction: column; gap: 6px; position: relative; }
+.doc .doc-open { display: block; width: 100%; border: 0; padding: 0; background: transparent; cursor: pointer; text-align: left; position: relative; }
+.doc .doc-open[aria-disabled="true"] { cursor: default; }
+.doc .cover { display: block; aspect-ratio: 1 / 1.414; background: #FFFFFF; border-bottom: 1px solid var(--line); overflow: hidden; position: relative; }
+.doc .cover img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.doc .cover.empty { background: var(--paper); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.doc .cover.empty::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, transparent 0 9px, var(--line) 9px 10px); opacity: 0.5; }
+.doc .cover.empty b { position: relative; font-family: var(--serif); font-weight: 500; font-size: 40px; color: var(--bench); letter-spacing: -0.02em; }
+.doc .cover.empty i { position: relative; font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.doc .cover .stamp { position: absolute; top: 8px; right: 8px; }
+.doc .meta { padding: 8px 12px 0; font-size: 11px; line-height: 1.5; }
+.doc .ttl { font-family: var(--serif); font-size: 18px; font-weight: 500; line-height: 1.2; padding: 0 12px; letter-spacing: -0.01em; }
+.doc .ttl a { color: var(--ink); text-decoration: none; }
+.doc .ttl a:hover { color: var(--accent); }
+.doc .rating { padding: 0 12px; }
+.doc .lineage, .doc .proves { padding: 0 12px; font-size: 10.5px; line-height: 1.5; }
+.doc .proves a { color: var(--muted); }
+.doc .proves a:hover { color: var(--ink); }
+.doc .thesis { padding: 0 12px; margin: 0; font-family: var(--sans); font-size: 13.5px; color: var(--ink-2); border: 0; max-width: none; line-height: 1.45; }
+.doc.slot { border-style: dashed; }
+.doc.slot .ttl a { color: var(--ink-2); }
+
+/* Library layout */
+.lib { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; align-items: start; }
+.rail { position: sticky; top: 64px; display: flex; flex-direction: column; gap: 18px; font-size: 13.5px; }
+.rail .grp { display: flex; flex-direction: column; gap: 4px; }
+.rail .grp .mono { margin-bottom: 4px; }
+.rail label { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+.rail input[type="checkbox"] { accent-color: var(--accent); margin: 0; }
+.rail select, .search input { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 2px; padding: 8px 10px; }
+.rail .count { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.rail .clear { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.railscroll { display: none; }
+.search { margin-top: 18px; max-width: 420px; }
+.search input { width: 100%; font-family: var(--mono); font-size: 13px; }
+.search input::placeholder { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.views { display: inline-flex; gap: 0; margin-top: 14px; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
+.views button { border: 0; background: transparent; padding: 6px 12px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.views button[aria-pressed="true"] { background: var(--tint); color: var(--ink); }
+.series { margin-bottom: 36px; }
+.series > h3 { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 14px; font-family: var(--serif); font-size: 22px; font-weight: 500; }
+.series > h3 .mono { font-size: 10.5px; }
+.catalogue { margin-top: 24px; font-size: 13.5px; }
+.catalogue summary { cursor: pointer; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.catalogue ul { padding-left: 18px; }
+.catalogue li { margin: 4px 0; }
+
+/* Document pane */
+.pane-back { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.35); z-index: 20; display: none; }
+.pane { position: fixed; top: 0; right: 0; bottom: 0; width: 480px; max-width: 100vw; background: var(--surface); border-left: 1px solid var(--line); z-index: 21; overflow-y: auto; padding: 16px 20px 40px; transform: translateX(100%); display: none; }
+.pane.open, .pane-back.open { display: block; }
+.pane.open { transform: none; }
+.pane .pane-ctl { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+.pane .pane-ctl button { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 5px 10px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.pane .pane-ctl button:hover { color: var(--ink); border-color: var(--line-strong); }
+.pane .cover { display: block; max-height: 48vh; background: #FFFFFF; border: 1px solid var(--line); overflow: hidden; }
+.pane .cover img { width: 100%; height: auto; max-height: 48vh; object-fit: contain; object-position: top; display: block; }
+.pane .cover.empty { aspect-ratio: 1.414 / 1; background: var(--paper); display: flex; align-items: center; justify-content: center; gap: 10px; position: relative; }
+.pane .cover.empty::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, transparent 0 9px, var(--line) 9px 10px); opacity: 0.5; }
+.pane .cover.empty b { position: relative; font-family: var(--serif); font-weight: 500; font-size: 40px; color: var(--bench); }
+.pane .cover.empty i { position: relative; font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.pane h2 { font-family: var(--serif); font-size: 24px; font-weight: 500; line-height: 1.2; margin-top: 10px; letter-spacing: -0.01em; }
+.pane .meta { margin-top: 12px; }
+.pane .byline { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.pane .call { border-top: 2px solid var(--line-strong); margin-top: 14px; padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.pane .call p { font-size: 14.5px; color: var(--ink-2); }
+.pane .status { font-size: 13px; color: var(--flag); margin-top: 10px; }
+.pane .lineage, .pane .proves { margin-top: 10px; font-size: 11px; line-height: 1.8; }
+.pane .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.pane .actions a, .pane .actions span { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line-strong); color: var(--ink); text-decoration: none; padding: 7px 10px; border-radius: 2px; }
+.pane .actions a:hover { background: var(--tint); }
+.pane .actions span { color: var(--muted); border-color: var(--line); }
+.pane .pages { margin-top: 18px; }
+.pane .pages .slides.portrait { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+body.pane-open { overflow: hidden; }
+
+/* Engines */
+.eng { background: var(--surface); border: 1px solid var(--line); border-left: 2px solid var(--accent); border-radius: 3px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.eng .head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.eng .name { font-family: var(--mono); font-size: 13px; color: var(--ink); }
+.eng .flavor { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line); padding: 1px 6px; border-radius: 2px; color: var(--muted); }
+.eng .size { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.eng .kv { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 4px 10px; font-size: 13.5px; color: var(--ink-2); }
+.eng .kv .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.eng .rule { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--ink); border-left: 2px solid var(--line); padding-left: 10px; }
+.eng .produced { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.engs { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+details.dossier { border-top: 1px solid var(--line); padding: 14px 0; }
+details.dossier summary { cursor: pointer; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+details.dossier summary::-webkit-details-marker { display: none; }
+details.dossier summary h3 { font-family: var(--serif); font-size: 22px; font-weight: 500; }
+details.dossier summary h3::after { content: " +"; color: var(--muted); }
+details.dossier[open] summary h3::after { content: " −"; }
+details.dossier .body { margin-top: 16px; display: flex; flex-direction: column; gap: 18px; }
+.diagram { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; padding: 12px; margin-top: 16px; }
+.diagram svg { min-width: 640px; width: 100%; height: auto; display: block; }
+.diagram .node { fill: var(--paper); stroke: var(--line); }
+.diagram .hub { fill: var(--accent); stroke: var(--accent); }
+.diagram .store { fill: var(--paper); stroke: var(--line); stroke-dasharray: 4 3; }
+.diagram .edge { stroke: var(--muted); fill: none; stroke-width: 1; }
+.diagram text { fill: var(--ink); font-family: var(--sans); font-size: 13px; }
+.diagram text.mono { fill: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.diagram .hub + text, .diagram text.on { fill: var(--accent-ink); }
+.diagram a { cursor: pointer; }
+.frame { aspect-ratio: 16 / 10; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; margin-top: 14px; }
+.frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+/* Claims (CV line + evidence), ventures, certificates */
+.claim { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; padding-block: 28px; border-bottom: 1px solid var(--line); }
+.claim blockquote { margin: 0; font-family: var(--serif); font-size: 19px; line-height: 1.4; color: var(--ink); max-width: 60ch; }
+.claim blockquote p + p { margin-top: 6px; }
+.ventures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.venture { border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; display: flex; flex-direction: column; }
+.venture img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; }
+.venture .vbody { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.venture h3 { font-family: var(--serif); font-size: 22px; font-weight: 500; }
+.venture p { font-size: 14px; color: var(--ink-2); }
+.venture .stats { margin: 8px 0 0; gap: 6px 22px; }
+.venture .stats strong { font-size: 26px; }
+.venture .more { margin-top: 10px; }
+.certs .fam { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 12px; }
+.certs .fam button { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 3px 9px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.certs .fam button[aria-pressed="true"] { background: var(--tint); color: var(--ink); border-color: var(--line-strong); }
+.certs .slides { grid-template-columns: repeat(6, 1fr); }
+.certs .slide img { aspect-ratio: 4 / 3; }
+.certs .showall { margin-top: 12px; border: 1px solid var(--line-strong); background: transparent; border-radius: 2px; padding: 7px 12px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); }
+.thumb { width: 56px; height: 56px; object-fit: cover; border: 1px solid var(--line); border-radius: 2px; display: inline-block; vertical-align: middle; margin-right: 4px; cursor: zoom-in; }
+
+/* Lightbox */
+dialog#lb { border: 0; padding: 0; background: transparent; max-width: min(96vw, 1200px); }
+dialog#lb::backdrop { background: rgba(0, 0, 0, 0.85); }
+dialog#lb img { max-width: 96vw; max-height: 86vh; display: block; border-radius: 2px; margin: 0 auto; }
+dialog#lb .ctl { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; color: #fff; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+dialog#lb button { font: inherit; color: #fff; background: transparent; border: 1px solid rgba(255, 255, 255, 0.5); padding: 6px 12px; cursor: pointer; border-radius: 2px; }
+
+/* Promoted from the page builds */
+.doc .cover .stamp + .stamp { top: 32px; }
+.ledger .t { min-width: 860px; }
+.ledger .t th, .ledger .t td { white-space: nowrap; }
+.ledger .t td.tt { white-space: normal; min-width: 240px; }
+.ledger .t th.on button { color: var(--ink); }
+.pane button.cover { width: 100%; padding: 0; cursor: zoom-in; text-align: left; border: 1px solid var(--line); }
+.exhibits { align-items: start; }
+.certs .slide[hidden], .certs .showall[hidden] { display: none; }
+.t .flag { color: var(--flag); }
+.cov { min-width: 820px; }
+.cov.macro { min-width: 560px; }
+.cov .rating { flex-wrap: wrap; }
+.cov .stamp { white-space: nowrap; }
+.cov td .stamp { display: block; width: fit-content; max-width: 150px; white-space: normal; line-height: 1.3; margin: 0 0 4px; }
+.cov td.num { white-space: nowrap; }
+.band strong a { color: inherit; text-decoration: none; }
+.band strong a:hover { color: var(--accent); }
+.claim .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.claim > div > .stats { margin-top: 16px; }
+.sheet-row a, .strip figure a { display: block; }
+.venture .side { display: block; margin-top: -2px; }
+.eng .note { font-size: 13px; color: var(--muted); margin: 0; max-width: none; }
+.eng .produced .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.eng .flavor.prop { color: var(--flag); border-color: var(--flag); }
+.dossier .body h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 6px; }
+.formula { font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
+.dossier .body .line { font-family: var(--serif); font-size: 17px; font-style: italic; color: var(--ink); max-width: 60ch; }
+.frame .fallback { display: none; }
+.frame.failed { aspect-ratio: auto; border: 0; background: transparent; }
+.frame.failed iframe { display: none; }
+.frame.failed .fallback { display: block; }
+
+/* Claim plates: a claim set beside its evidence, with a source line */
+.plate { padding-block: 72px 64px; border-top: 1px solid var(--line); margin: 0; }
+.plate:first-of-type { border-top: 0; }
+.plate .idx { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.plate .idx::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.claim-x { font-family: var(--serif); font-weight: 400; font-size: clamp(36px, 5.2vw, 68px); line-height: 1.02; letter-spacing: -0.03em; max-width: 16ch; text-wrap: balance; }
+.claim-x .num { font-weight: 500; font-variant-numeric: tabular-nums; }
+.claim-x em { font-style: italic; color: var(--accent); }
+.claim-x .arrow { color: var(--bench); font-weight: 400; }
+.sub { margin-top: 20px; font-family: var(--serif); font-size: clamp(18px, 2vw, 22px); line-height: 1.4; color: var(--ink-2); max-width: 40ch; }
+.sub b { color: var(--ink); font-weight: 500; }
+.srcline { display: inline-flex; align-items: baseline; gap: 10px; margin-top: 22px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-top: 1px solid var(--line-strong); padding-top: 10px; }
+.srcline::before { content: "↳"; color: var(--bench); }
+.srcline .go { color: var(--accent); }
+.srcline:hover .go { text-decoration: underline; text-underline-offset: 3px; }
+.plate .side { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: start; }
+.plate .side.flip { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.plate figure { margin: 0; }
+.plate figure img { width: 100%; display: block; border-radius: 2px; }
+.plate figcaption, .cap-m { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+.pageimg { border: 1px solid var(--line); background: #FFFFFF; }
+.bleed { margin-inline: calc(50% - 50vw); padding-inline: calc(50vw - 50%); }
+.triptych { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 28px; }
+.triptych img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; border-radius: 2px; }
+.wide { margin-top: 8px; }
+.wide img { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; object-position: center 40%; display: block; border-radius: 2px; }
+.fan { display: flex; align-items: flex-end; margin-top: 36px; padding-bottom: 12px; min-height: 240px; }
+.fan a { display: block; width: 170px; flex: 0 0 auto; margin-right: -46px; border: 1px solid var(--line); background: #FFFFFF; box-shadow: 0 1px 0 var(--line); transform: rotate(var(--r, 0deg)) translateY(var(--y, 0px)); transform-origin: bottom center; }
+.fan a img { width: 100%; aspect-ratio: 1 / 1.414; object-fit: cover; object-position: top; display: block; }
+.fan a:nth-child(1) { --r: -6deg; --y: 6px; } .fan a:nth-child(2) { --r: -3deg; } .fan a:nth-child(3) { --r: -1deg; --y: 4px; } .fan a:nth-child(4) { --r: 1deg; } .fan a:nth-child(5) { --r: 3deg; --y: 6px; } .fan a:nth-child(6) { --r: 5deg; } .fan a:nth-child(7) { --r: 7deg; --y: 8px; }
+.fan a:hover, .fan a:focus-visible { z-index: 2; transform: rotate(0deg) translateY(-14px); border-color: var(--line-strong); }
+.fan .more-fan { width: auto; margin-left: 72px; margin-right: 0; align-self: center; border: 0; background: transparent; box-shadow: none; transform: none; white-space: nowrap; }
+.lines { margin-top: 28px; border-top: 2px solid var(--line-strong); max-width: 760px; }
+.lines > a, .lines > div { display: grid; grid-template-columns: 84px minmax(0, 1fr) minmax(0, 300px); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); color: inherit; text-decoration: none; align-items: baseline; font-size: 15px; }
+.lines > a:hover .ttl { color: var(--accent); }
+.lines .tk { justify-self: start; }
+.lines .ttl { font-family: var(--serif); font-size: 19px; }
+.lines .r { font-family: var(--mono); font-size: 11px; line-height: 1.6; color: var(--muted); text-align: right; }
+.trace { margin-top: 36px; overflow-x: auto; }
+.trace svg { min-width: 760px; width: 100%; height: auto; display: block; }
+.trace .rail { stroke: var(--line-strong); stroke-width: 2; fill: none; }
+.trace .stop { fill: var(--paper); stroke: var(--line-strong); stroke-width: 2; }
+.trace .stop.hub { fill: var(--accent); stroke: var(--accent); }
+.trace .gate { fill: var(--flag); }
+.trace text { font-family: var(--sans); font-size: 13px; fill: var(--ink); }
+.trace text.mono { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; fill: var(--muted); }
+.trace text.flag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.04em; fill: var(--flag); }
+.write { padding-block: 80px 40px; border-top: 1px solid var(--line); }
+.write .mail { display: inline-flex; align-items: baseline; gap: 14px; margin-top: 24px; font-family: var(--mono); font-size: clamp(18px, 3vw, 30px); color: var(--ink); word-break: break-all; }
+.write .mail code { font-family: inherit; user-select: all; }
+.write .meta { margin-top: 18px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; gap: 20px; flex-wrap: wrap; }
+.write .meta a { color: var(--ink); }
+.toc { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 2px solid var(--line-strong); border-bottom: 1px solid var(--line); margin-top: 56px; }
+.toc a { color: inherit; text-decoration: none; padding: 18px 16px 18px 0; border-left: 1px solid var(--line); padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
+.toc a:first-child { border-left: 0; padding-left: 0; }
+.toc strong { font-family: var(--serif); font-size: clamp(30px, 3.4vw, 40px); font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.toc a:hover strong { color: var(--accent); }
+.toc .mono { line-height: 1.4; }
+.toc .mono em { font-style: normal; color: var(--ink); }
+@media (max-width: 900px) { .toc { grid-template-columns: repeat(2, 1fr); } .toc a { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); } .toc a:nth-child(-n+2) { border-top: 0; } .toc a:nth-child(2n) { border-left: 1px solid var(--line); padding-left: 16px; } }
+@media (max-width: 820px) {
+  .plate { padding-block: 48px 40px; }
+  .plate .side, .plate .side.flip { grid-template-columns: 1fr; gap: 24px; }
+  .plate .side.flip > :first-child { order: 2; }
+  .triptych { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .wide img { aspect-ratio: 4 / 3; }
+  .fan { overflow-x: auto; padding-bottom: 20px; min-height: 0; }
+  .fan a { width: 120px; margin-right: -24px; }
+  .lines > a, .lines > div { grid-template-columns: 64px minmax(0, 1fr); }
+  .lines .r { grid-column: 2; text-align: left; }
+  .write { padding-block: 64px 56px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fan a { transition: transform .25s ease, border-color .15s; }
+  .srcline::before { transition: transform .2s; display: inline-block; }
+  .srcline:hover::before { transform: translateX(3px); }
+  .open .wordmark, .open .intro { animation: rise .7s ease both; }
+  .open .intro { animation-delay: .12s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+}
+
+/* Two registers: market term as text, engine code as a tag; a page can switch the tags off */
+.code { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.04em; text-transform: none; color: var(--muted); border: 1px solid var(--line); border-radius: 2px; padding: 0 5px; line-height: 1.6; vertical-align: 0.15em; margin-left: 6px; white-space: nowrap; font-weight: 500; font-style: normal; }
+h1 .code, h2 .code, .claim-x .code { font-size: 12px; vertical-align: 0.6em; margin-left: 10px; letter-spacing: 0.06em; }
+.mono .code { margin-left: 4px; }
+.codes-off .code { display: none; }
+.codeswitch { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 2px; padding: 5px 10px; background: transparent; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.codeswitch[aria-pressed="true"] { color: var(--ink); border-color: var(--line-strong); }
+.codeswitch:hover { color: var(--ink); }
+.gloss { margin-top: 20px; max-width: 760px; }
+.gloss .t td:first-child { font-weight: 600; color: var(--ink); width: 34%; }
+.gloss .t td.m { color: var(--muted); }
+
+footer { color: var(--muted); font-size: 13px; max-width: 64ch; line-height: 1.5; }
+footer p + p { margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .lib { grid-template-columns: 1fr; gap: 16px; }
+  .rail { position: static; display: none; }
+  .railscroll { display: flex; gap: 6px; overflow-x: auto; white-space: nowrap; padding-bottom: 8px; align-items: center; }
+  .railscroll button, .railscroll select { flex: 0 0 auto; border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 4px 9px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+  .railscroll button[aria-pressed="true"] { background: var(--tint); color: var(--ink); border-color: var(--line-strong); }
+  .shelf { grid-template-columns: repeat(2, 1fr); }
+  .engs { grid-template-columns: 1fr; }
+}
+@media (max-width: 820px) {
+  .page { padding-inline: 16px; }
+  .bar { gap: 8px 14px; }
+  .bar .who .desk { display: none; }
+  .bar .theme { margin-left: auto; order: 2; }
+  .bar nav { order: 3; flex-basis: 100%; margin-left: 0; gap: 12px; }
+  .bar nav a { font-size: 11px; }
+  .mast, .mast.narrow { grid-template-columns: 1fr; gap: 28px; padding-block: 36px 28px; }
+  .mast figure { max-width: 300px; order: 2; }
+  .figures, .figures.four { grid-template-columns: repeat(2, 1fr); margin-bottom: 48px; }
+  .figures > * { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); }
+  .figures > *:nth-child(-n+2) { border-top: 0; }
+  .figures > *:nth-child(2n) { border-left: 1px solid var(--line); padding-left: 16px; }
+  .figures strong, .tiles strong { font-size: 32px; }
+  .tiles.row4 { grid-template-columns: repeat(2, 1fr); }
+  section { margin-bottom: 48px; }
+  section > header { grid-template-columns: 1fr; gap: 8px; }
+  .grid2, .bands, .ventures, .steps, .steps.five { grid-template-columns: 1fr; }
+  .steps, .steps.five { grid-template-columns: repeat(2, 1fr); }
+  .entry, .claim { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .entry > *, .claim > *, .grid2 > * { min-width: 0; }
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .entry .side { flex-direction: row; gap: 14px; align-items: baseline; }
+  .strip { grid-template-columns: 1fr; }
+  .sheet-row { grid-template-columns: repeat(2, 1fr); }
+  .wall { columns: 2; }
+  .t { font-size: 13px; }
+  .pane { width: 100vw; border-left: 0; }
+  .certs .slides { grid-template-columns: repeat(3, 1fr); }
+  .shelf { grid-template-columns: repeat(2, 1fr); }
+  .frame { aspect-ratio: 3 / 4; }
+}
+@media (max-width: 820px) { .pane.open { animation: none; } .sheet-row figure:nth-child(3) { grid-column: 1 / -1; max-width: calc(50% - 4px); } }
+@media (max-width: 480px) { .bar .who .desk { display: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .figures strong, .bar nav a, .copy, .tag, .tk, .doc, .doc .ttl a { transition: color .15s, border-color .15s, transform .15s; }
+  .doc:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+  .pane.open { animation: paneIn .2s ease; }
+  @keyframes paneIn { from { transform: translateX(100%); } to { transform: none; } }
+}
+@media print {
+  .bar, .pane, .pane-back, .rail, .railscroll, .views, .search, dialog { display: none !important; }
+  .catalogue { display: block; }
+  .catalogue[open], .catalogue { open: true; }
+  .page { max-width: none; padding: 0; }
+}
+/* BASE v1 end */
+</style>
+<style>
+/* cpv.html page styles: the CPV engine field guide on the site tokens */
+.mast .tiles { margin-top: 0; }
+.mast .note { margin-top: 14px; }
+.drive { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 40px; align-items: start; }
+.drive > * { min-width: 0; }
+.ctlwrap { position: sticky; top: 64px; max-height: calc(100vh - 80px); overflow-y: auto; padding: 0 10px 8px; margin-inline: -10px; }
+.ctlpanel { border-top: 2px solid var(--line-strong); }
+.ctlpanel summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 10px 0; }
+.ctlpanel summary::-webkit-details-marker { display: none; }
+.ctlpanel summary .mono { color: var(--ink); }
+.ctlpanel summary .hint { color: var(--muted); }
+.ctlpanel summary .hint::after { content: "+"; margin-left: 8px; }
+.ctlpanel[open] summary .hint::after { content: "−"; }
+.ctls { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; }
+.ctl label { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); line-height: 1.4; }
+.ctl label span { min-width: 0; }
+.ctl output { color: var(--ink); font-family: var(--mono); font-size: 12px; letter-spacing: 0; text-transform: none; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ctl input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 2px; background: var(--line-strong); border-radius: 1px; margin: 10px 0 2px; display: block; cursor: pointer; }
+.ctl input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); border: 2px solid var(--paper); box-shadow: 0 0 0 1px var(--line-strong); }
+.ctl input[type="range"]::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); border: 2px solid var(--paper); box-shadow: 0 0 0 1px var(--line-strong); }
+.ctl input[type="range"]::-moz-range-track { height: 2px; background: var(--line-strong); }
+.ctl input[type="range"]:focus-visible { outline-offset: 8px; }
+.ctl select { width: 100%; margin-top: 6px; font: inherit; font-size: 13px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 2px; padding: 6px 8px; }
+.ctl.check { flex-direction: row; justify-content: flex-start; align-items: flex-start; gap: 10px; text-transform: none; letter-spacing: 0; font-family: var(--sans); font-size: 13px; color: var(--ink-2); cursor: pointer; }
+.ctl.check input { accent-color: var(--accent); margin: 3px 0 0; flex: 0 0 auto; }
+.reset { margin-top: 16px; border: 1px solid var(--line-strong); background: transparent; border-radius: 2px; padding: 7px 12px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); }
+.reset:hover { background: var(--tint); }
+.readout { margin: 18px 0 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+.readout > div { padding: 8px 0; border-bottom: 1px solid var(--line); min-width: 0; }
+.readout > div.wide { grid-column: span 2; }
+.readout dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.readout dd { margin: 2px 0 0; font-family: var(--serif); font-size: 17px; font-weight: 500; color: var(--ink); line-height: 1.2; overflow-wrap: anywhere; }
+.plates .plate { padding-block: 56px 48px; }
+.plates .plate:first-of-type { padding-top: 8px; }
+.plates .claim-x { font-size: clamp(32px, 4.2vw, 52px); max-width: 20ch; }
+.band .act.formula { text-transform: none; letter-spacing: 0; font-size: 12px; }
+.plate .lede { margin-top: 20px; }
+.plate h3.h { margin-top: 32px; }
+.plate .grid2 { margin-top: 24px; }
+.plate .grid2 + .grid2, .plate .grid2 + .tscroll, .plate .tscroll + .grid2 { margin-top: 28px; }
+.plate .bands { margin-top: 24px; }
+.plate .tscroll { margin-top: 20px; }
+.chart .ttl { margin-top: 4px; }
+.chart svg { font-family: var(--sans); overflow: visible; }
+.chart svg text.m { font-family: var(--mono); }
+.lg { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+.lg i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.chart .src { max-width: 66ch; }
+.gates { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+.gate { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; font-size: 13.5px; color: var(--ink-2); }
+.chip.good, .chip.acc { border-color: var(--accent); color: var(--accent); }
+.chip.warn, .chip.crit { border-color: var(--flag); color: var(--flag); }
+.chip i { font-style: normal; color: var(--muted); margin-left: 6px; }
+.rule { border-top: 1px solid var(--line); padding-top: 12px; font-size: 14px; color: var(--ink-2); display: flex; flex-direction: column; gap: 6px; }
+.rule b { color: var(--ink); font-weight: 600; }
+.rule .formula { display: block; }
+.formula { overflow-wrap: anywhere; }
+.steps .step .thr { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+.steps .step .thr span { color: var(--ink); letter-spacing: 0.06em; text-transform: uppercase; font-size: 10px; margin-right: 4px; }
+.tree { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.tree > div { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; padding: 8px 10px; font-size: 14px; border: 1px solid transparent; border-radius: 3px; }
+.tree > div.on { background: var(--tint); border-color: var(--line-strong); font-weight: 600; }
+.tree .formula { font-size: 12px; }
+.cells { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+.cellrow { display: grid; grid-template-columns: minmax(0, 1.2fr) 72px minmax(0, 1.6fr); gap: 12px; align-items: center; font-size: 13.5px; }
+.cellrow .k { color: var(--ink); }
+.cellrow .k .mono { margin-right: 6px; }
+.cellrow .why { color: var(--ink-2); font-size: 13px; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; height: 12px; }
+.seg span { background: var(--tint); border-radius: 2px; }
+.seg span.on { background: var(--accent); }
+.cascade { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+.cas { border: 1px solid var(--line); background: var(--surface); border-radius: 3px; padding: 10px 12px; font-size: 13px; color: var(--ink-2); display: flex; flex-direction: column; gap: 4px; min-height: 104px; }
+.cas b { font-family: var(--serif); font-size: 17px; font-weight: 500; color: var(--ink); line-height: 1.15; }
+.cas .st { color: var(--muted); }
+.cas.hit { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--tint); }
+.cas.hit .st { color: var(--accent); }
+.cas.skip { opacity: 0.55; }
+.matrix { display: grid; grid-template-columns: auto 1fr 1fr; gap: 4px; font-size: 14px; margin-top: 8px; }
+.matrix div { background: var(--surface); border: 1px solid var(--line); padding: 12px; border-radius: 3px; font-family: var(--serif); font-size: 18px; }
+.matrix .h { background: transparent; border-color: transparent; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding: 6px 12px; }
+.matrix .hl { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--tint); }
+.ratings .band.kill { border-color: var(--flag); }
+.ratings .band strong { font-size: 30px; }
+.sm { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 20px; }
+.filters button { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 4px 9px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.filters button[aria-pressed="true"] { background: var(--tint); color: var(--ink); border-color: var(--line-strong); }
+.filters input { margin-left: auto; font: inherit; font-family: var(--mono); font-size: 12.5px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 2px; padding: 6px 10px; min-width: 0; flex: 1 1 200px; max-width: 320px; }
+.filters .count { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); flex-basis: 100%; }
+.reg .t { min-width: 640px; }
+.t td.dim, .t tr.dim td { color: var(--muted); }
+.bullets b { color: var(--ink); }
+.bullets.wide { max-width: 66ch; }
+.bands.two { grid-template-columns: repeat(2, 1fr); }
+#tip { position: fixed; z-index: 30; pointer-events: none; max-width: 260px; background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); border-radius: 2px; padding: 5px 8px; font-family: var(--mono); font-size: 11.5px; line-height: 1.4; }
+#tip[hidden] { display: none; }
+.onpage a[aria-current] { color: var(--ink); border-bottom: 1px solid var(--ink); }
+.closing { padding-block: 40px 24px; border-top: 1px solid var(--line); }
+@media (max-width: 900px) {
+  .drive { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .ctlwrap { position: static; max-height: none; overflow: visible; padding-inline: 0; margin-inline: 0; }
+  .ctls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; }
+  .ctl.check { grid-column: 1 / -1; }
+  .readout { grid-template-columns: repeat(4, 1fr); }
+  .cascade { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 820px) {
+  .plates .plate { padding-block: 44px 36px; }
+  .bands.two { grid-template-columns: 1fr; }
+  .cellrow { grid-template-columns: minmax(0, 1fr) 60px; }
+  .cellrow .why { grid-column: 1 / -1; }
+  .ratings .band strong { font-size: 26px; }
+}
+@media (max-width: 560px) {
+  .ctls { grid-template-columns: 1fr; }
+  .readout { grid-template-columns: repeat(2, 1fr); }
+  .cascade { grid-template-columns: 1fr; }
+  .matrix div { font-size: 15px; padding: 10px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cas, .tree > div, .matrix div, .filters button { transition: background-color .15s, border-color .15s, opacity .15s; }
+  .ctl input[type="range"]::-webkit-slider-thumb { transition: transform .12s; }
+  .ctl input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); }
+}
+</style>
+</head>
+<body data-page="cpv">
+<div class="page">
+<!-- CHROME v1 start -->
+<div class="bar" id="siteBar"><a class="who" href="index.html">Faldo Lyon <span class="desk mono">Research desk</span></a><nav aria-label="Site"><a href="research.html" data-page="research">Research</a><a href="engines.html" data-page="engines">Engines</a><a href="cpv.html" data-page="cpv">CPV</a><a href="index.html#clients">Clients</a><a href="analyst.html" data-page="analyst">Analyst</a><a href="kopi.html" data-page="kopi">Kopi Satset</a></nav><button class="theme mono" type="button" id="themeBtn" aria-label="Switch colour theme">Theme · auto</button></div>
+<!-- CHROME v1 end -->
+
+<main id="main">
+  <header class="mast" id="top">
+    <div>
+      <h1 class="wordmark">CPV<span>.</span></h1>
+      <p class="thesis">One company, my data only. The engine builds the next four quarters bottom-up, layers two or three catalysts at their probability, checks what the multiple already pays for, values bear, base and bull to one probability-weighted fair value, then reads those results into a positioning call and two ratings. It writes a structured model output. It never writes the report.</p>
+      <p class="note">catalyst-projection-valuation v4.10-lean, the full engine behind the IC notes in the library. Every chart on this page runs on one invented company, ExampleCo. All inputs are assumptions chosen to exercise the engine, not a view on any stock.</p>
+      <p class="note"><button class="codeswitch" type="button" id="codeSwitch" aria-pressed="true">Engine codes · on</button></p>
+    </div>
+    <div class="tiles" aria-label="The engine in four figures">
+      <div><strong class="num">5</strong><span class="mono">modules: Build · Price · Value · Decide · Emit</span></div>
+      <div><strong class="num" id="tileBank">13</strong><span class="mono">output sections of named fields, plus a checklist and a provenance log<span class="code">S1–S13 · SM · SP</span></span></div>
+      <div><strong class="num" id="tileReg">53</strong><span class="mono">constants in one register, each tagged with how far to trust it<span class="code">T1–T52</span></span></div>
+      <div><strong class="num" id="tileKill">5</strong><span class="mono">thesis-break conditions, none of them the price<span class="code">kill switches</span></span></div>
+    </div>
+  </header>
+
+  <nav class="onpage" aria-label="On this page"><span>Five modules</span><a href="#s2" data-ph="build">Build</a><a href="#s6" data-ph="price">Price</a><a href="#s9" data-ph="value">Value</a><a href="#s10d" data-ph="decide">Decide</a><a href="#s11" data-ph="emit">Emit</a><span>·</span><a href="#reg">Constants</a><a href="#rules">Binding rules</a><a href="#open">Open items</a></nav>
+
+  <section id="scale">
+    <header><span class="mono">Scale</span><h2>The scale of the logic</h2></header>
+    <p class="lede">What one full run holds, in plain numbers. Counts are read from this page's own tables.</p>
+    <div class="stats" aria-label="The scale of the logic">
+      <div><strong class="num" id="statSteps">12</strong><span class="mono">steps in one fixed order</span></div>
+      <div><strong class="num" id="statBank">13</strong><span class="mono">output sections, each a set of named fields, plus a checklist and a provenance log</span></div>
+      <div><strong class="num" id="statReg">53</strong><span class="mono">constants in one register, each tagged with how far to trust it</span></div>
+      <div><strong class="num" id="statSM">37</strong><span class="mono">tests in the completion checklist, each printed with its figures</span></div>
+      <div><strong class="num">3</strong><span class="mono">scenarios to 1 probability-weighted fair value; 4 valuation methods cross-checked</span></div>
+      <div><strong class="num" id="statKill">5</strong><span class="mono">thesis-break conditions, none of them the price</span></div>
+      <div><strong class="num">2</strong><span class="mono">ratings on 2 bases; <span id="statSetups">7</span> positioning outcomes; <span id="statCells">5</span> conviction criteria</span></div>
+      <div><strong class="num" id="statRules">9</strong><span class="mono">binding rules, each with the arithmetic it protects</span></div>
+    </div>
+    <div class="gloss">
+      <h3>How to read this page</h3>
+      <p class="note">The engine's own names are shown as small tags; switch them off for a plain read.</p>
+      <table class="t">
+        <thead><tr><th>Market term</th><th>Engine term</th></tr></thead>
+        <tbody>
+          <tr><td>the model output: thirteen sections of named fields</td><td class="m">bank · S1–S13</td></tr>
+          <tr><td>completion checklist</td><td class="m">SM</td></tr>
+          <tr><td>provenance log: where every number came from</td><td class="m">SP</td></tr>
+          <tr><td>disclosed / from guidance / modelled / assumed</td><td class="m">D / G / M / A</td></tr>
+          <tr><td>probability-weighted fair value (per share)</td><td class="m">weighted PV · wPV · S10</td></tr>
+          <tr><td>upside to fair value, after the cost of capital</td><td class="m">edge</td></tr>
+          <tr><td>expected value at exit, before discounting</td><td class="m">undiscounted</td></tr>
+          <tr><td>scenario (bear / base / bull)</td><td class="m">arm</td></tr>
+          <tr><td>what the price implies / consensus / our forecast</td><td class="m">X · Y · Z</td></tr>
+          <tr><td>upside-to-downside ratio (reward to risk)</td><td class="m">asymmetry · 10d</td></tr>
+          <tr><td>the five conviction criteria</td><td class="m">cells · 10e</td></tr>
+          <tr><td>positioning: the criteria and the decision order</td><td class="m">setup · axes · cascade · 10h</td></tr>
+          <tr><td>new money / existing holders</td><td class="m">Entrant / Holder</td></tr>
+          <tr><td>thesis-break condition</td><td class="m">kill switch</td></tr>
+          <tr><td>an input, shocked in the sensitivity ranking</td><td class="m">dial</td></tr>
+          <tr><td>a test, named, that can stop the run</td><td class="m">gate</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="drive">
+    <aside class="ctlwrap" aria-label="Model controls">
+      <details class="ctlpanel" id="ctlpanel" open>
+        <summary><span class="mono">Controls · ExampleCo</span><span class="mono hint">toy inputs</span></summary>
+        <div class="ctls" id="controls"></div>
+        <button class="reset" id="reset" type="button">Reset to defaults</button>
+        <dl class="readout" id="readout" aria-live="polite"></dl>
+      </details>
+    </aside>
+
+    <div class="plates">
+
+      <section class="plate" id="sits">
+        <div class="idx">Orientation · Where it sits</div>
+        <h2 class="claim-x">Three tools answer one question at three depths.</h2>
+        <p class="lede">Three tools answer the same question at three depths. The project ladder runs quick-stock-verdict, then cpv-core, then full CPV. Each step up costs more inputs and returns more output fields.</p>
+        <div class="bands">
+          <div class="band"><span class="act">Tier 1</span><strong>quick-stock-verdict</strong><p>Thirty-second gut check from web data. Loose by design. Good, bad or just okay.</p></div>
+          <div class="band"><span class="act">Tier 2</span><strong>cpv-core</strong><p>The three numbers without the full model output. Computation-identical mirror of the engine, currently stamped stale against v4.10.</p></div>
+          <div class="band"><span class="act">Tier 3 · this page</span><strong>catalyst-projection-valuation</strong><p>Full run. Every module, every field, every test with its arithmetic. Writes the thirteen output sections, the completion checklist and the provenance log.<span class="code">S1–S13 · SM · SP</span></p></div>
+        </div>
+        <h3 class="h">What each skill may read, write and never touch<span class="code">handoff contract</span></h3>
+        <div class="bands">
+          <div class="band"><span class="act">Reads, once each</span><strong>per-growth-checker · moat-analyzer</strong><p>per-growth-checker at Step 6b only: hurdle-rate surface for backing market-implied growth out of a multiple. Never a cost of equity. moat-analyzer at Step 8 only: score, pass or fail, direction, confidence.</p></div>
+          <div class="band"><span class="act">Computes and rates</span><strong>CPV engine</strong><p>Catalyst and valuation lens only. Issues a model rating at Step 10k. Does not overwrite equity-rating-analyst.</p></div>
+          <div class="band"><span class="act">Writes</span><strong>Model output · checklist · provenance<span class="code">S1–S13 · SM · SP</span></strong><p>Stable field keys are the contract. Report writers such as stock-writeup-composer read them. No summary, verdict or "final read" inside the engine.</p></div>
+        </div>
+        <div class="grid2">
+          <div class="block"><h3>Every run, the same way<span class="code">engine invariant</span></h3><ul class="bullets"><li>Every module runs and every field is emitted on every full run.</li><li>No tiering: emphasis and truncation happen downstream.</li><li>No compaction: a passing test still prints its figures.</li><li>No delta mode: a prior model output is never an input. A different <code class="formula">skill_version</code> forces full recomputation.</li></ul></div>
+          <div class="block"><h3>Run discipline</h3><ul class="bullets"><li>One consolidated ask at Step 1, never again mid-run.</li><li>One arithmetic pass. Later sections cite, they never recompute.</li><li>Sub-skills read once. A second read is a defect.</li><li>Diagnostic text is written only when its check fires.</li><li>Steps 10e, 10h and 10k read existing results and select. Re-weighing evidence there is a defect.</li></ul></div>
+        </div>
+        <h3 class="h">Twelve steps in one fixed order<span class="code">spine</span></h3>
+        <div class="steps" id="spine"></div>
+        <h3 class="h">The toy model</h3>
+        <p class="lede">Every chart below runs on one invented company, ExampleCo. All inputs are assumptions chosen to exercise the engine, not a view on any stock. The toy works in EPS per share to keep the arithmetic visible; a real run builds revenue, then margins, then EPS. Move a control and every section recomputes through the same rules the skill states.</p>
+        <p class="note">ExampleCo inputs (all assumed): base NTM EPS $4.00 · consensus NTM EPS $4.50 · hurdle multiple 18.0x from the growth table · C1 new product line $0.80 full size, 75% in window · C2 pricing reset $0.40 full size, 50% in window · RFR 4.2%, ERP 5.0% · bear scenario takes a 3% base-EPS haircut for operating leverage.</p>
+      </section>
+
+      <section class="plate" id="s2" data-ph="build">
+        <div class="idx">Steps 2–3 · Build · Catalysts and probability</div>
+        <h2 class="claim-x">A catalyst is only the increment above base.</h2>
+        <p class="lede">Base carries the disclosed trajectory. A catalyst is only the increment above it, net of named offsets. Each catalyst is sized in full, cut to the share that lands inside the next twelve months, then multiplied by its hit probability. The stripped post-window slice is kept and returns at Step 9.</p>
+        <div class="grid2">
+          <div class="chart"><div class="ttl">Catalyst sizing: full size to the probability-weighted slice inside twelve months, $ EPS per share<span class="code">2–3</span></div><div id="ch-funnel"></div><div class="lg" id="lg-funnel"></div></div>
+          <div class="chart"><div class="ttl">Probability bands by catalyst type<span class="code">T1–T3</span></div><div id="ch-pbuckets"></div><p class="src">Probability is set by the catalyst's single biggest risk. Sizing with no disclosed figure behind it sits at the bottom of its band.</p></div>
+        </div>
+        <div class="grid2">
+          <div class="block"><h3>One uncertainty, one field</h3>
+            <div class="tscroll"><table class="t"><thead><tr><th>Uncertainty</th><th>Lives in</th></tr></thead><tbody>
+              <tr><td>Whether it happens</td><td class="m">p, the probability</td></tr>
+              <tr><td>When it lands</td><td>share inside twelve months × timing</td></tr>
+              <tr><td>How much</td><td>size (or p, per the half-lands election)</td></tr>
+              <tr><td>How long it lasts</td><td>after-window and fade treatment</td></tr></tbody></table></div>
+            <p class="note">Charging one uncertainty twice, such as shading p for slip and also cutting the share inside twelve months for the same slip, is flagged as charging the same uncertainty twice.<span class="code">double-conservatism</span></p></div>
+          <div class="block"><h3>Tests at this step<span class="code">gates</span></h3><div class="gates" id="gates2"></div></div>
+        </div>
+      </section>
+
+      <section class="plate" id="s4" data-ph="build">
+        <div class="idx">Steps 4–5 · Build · Four quarters, then shares and debt rolled</div>
+        <h2 class="claim-x">Revenue first, EPS on rolled shares, FCF last.</h2>
+        <p class="lede">Strict order: revenue, gross margin for mix, opex split fixed and variable, EBITDA and EBIT, interest on the rolled net debt, tax, then EPS on rolled shares. Growth is charged its capex and working capital, so FCF falls out last. Where the company guides EPS, margins are backed out of the guide instead of assumed.</p>
+        <div class="grid2">
+          <div class="chart"><div class="ttl">Next-twelve-month EPS by quarter, probability-weighted</div><div id="ch-quarters"></div><div class="lg" id="lg-quarters"></div></div>
+          <div class="block"><h3>Roll-forward identities</h3>
+            <div class="rule"><span class="formula">shares_t = shares_(t−1) + SBC − buyback$ / avg price</span><span class="formula">netdebt_t = netdebt_(t−1) − FCF + buyback$ + dividend$ + acq</span><span>Buybacks shrink shares and raise net debt in the same period. Average price is spot unless a disclosed plan price exists; a below-spot assumption is tagged A, assumed.</span></div>
+            <div class="rule" style="margin-top:14px"><b>Convert consistency</b><span>Debt-form: face value in net debt, if-converted shares excluded from every denominator. Equity-form: the reverse, everywhere. A mixed basis counts the instrument twice and fails the completion checklist.</span></div>
+          </div>
+        </div>
+        <h3 class="h">Build tests<span class="code">gates</span></h3>
+        <div class="tscroll"><table class="t"><thead><tr><th>Test</th><th>What it checks</th><th>On failure</th></tr></thead><tbody>
+          <tr><td>First-quarter anchor<span class="code">T9</span></td><td>Projected Q1 vs last actual, QoQ and YoY. Tolerance: revenue 5%, EPS 8%.</td><td>Rebuild base before touching catalysts.</td></tr>
+          <tr><td>Continuity</td><td>Any Q2–Q4 step beyond phased catalyst plus seasonality; NTM margin above best history; position vs guide range.</td><td>Named deviation with a structural driver.</td></tr>
+          <tr><td>Negative leverage</td><td>Opex growth above revenue growth in recent prints.</td><td>Margin expansion past the guide needs a sized offset.</td></tr>
+          <tr><td>EPS vs FCF</td><td>Direction and size of the gap.</td><td>Where SBC drives it, owner earnings = (FCF − SBC)/share; every later FCF-yield field uses the adjusted one.</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="plate" id="s6" data-ph="price">
+        <div class="idx">Step 6 · Price · Reconcile against consensus and the market</div>
+        <h2 class="claim-x">What the price implies, what consensus says, what we forecast. One driver explains the gap.<span class="code">X · Y · Z</span></h2>
+        <p class="lede">Our forecast is reconciled twice. Against consensus, after matching horizon (FY vs NTM) and basis (GAAP vs non-GAAP, share count). Against the price, by backing the market-implied growth out of the current multiple. The output is one line: what the price implies (X), consensus (Y), our forecast (Z), the single driver D that explains Z minus X, and the event that makes D observable.</p>
+        <div class="chart" style="margin-top:24px"><div class="ttl">Price-implied vs consensus vs our forecast, NTM EPS</div><div id="ch-xyz"></div><p class="src" id="xyz-read"></p></div>
+        <div class="grid2">
+          <div class="chart"><div class="ttl">Gap to consensus, by tier<span class="code">T11</span></div><div id="ch-t11"></div><p class="src">At the loud tier the engine assumes a slip first and re-checks five things in order: double-count, window, basis, staleness, timing. A loud gap that skipped the re-check is invalid at Step 10h.</p></div>
+          <div class="block"><h3>Guards on market-implied growth<span class="code">6b</span></h3><ul class="bullets"><li><b>Conditionality.</b> Implied growth comes from the same hurdle table, so it is never independent evidence for or against a discount rate drawn from that table.</li><li><b>Identifiability.</b> Backing growth out of the multiple solves one free variable. It names a belief consistent with spot, not the belief.</li><li><b>Horizon.</b> A P/E-implied growth is a perpetuity statement; build EPS is a one-year statement. A big implied gap beside a small one-year gap is horizon, not contradiction.</li><li><b>Estimate revisions.</b> Read on the line the driver lives on. Alignment on another line is "adjacent" and caps conviction criterion 5 at half.<span class="code">revision vector</span></li></ul></div>
+        </div>
+      </section>
+
+      <section class="plate" id="s7" data-ph="price">
+        <div class="idx">Steps 7–8 · Price · Valuation method and exit multiple</div>
+        <h2 class="claim-x">Settle the bridge first; the moat only moves the exit.</h2>
+        <p class="lede">The bridge from enterprise value to equity is settled first, with one treatment across every valuation method and both periods. Then a decision tree picks the primary method, four valuation methods are run off the same forecast, and the spread between them tests bridge consistency. Moat and sector regime set how far the exit multiple may move.</p>
+        <div class="grid2">
+          <div class="block"><h3>Valuation method selection, leverage before capex<span class="code">tree</span></h3><div class="tree" id="tree"></div><p class="note">Highlighted: the toy is profitable with no leverage, capex or D&amp;A distortion, so P/E is primary. Lenders and insurers skip the EV methods entirely: P/E primary, P/B vs ROE as the cross-check. Both methods are computed when an input sits within 10% of a threshold.<span class="code">T50</span></p></div>
+          <div class="block"><h3>Exit multiple, bounded by moat and sector regime<span class="code">stance · T17</span></h3><div class="tscroll"><table class="t"><thead><tr><th>Moat read</th><th>Exit assumption</th><th>Range</th></tr></thead><tbody id="moatrows"></tbody></table></div><p class="note">Moat enters valuation only through this range. A sector de-rating caps the range at hold; a tailwind never lifts it past what the moat earned. The pass-or-fail test binds before the score. The highlighted row follows the moat control.</p></div>
+        </div>
+        <div class="chart" style="margin-top:28px"><div class="ttl">Exit multiples on one axis, P/E</div><div id="ch-mult"></div><div class="lg" id="lg-mult"></div></div>
+        <h3 class="h">Tolerance between methods, and the order to resolve divergence<span class="code">band</span></h3>
+        <div class="grid2" style="margin-top:12px">
+          <div class="rule"><span class="formula">band = 15% × (1 + ND/EBITDA ÷ 4), floor 15%, cap 30%</span><span>Only horizon-matched methods vote. A trailing multiple times an NTM metric reproduces spot × growth by identity and is excluded with a one-line bridge.</span></div>
+          <ol class="bullets" style="margin-top:0"><li>EV/S vs EV/EBITDA: margin abnormality</li><li>P/E vs EV/EBITDA: capital structure, usually a bridge error</li><li>EV/FCF vs EV/EBITDA: capex intensity</li><li>FCF yield vs P/E: earnings quality, resolved with owner earnings</li><li>EV/FCF ≈ EV/EBITDA, both off P/E: working capital</li></ol>
+        </div>
+      </section>
+
+      <section class="plate" id="s9" data-ph="value">
+        <div class="idx">Step 9 · Value · Three scenarios</div>
+        <h2 class="claim-x">Three scenarios, one probability-weighted fair value.<span class="code">arms · S9</span></h2>
+        <p class="lede">Each scenario uses rolled shares and net debt. The exit multiple is a forward multiple applied to the forward metric as of window close, so the NTM figure is rolled one more year by the year-two growth rate, <code class="formula">g_roll</code>. Sizing differs by scenario (bear zero, base 50%, bull full<span class="code">T52</span>) and probability never touches the sizing; it lives only in the weights. The slice landing after the window returns here at each scenario's own sizing.</p>
+        <div class="grid2">
+          <div class="chart"><div class="ttl">Scenario present value per share vs spot</div><div id="ch-scen"></div><div class="lg" id="lg-scen"></div></div>
+          <div class="chart"><div class="ttl">How the weights are built</div><div id="ch-weights"></div><div class="lg" id="lg-weights"></div><p class="src" id="weights-read"></p></div>
+        </div>
+        <h3 class="h">Scenario arithmetic<span class="code">arms</span></h3>
+        <div class="tscroll" style="margin-top:12px"><table class="t" id="tbl-arms"></table></div>
+        <p class="note" id="dr-line"></p>
+        <div class="bands">
+          <div class="band"><strong>Not just today's price carried forward<span class="code">T47</span></strong><span class="act formula">NTM metric × current multiple = spot × (forecast ÷ consensus)</span><p>That product is a present value by identity. An exit equal to it means the year-two roll-forward was dropped; the run is invalid at Step 9a. The fix is the roll-forward, never a lower discount rate.</p></div>
+          <div class="band"><strong>The discount rate is a cost of equity<span class="code">DR</span></strong><span class="act formula">r = RFR + β × ERP, inside [7.5%, 20%]</span><p>The growth table serves market-implied growth at Step 6b only. It never discounts a present value. Fallback without beta: 7.5% + 0.15 × g.</p></div>
+          <div class="band"><strong>Fair value is not a target price<span class="code">wPV · S10</span></strong><span class="act formula">fair value × (1 + discount rate) = expected value at exit</span><p>A probability-weighted expectation under stated assumptions. The identity is checked to rounding on every run.</p></div>
+        </div>
+      </section>
+
+      <section class="plate" id="s9c" data-ph="value">
+        <div class="idx">Steps 9c–9d · Value · Sensitivity and breakeven</div>
+        <h2 class="claim-x">Shock every input, then ask what the price already requires.<span class="code">9c · 9d</span></h2>
+        <p class="lede">Each surviving input is shocked ±10% and the fair value recomputed.<span class="code">T23</span> Inputs swinging under $0.05 drop.<span class="code">T24</span> The tornado ranks local sensitivity; it is not an interval. The breakeven solve inverts the base scenario to state what the price already requires.</p>
+        <div class="chart" style="margin-top:24px"><div class="ttl">Tornado: change in fair value per input, $ per share<span class="code">9c</span></div><div id="ch-tornado"></div><div class="lg" id="lg-tornado"></div><p class="src" id="tornado-read"></p></div>
+        <div class="chart" style="margin-top:28px"><div class="ttl">What the price already requires: breakeven multiple and EPS, base scenario<span class="code">9d</span></div><div id="ch-be"></div><p class="src" id="be-read"></p></div>
+      </section>
+
+      <section class="plate" id="s10d" data-ph="decide">
+        <div class="idx">Step 10d · Decide · Upside to downside</div>
+        <h2 class="claim-x">Upside to downside is the shape of the payoff, unweighted on purpose.<span class="code">asymmetry · 10d</span></h2>
+        <p class="lede">The upside-to-downside ratio is the unweighted shape of the payoff at spot: upside to bull over downside to bear. It is bucketed unweighted on purpose so it stays independent of the upside to fair value. The engine then solves the spot prices at which the ratio crosses 1.5 and 0.8, which become the entry and trim levels the action menu cites.</p>
+        <div class="chart" style="margin-top:24px"><div class="ttl">Upside-to-downside ratio as spot moves (click the chart to move spot)</div><div id="ch-asym"></div><div class="lg" id="lg-asym"></div><p class="src" id="asym-read"></p></div>
+        <div class="grid2">
+          <div class="rule"><span class="formula">ratio = (bull_pv − spot) ÷ (spot − bear_pv)</span><span class="formula">s*(k) = (bull_pv + k × bear_pv) ÷ (1 + k)</span><span>Favorable, the entry level, at or below s*(1.5); exhausted, the trim level, at or above s*(0.8). The ratio rises as spot falls.</span></div>
+          <div class="rule"><b>Degenerate cases</b><span>Spot at or above bull PV: ratio 0, exhausted, no favorable band. Spot at or below bear PV: ratio undefined, treated as a staleness check on spot or the bear scenario. A negative-expected-return positioning<span class="code">setup 6</span> re-solves the band as si(k) = (k × bull + bear) ÷ (1 + k) instead of relabelling.</span></div>
+        </div>
+      </section>
+
+      <section class="plate" id="s10e" data-ph="decide">
+        <div class="idx">Step 10e · Decide · Conviction</div>
+        <h2 class="claim-x">Five conviction criteria, three grades, and the limits are stated either way.<span class="code">10e · T32</span></h2>
+        <p class="lede">Five criteria graded 0, 0.5 or 1. A criterion that fails only because the input was never supplied takes a 0.5 credit, at most twice.<span class="code">T35</span> A criterion supplied and failed scores zero. Three limits are stated whether or not they bind.</p>
+        <div class="grid2">
+          <div class="block"><h3>The five criteria<span class="code">cells</span></h3><div class="cells" id="cells"></div></div>
+          <div class="chart"><div class="ttl">Conviction score, out of five<span class="code">T32</span></div><div id="ch-conv"></div><div class="gates" id="caps"></div></div>
+        </div>
+        <div class="rule" style="margin-top:28px"><b>Position limit<span class="code">cap</span></b><span class="formula">expected loss at the thesis-break level × size ≤ risk budget</span><span id="poscap"></span></div>
+      </section>
+
+      <section class="plate" id="s10h" data-ph="decide">
+        <div class="idx">Step 10h · Decide · Positioning</div>
+        <h2 class="claim-x">Vetoes before opportunities: 7, then 6, 4, 5, 2, 1, 3.<span class="code">setup 1–7</span></h2>
+        <p class="lede">Five criteria are read off existing results. The first positioning whose rule matches wins, and vetoes are checked before opportunities: 7, then 6, 4, 5, 2, 1, 3. Nothing matching lands at 0, no positioning.</p>
+        <h3 class="h">The five criteria<span class="code">axes</span></h3>
+        <div class="tscroll" style="margin-top:12px"><table class="t" id="tbl-axes"></table></div>
+        <h3 class="h">The decision order<span class="code">cascade</span></h3>
+        <div class="cascade" id="cascade"></div>
+        <h3 class="h">What would change the positioning<span class="code">cascade</span></h3>
+        <p class="note" style="margin-top:0">Each criterion nudged one bucket, holding the others. Highlighted rows change the positioning; they show which result the call is close to.</p>
+        <div class="tscroll" style="margin-top:12px"><table class="t" id="tbl-sens"></table></div>
+      </section>
+
+      <section class="plate" id="s10k" data-ph="decide">
+        <div class="idx">Step 10k · Decide · Two ratings</div>
+        <h2 class="claim-x">Two ratings on two bases. Between them, a no-trade region.<span class="code">10k</span></h2>
+        <p class="lede">New money asks whether new capital beats the cost of capital, so it is graded on the upside after discounting, through the positioning map. Existing holders ask whether the position expects an absolute gain, so they are graded on the return before discounting. The gap between the two bases is a no-trade region: hold what you own, buy none.</p>
+        <div class="bands two ratings" id="ratings" aria-live="polite"></div>
+        <div class="chart" style="margin-top:28px"><div class="ttl">Existing-holder lines on the upside axis<span class="code">holder</span></div><div id="ch-rating"></div><p class="src" id="rating-read"></p></div>
+        <div class="grid2">
+          <div class="block"><h3>Rating for new money<span class="code">entrant · 10k</span></h3><div class="tscroll"><table class="t"><thead><tr><th>Positioning</th><th>New money</th></tr></thead><tbody><tr><td>1 Accumulate before the catalyst · 2 Event imminent</td><td>Full band: Strong Buy · half: Weak Buy</td></tr><tr><td>3 Already priced in, confirm</td><td>Weak Buy</td></tr><tr><td>4 · 5 · 6 · 7 · 0</td><td>No Buy</td></tr></tbody></table></div></div>
+          <div class="block"><h3>Rating for existing holders<span class="code">holder · 10k</span></h3><div class="tscroll"><table class="t"><thead><tr><th>Return before discounting</th><th>Existing holders</th></tr></thead><tbody><tr><td>Below −15% and the 6a re-check survives</td><td>Strong Trim</td></tr><tr><td>Below 0</td><td>Trim</td></tr><tr><td>0 or above</td><td>Hold floor</td></tr><tr><td>0 or above, positioning 1 or 2, full band, favorable, no thesis-break</td><td>Strong Hold</td></tr></tbody></table></div><p class="note">Any thesis-break condition that has been met overrides both: No Buy and Strong Trim.</p></div>
+        </div>
+      </section>
+
+      <section class="plate" id="s10j" data-ph="decide">
+        <div class="idx">Steps 10b–10j · Decide · Calendar, reaction, time decay, thesis-break</div>
+        <h2 class="claim-x">The catalyst calendar: what lands, what slips, what breaks the thesis.<span class="code">10b–10j</span></h2>
+        <p class="lede">Calendar, expected price reaction, time decay and thesis-break conditions read the same results. The price reaction is read for the top catalyst against how much is already in the price; time decay charges the upside for carry and for slip past mid-window; the five conditions below are the only things that end a thesis.</p>
+        <div class="grid2">
+          <div class="block"><h3>Expected price reaction by outcome · top catalyst<span class="code">10c</span></h3><div class="matrix" id="matrix"></div><p class="note" id="matrix-read"></p></div>
+          <div class="chart"><div class="ttl">Time decay of the thesis · top catalyst<span class="code">theta · 10i</span></div><div id="ch-theta"></div><div class="lg" id="lg-theta"></div><p class="src" id="theta-read"></p></div>
+        </div>
+        <h3 class="h">Thesis-break conditions<span class="code">kill switches · 10j</span></h3>
+        <div class="tscroll" style="margin-top:12px"><table class="t"><thead><tr><th>#</th><th>Condition</th><th>What it says</th><th>Rebuild</th></tr></thead><tbody id="killrows">
+          <tr><td class="m">1</td><td>First-quarter actual misses the forecast beyond tolerance<span class="code">T9</span></td><td>Thesis wrong</td><td>Full rebuild</td></tr>
+          <tr><td class="m">2</td><td>A dated catalyst slips its window</td><td>Timing wrong</td><td>Re-date; time decay reprices</td></tr>
+          <tr><td class="m">3</td><td>Estimate revisions against us for two consecutive marks</td><td>Thesis wrong</td><td>Full rebuild</td></tr>
+          <tr><td class="m">4</td><td>Moat test downgraded</td><td>Thesis wrong</td><td>Full rebuild</td></tr>
+          <tr><td class="m">5</td><td>Sector regime breaches the exit-multiple range</td><td>Environment wrong</td><td>Exit-multiple assumption rebuilt</td></tr>
+        </tbody></table></div>
+        <p class="note">Price is never a thesis-break condition; price feeds Step 10d. When the thesis was re-routed to a non-catalyst driver, a condition observing that driver is added. Re-entry after a condition has been met needs a full re-run of Steps 2–6, the cause explained inside the new forecast, and a sizeable positioning on its own merits, with conviction capped at mid.</p>
+      </section>
+
+      <section class="plate" id="s11" data-ph="emit">
+        <div class="idx">Step 11 · Emit · The model output</div>
+        <h2 class="claim-x">The model output ends at section thirteen. There is no summary.<span class="code">bank · S13</span></h2>
+        <p class="lede">Every section prints on every full run, in order. Anything downstream could need is a named field with a stable key. Prose is capped at 60 words per section outside tables.<span class="code">T36</span> The output ends at section thirteen; there is no summary.</p>
+        <h3 class="h">Thirteen sections of named fields<span class="code">S1–S13</span></h3>
+        <div class="tscroll" style="margin-top:12px"><table class="t"><thead><tr><th>Section</th><th>Key</th><th>Contents</th></tr></thead><tbody id="bank"></tbody></table></div>
+        <div class="grid2">
+          <div class="block"><h3>Completion checklist<span class="code">SM</span></h3><p class="note" id="sm-count" style="margin-top:0"></p><div class="sm" id="sm"></div></div>
+          <div class="block"><h3>Provenance log: where every number came from<span class="code">SP</span></h3><ol class="bullets" style="margin-top:0"><li>Tag census across material figures: D disclosed, G from guidance, M modelled, A assumed</li><li>Provenance ratio: share of fair value driven by modelled or assumed figures</li><li>Assumed-figure register: every default that fired</li><li>Constant overrides, old → new</li><li>Conviction criteria with grade and ANALYSIS or MISSING INPUT tag</li><li>Top-input check: the biggest input and its provenance tag<span class="code">T37</span></li><li>What would repair it: missing inputs ranked by the criteria and tests they fix</li></ol>
+            <div class="rule" style="margin-top:16px"><b>Provenance precedence</b><span class="formula">D disclosed &gt; G guide-derived &gt; M modelled &gt; A assumed</span><span>A figure that could have been disclosed or guidance-derived but was modelled is an error.</span></div></div>
+        </div>
+      </section>
+
+      <section class="plate reg" id="reg">
+        <div class="idx">The constants · Register<span class="code">T1–T52</span></div>
+        <h2 class="claim-x">Every constant lives here, with how far to trust it.</h2>
+        <p class="lede">Every constant the engine uses lives here. You can override any of them; the override is stamped in the provenance log. Calibration says how much to trust each: <i>general</i> is standard practice, <i>structural</i> follows from the method, <i>n=1</i> was fitted on one run, <i>PROPOSED</i> is live but waiting for you to promote or strike it.</p>
+        <div class="chart" style="margin-top:24px"><div class="ttl">How far to trust them: calibration mix</div><div id="ch-cal"></div></div>
+        <div class="filters" id="regfilters"><input id="regq" type="search" placeholder="Filter by code, constant or step" aria-label="Filter thresholds"><span class="count" id="regcount"></span></div>
+        <div class="tscroll" style="margin-top:12px"><table class="t"><thead><tr><th>Code</th><th>Constant</th><th>Default</th><th>Step</th><th>Calibration</th></tr></thead><tbody id="regrows"></tbody></table></div>
+      </section>
+
+      <section class="plate" id="rules">
+        <div class="idx">Binding rules</div>
+        <h2 class="claim-x">Binding rules worth knowing by heart.</h2>
+        <p class="lede">Nine rules the engine applies before any judgement. Each pairs the rule with the line of arithmetic it protects and the defect it names when broken.</p>
+        <div class="bands" id="rulecards"></div>
+      </section>
+
+      <section class="plate" id="open">
+        <div class="idx">Open items</div>
+        <h2 class="claim-x">Open items in v4.10-lean.</h2>
+        <p class="lede">My read of the file as it stands, separate from what the skill says.</p>
+        <ol class="bullets wide" id="openitems"></ol>
+      </section>
+
+    </div>
+  </div>
+
+  <p class="note closing">CPV is the engine behind the IC notes in the research library; the report writer types no number of its own and resolves every figure against the model output this page describes.<span class="code">composer</span> ExampleCo is invented and every input here is an assumption, so nothing on this page is a view on any company.</p>
+  <div id="tip" role="status" hidden></div>
+</main>
+
+<!-- FOOT v1 start -->
+<footer id="footnote"><p>Nothing on this site is not on my CV or in work I did myself. Gotrade figures and documents are the firm's data, shown with permission pending. Four energy write-ups are drafts and are stamped as such; the house-format report is a sample on a worked-example company; Kopi Satset plan figures are model outputs. Research is for information only and is not investment advice. Updated October 2026.</p></footer>
+<dialog id="lb"><img id="lbImg" alt=""><div class="ctl"><button id="lbPrev" type="button">← Prev</button><span id="lbCap"></span><button id="lbNext" type="button">Next →</button><button id="lbClose" type="button">Close</button></div></dialog>
+<script>
+/* shared chrome: theme toggle, lightbox, copy buttons, current-page marker */
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  // current page
+  var page = document.body.getAttribute('data-page');
+  if (page) { var cur = document.querySelector('#siteBar nav a[data-page="' + page + '"]'); if (cur) cur.setAttribute('aria-current', 'page'); }
+  // theme: auto -> dark -> light
+  var btn = $('#themeBtn');
+  var read = function () { try { return localStorage.getItem('fl-theme') || 'auto'; } catch (e) { return document.documentElement.getAttribute('data-theme') || 'auto'; } };
+  var apply = function (t) {
+    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme');
+    try { if (t === 'auto') localStorage.removeItem('fl-theme'); else localStorage.setItem('fl-theme', t); } catch (e) {}
+    if (btn) btn.textContent = 'Theme · ' + t;
+  };
+  if (btn) { btn.textContent = 'Theme · ' + read(); btn.addEventListener('click', function () { var t = read(); apply(t === 'auto' ? 'dark' : t === 'dark' ? 'light' : 'auto'); }); }
+  // lightbox: openLightbox(list, index) where list is [{file, cap}]
+  var lb = $('#lb'), img = $('#lbImg'), cap = $('#lbCap'), list = [], cur = 0;
+  var show = function (i) { if (!list.length) return; cur = (i + list.length) % list.length; img.src = list[cur].file; img.alt = list[cur].cap || ''; cap.textContent = list[cur].cap || ''; if (!lb.open) lb.showModal(); };
+  window.openLightbox = function (l, i) { list = l || []; show(i || 0); };
+  if (lb) {
+    $('#lbPrev').addEventListener('click', function () { show(cur - 1); });
+    $('#lbNext').addEventListener('click', function () { show(cur + 1); });
+    $('#lbClose').addEventListener('click', function () { lb.close(); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) lb.close(); });
+    document.addEventListener('keydown', function (e) { if (!lb.open) return; if (e.key === 'ArrowLeft') show(cur - 1); if (e.key === 'ArrowRight') show(cur + 1); });
+  }
+  // any element with data-lb="groupName" and data-file/data-cap joins a lightbox group
+  var groups = {};
+  document.querySelectorAll('[data-lb]').forEach(function (el) {
+    var g = el.getAttribute('data-lb'); (groups[g] = groups[g] || []).push({ file: el.getAttribute('data-file') || (el.querySelector('img') || {}).src, cap: el.getAttribute('data-cap') || '' });
+  });
+  document.querySelectorAll('[data-lb]').forEach(function (el) {
+    var g = el.getAttribute('data-lb'), i = groups[g].findIndex(function (x) { return x.file === (el.getAttribute('data-file') || (el.querySelector('img') || {}).src); });
+    el.addEventListener('click', function (e) { e.preventDefault(); window.openLightbox(groups[g], i); });
+  });
+  // copy buttons: <button class="copy" data-copy="text">
+  document.querySelectorAll('.copy[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var text = b.getAttribute('data-copy'), done = function () { b.textContent = 'copied'; setTimeout(function () { b.textContent = 'copy'; }, 1500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () {}); else done();
+    });
+  });
+})();
+</script>
+<!-- FOOT v1 end -->
+</div>
+<script>
+/* DOCS v1 start */
+/* The research registry. Edit here (src/docs.js), then run tools/sync.py to copy into every page.
+   Paths are derived, never stored: pdf = proof/research/<slug>.pdf, page i = proof/research/<slug>-pNN.jpg. */
+const LINES = {
+  role: { short: "Investment Research & Product Growth Strategist, Gotrade", anchor: "analyst.html#gotrade" },
+  advisory: { short: "Advises clients above $100k AUM with catalyst-driven equity research", anchor: "analyst.html#gotrade" },
+  alpha: { short: "Runs the Monthly Alpha Selection Book", anchor: "analyst.html#gotrade" },
+  maybank: { short: "Written buy call on ATIC at Rp438, Dec 2024", anchor: "analyst.html#maybank" }
+};
+const ENGINE_LABEL = { "catalyst-projection-valuation": "CPV", "cpv-core": "cpv-core", "gotrade-ic-note": "gotrade-ic-note", "moat-analyzer": "moat-analyzer", "energy-macro-pack": "energy-macro-pack", "energy-sector-analysis": "energy-sector-analysis", "stock-writeup-composer": "stock-writeup-composer", "stock-writeup-pdf": "stock-writeup-pdf", "dhany-writeup-composer": "dhany-writeup-composer", "dhany-writeup-pdf": "dhany-writeup-pdf", "energy-refresh": "energy-refresh", "energy-read": "energy-read", "weekly-market-note": "weekly-market-note" };
+const WRITEUP_ENGINES = ["moat-analyzer", "energy-macro-pack", "energy-sector-analysis", "cpv-core", "stock-writeup-composer", "stock-writeup-pdf"];
+const DOCS = [
+  { slug: "aph-ic-note", title: "Margin durability, not catalysts", ticker: "APH", company: "Amphenol", kind: "ic-note", kindLabel: "IC note", series: "ic", sector: "Tech hardware", date: "2026-08-27", pages: 12, format: "pdf", status: "final", attached: true, rendered: 12, rating: { entrant: "Weak Buy", holder: "Hold" }, spot: 161.34, pv: 170.15, currency: "$", thesis: "The in-window catalyst book is below the materiality gate, so what carries value is the operating margin near 29% and the 27.5x forward multiple. The one-year roll the prior bank dropped is worth $24.77 a share.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.8 → gotrade-ic-note", line: "advisory", companion: "aph-ic-1pager" },
+  { slug: "aph-ic-1pager", title: "IC summary, one page", ticker: "APH", company: "Amphenol", kind: "one-pager", kindLabel: "One-pager", series: "ic", sector: "Tech hardware", date: "2026-08-27", pages: 1, format: "pdf", status: "final", attached: true, rendered: 1, rating: { entrant: "Weak Buy", holder: "Hold" }, spot: 161.34, pv: 170.15, currency: "$", thesis: "The Amphenol IC note projected onto one page: the call, the distribution, the kill switches.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.8 → gotrade-ic-note", line: "advisory", companion: "aph-ic-note" },
+  { slug: "tel-ic-note", title: "Margin plus multiple, not catalysts", ticker: "TEL", company: "TE Connectivity", kind: "ic-note", kindLabel: "IC note", series: "ic", sector: "Tech hardware", date: "2026-08-27", pages: 11, format: "pdf", status: "final", attached: true, rendered: 11, rating: { entrant: "Weak Buy", holder: "Hold" }, spot: 205.03, pv: 210.40, currency: "$", thesis: "In-window catalyst revenue is 1.76% of base, below the materiality gate; the value carriers are the 22.2% adjusted margin and the 16.4x forward multiple. The FY2027 consensus makes the horizon check independent for the first time.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.8 → gotrade-ic-note", line: "advisory", companion: "tel-ic-1pager" },
+  { slug: "tel-ic-1pager", title: "IC summary, one page", ticker: "TEL", company: "TE Connectivity", kind: "one-pager", kindLabel: "One-pager", series: "ic", sector: "Tech hardware", date: "2026-08-27", pages: 1, format: "pdf", status: "final", attached: true, rendered: 1, rating: { entrant: "Weak Buy", holder: "Hold" }, spot: 205.03, pv: 210.40, currency: "$", thesis: "The TE Connectivity IC note projected onto one page: the call, the distribution, the kill switches.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.8 → gotrade-ic-note", line: "advisory", companion: "tel-ic-note" },
+  { slug: "nvda-ic-note", title: "The year the multiple is not paying for", ticker: "NVDA", company: "NVIDIA", kind: "ic-note", kindLabel: "IC note", series: "ic", sector: "Semis", date: "2026-09-02", pages: 26, format: "pdf", status: "final", attached: false, rendered: 0, rating: { entrant: "Strong Buy", holder: "Strong Hold" }, spot: 217.44, pv: 270.32, currency: "$", thesis: "The market pays 18x for the next twelve months of earnings and nothing for the year after. Held at that multiple the base case is worth $331 at exit; probability-weighted and discounted, $270.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.10 → gotrade-ic-note", line: "advisory", companion: "nvda-ic-1pager" },
+  { slug: "nvda-ic-1pager", title: "One-page summary", ticker: "NVDA", company: "NVIDIA", kind: "one-pager", kindLabel: "One-pager", series: "ic", sector: "Semis", date: "2026-09-02", pages: 1, format: "pdf", status: "final", attached: false, rendered: 0, rating: { entrant: "Strong Buy", holder: "Strong Hold" }, spot: 217.44, pv: 270.32, currency: "$", thesis: "The NVIDIA IC note projected onto one page.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.10 → gotrade-ic-note", line: "advisory", companion: "nvda-ic-note" },
+  { slug: "bkr-ic-note", title: "Catalyst, projection and implied valuation", ticker: "BKR", company: "Baker Hughes", kind: "ic-note", kindLabel: "IC note", series: "ic", sector: "Energy services", date: "2026-09-04", pages: 23, format: "pdf", status: "final", attached: false, rendered: 0, rating: { entrant: "No Buy", holder: "Hold" }, spot: 63.64, pv: 68.71, currency: "$", thesis: "The catalysts are real and immaterial. What decides the stock is the multiple paid for a larger, more industrial, more indebted earnings stream, and whether Chart's pre-deal profit survives consolidation. Conviction 2.5 of five.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.10 → gotrade-ic-note", line: "advisory", companion: "bkr-ic-1pager" },
+  { slug: "bkr-ic-1pager", title: "One page", ticker: "BKR", company: "Baker Hughes", kind: "one-pager", kindLabel: "One-pager", series: "ic", sector: "Energy services", date: "2026-09-04", pages: 1, format: "pdf", status: "final", attached: false, rendered: 0, rating: { entrant: "No Buy", holder: "Hold" }, spot: 63.64, pv: 68.71, currency: "$", thesis: "The Baker Hughes IC note projected onto one page.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.10 → gotrade-ic-note", line: "advisory", companion: "bkr-ic-note" },
+  { slug: "cnq-writeup", title: "Company analysis, financial performance and investment plan", ticker: "CNQ", company: "Canadian Natural Resources", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-10", pages: 8, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Canadian Natural Resources in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "cop-writeup", title: "Company analysis, financial performance and investment plan", ticker: "COP", company: "ConocoPhillips", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-10", pages: 7, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "ConocoPhillips in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "cve-writeup", title: "Company analysis, financial performance and investment plan", ticker: "CVE", company: "Cenovus Energy", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-10", pages: 9, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Cenovus Energy in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "cvx-writeup", title: "Company analysis, financial performance and investment plan", ticker: "CVX", company: "Chevron", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-15", pages: 34, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Chevron in the three-stage house format, with the valuation and investment plan stages and the energy store read of 14 September 2026.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "fang-writeup", title: "Company analysis, financial performance and investment plan", ticker: "FANG", company: "Diamondback Energy", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-23", pages: 38, format: "pdf", status: "draft", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Diamondback Energy in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "mpc-writeup", title: "Company analysis, financial performance and investment plan", ticker: "MPC", company: "Marathon Petroleum", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-23", pages: 32, format: "pdf", status: "draft", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Marathon Petroleum in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "oxy-writeup", title: "Company analysis, financial performance and investment plan", ticker: "OXY", company: "Occidental Petroleum", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-23", pages: 35, format: "pdf", status: "draft", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Occidental Petroleum in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "shel-writeup", title: "Company analysis, financial performance and investment plan", ticker: "SHEL", company: "Shell", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-23", pages: 41, format: "pdf", status: "draft", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Shell in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "adbe-research", title: "Undervalued, but AI execution must deliver", ticker: "ADBE", company: "Adobe", kind: "editorial", kindLabel: "Editorial", series: "editorial", sector: "Software", date: "2026-09-16", pages: 10, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "A high-quality subscription business with AI-first ARR above $650 million; the case turns on Firefly deepening workflow ownership.", engines: ["dhany-writeup-composer", "dhany-writeup-pdf"], lineage: "dhany-writeup-composer → dhany-writeup-pdf", line: "advisory", companion: null },
+  { slug: "house-format-sample", title: "A dependable subscription business, priced for a margin recovery it has not yet shown", ticker: "MLSW", company: "Meridian Ledger Software (worked example)", kind: "editorial", kindLabel: "Editorial", series: "editorial", sector: "Software", date: "2026-09-29", pages: 6, format: "pdf", status: "sample", attached: true, rendered: 6, rating: null, spot: null, pv: null, currency: "$", thesis: "The Gotrade Research editorial format demonstrated on a worked-example company: research view, base-case DCF with scenarios, the questions that decide the case, risks and a disclosures page.", engines: ["dhany-writeup-composer", "dhany-writeup-pdf"], lineage: "dhany-writeup-composer → dhany-writeup-pdf", line: "role", companion: null },
+  { slug: "weekly-note-2026-09-27", title: "Weekly Market Note, 21–27 September 2026, oil edition", ticker: "", company: "", kind: "weekly", kindLabel: "Weekly note", series: "weekly", sector: "Macro", date: "2026-09-27", pages: 12, format: "pdf", status: "final", attached: true, rendered: 12, rating: null, spot: null, pv: null, currency: "$", thesis: "Brent dips below $100 and recovers as Saudi Arabia reopens its pipeline. Prices, flows through Hormuz, inventories and what the futures curve is pricing, with every figure sourced and dated.", engines: ["energy-refresh", "energy-read", "weekly-market-note"], lineage: "energy store → weekly-market-note", line: "role", companion: null },
+  { slug: "weekly-note-2026-09-20", title: "Weekly Market Note, 14–20 September 2026", ticker: "", company: "", kind: "weekly", kindLabel: "Weekly note", series: "weekly", sector: "Macro", date: "2026-09-20", pages: 12, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Rate hikes in Washington and Tokyo, a hold in London: three central bank decisions in three days and the bond market's reply.", engines: ["weekly-market-note"], lineage: "weekly-market-note", line: "role", companion: null },
+  { slug: "atic-note", title: "Buy call, December 2024", ticker: "ATIC", company: "PT Anabatic Technologies", kind: "archive", kindLabel: "Archive", series: "archive", sector: "Indonesia", date: "2024-12-02", pages: 7, format: "pdf", status: "final", attached: true, rendered: 7, rating: null, spot: null, pv: null, currency: "Rp", thesis: "Written on the morning of 2 December 2024 at Rp378; the buy was called at Rp438 and a client position of $273k exited at Rp835 within the year, +91% against +22% for the IHSG in 2025.", engines: [], lineage: "Maybank Securities Indonesia", line: "maybank", companion: null, byline: "Prepared by Faldo Lyon, Equity Research Analyst Intern, Maybank Securities Indonesia" }
+];
+const SERIES = [
+  { key: "ic", title: "IC notes", sub: "catalyst-projection-valuation → gotrade-ic-note" },
+  { key: "energy", title: "Energy write-ups", sub: "three-stage house format" },
+  { key: "editorial", title: "Editorial", sub: "Gotrade Research format" },
+  { key: "weekly", title: "Weekly Market Note", sub: "from the energy store" },
+  { key: "archive", title: "Archive", sub: "Maybank Securities Indonesia" }
+];
+/* ---- pure helpers (no DOM access at load) ---- */
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pad2 = (n) => String(n).padStart(2, "0");
+const docPaths = (d) => ({
+  pdf: "proof/research/" + d.slug + ".pdf",
+  cover: "proof/research/" + d.slug + "-p01.jpg",
+  page: (i) => "proof/research/" + d.slug + "-p" + pad2(i) + ".jpg",
+  pages: Array.from({ length: d.rendered || 0 }, (_, i) => ({ file: "proof/research/" + d.slug + "-p" + pad2(i + 1) + ".jpg", cap: (d.ticker || d.kindLabel) + " · page " + (i + 1) + " of " + d.pages }))
+});
+const docBySlug = (slug) => DOCS.find((d) => d.slug === slug) || null;
+const upside = (d) => (d.spot && d.pv) ? ((d.pv / d.spot - 1) * 100) : null;
+const fmtUpside = (d) => { const u = upside(d); return u === null ? "" : (u >= 0 ? "+" : "") + u.toFixed(1) + "%"; };
+const fmtPx = (d) => d.spot && d.pv ? `${d.currency}${d.spot.toFixed(2)} → ${d.currency}${d.pv.toFixed(2)} · ${fmtUpside(d)}` : "";
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const fmtDate = (iso) => { const [y, m, d] = iso.split("-").map(Number); return `${d} ${MONTHS[m - 1]} ${y}`; };
+const fmtMonth = (iso) => { const [y, m] = iso.split("-").map(Number); return `${MONTHS[m - 1]} ${y}`; };
+const stampList = (d) => [d.status === "draft" ? "Draft · not for distribution" : d.status === "sample" ? "Sample · worked example" : null, d.attached === false ? "To be attached" : null].filter(Boolean);
+const statusLabel = (d) => [d.status === "draft" ? "Draft" : d.status === "sample" ? "Sample" : null, d.attached === false ? "To be attached" : null].filter(Boolean).join(" · ") || "Final";
+const stampText = (d) => stampList(d).join(" · ");
+const statusSentence = (d) => [d.status === "draft" ? "This document is a draft stamped NOT FOR DISTRIBUTION; figures may change." : d.status === "sample" ? "The subject is a worked-example company used to demonstrate the format, not a live recommendation." : null, d.attached === false ? "The PDF has not been attached yet; the metadata is from the document itself." : null].filter(Boolean).join(" ");
+const metaLine = (d) => [d.ticker || d.kindLabel.toUpperCase(), d.ticker ? d.kindLabel.toUpperCase() : null, fmtDate(d.date).toUpperCase(), d.format === "html" ? "HTML" : d.pages + " PP"].filter(Boolean).join(" · ");
+const ratingHTML = (d) => d.rating ? `<div class="rating"><span class="chip ent" title="Rating for new money (the engine's entrant rating)">New money · ${esc(d.rating.entrant)}</span><span class="chip hol" title="Rating for existing holders (the engine's holder rating)">Holders · ${esc(d.rating.holder)}</span>${fmtPx(d) ? `<span class="px num" title="Spot price → probability-weighted fair value · upside">${esc(fmtPx(d))}</span>` : ""}</div>` : `<div class="rating"><span class="none">Rating: see document</span></div>`;
+const lineageHTML = (d) => `<div class="lineage mono">${d.engines.length ? d.engines.map((e) => `<a href="engines.html#${esc(e)}" style="color:inherit;text-decoration:none">${esc(ENGINE_LABEL[e] || e)}</a>`).join(" → ") : esc(d.lineage)}</div>`;
+const provesHTML = (d) => `<div class="proves mono">Proves: <a href="${esc(LINES[d.line].anchor)}">${esc(LINES[d.line].short)}</a></div>`;
+/* docCard(d, {open}) where open is 'pane' (same page, #doc=) or 'research' (link to research.html#doc=). */
+const docCard = (d, opts = {}) => {
+  const p = docPaths(d), live = d.attached !== false, href = (opts.open === "research" ? "research.html" : "") + "#doc=" + d.slug;
+  const stamp = stampList(d).map((t) => `<span class="stamp">${esc(t)}</span>`).join("");
+  const cover = live
+    ? `<span class="cover"><img src="${esc(p.cover)}" alt="${esc(d.company || d.title)}, page 1" loading="lazy" decoding="async" width="1000" height="1414" onerror="this.parentNode.className='cover empty';this.parentNode.innerHTML='<b>${esc(d.ticker || d.kindLabel)}</b><i>${esc(d.kindLabel)}</i>';this.closest('.doc').classList.add('slot')">${stamp}</span>`
+    : `<span class="cover empty"><b>${esc(d.ticker || d.kindLabel)}</b><i>${esc(d.kindLabel)}</i>${stamp}</span>`;
+  const openBtn = opts.open === "research"
+    ? `<a class="doc-open" href="${esc(href)}" ${live ? "" : 'aria-disabled="true"'}>${cover}</a>`
+    : `<button class="doc-open" type="button" data-doc="${esc(d.slug)}" ${live ? "" : 'aria-disabled="true"'}>${cover}</button>`;
+  return `<article class="doc${live ? "" : " slot"}" data-slug="${esc(d.slug)}">${openBtn}<div class="meta mono">${esc(metaLine(d))}</div><h3 class="ttl"><a href="${esc(href)}" data-doc="${esc(d.slug)}">${esc(d.title)}</a></h3>${ratingHTML(d)}${lineageHTML(d)}${provesHTML(d)}<p class="thesis">${esc(d.thesis)}</p></article>`;
+};
+const totals = (docs = DOCS) => ({
+  count: docs.length,
+  pages: docs.reduce((s, d) => s + (d.pages || 0), 0),
+  attached: docs.filter((d) => d.attached !== false).length,
+  first: docs.map((d) => d.date).sort()[0],
+  last: docs.map((d) => d.date).sort().slice(-1)[0],
+  names: new Set(docs.filter((d) => d.ticker && d.status !== "sample").map((d) => d.ticker)).size
+});
+/* DOCS v1 end */
+</script>
+<script>
+/* cpv.html page script. Wrapped so nothing here leaks into the shared DOCS or chrome scope; the model is exposed as window.CPV. */
+(function () {
+"use strict";
+/* CPV MODEL, ported verbatim from the field guide v4.10-lean */
+// ===== Toy CPV model (illustrative; every input is an assumption) =====
+const DEFAULTS = {
+  spot: 72, baseEps: 4.00, consEps: 4.50, hurdlePE: 18,
+  c1: { name: "New product line", fullEps: 0.80, inwin: 0.75, p: 0.70, a: 0.30, phase: [25, 50, 75, 100] },
+  c2: { name: "Pricing reset",    fullEps: 0.40, inwin: 0.50, p: 0.45, a: 0.10, phase: [0, 50, 100, 100] },
+  pe: { bear: 15.5, base: 17.5, bull: 19.5 },
+  g:  { bear: 0.04, base: 0.08, bull: 0.10 },
+  bearHaircut: 0.03,
+  rfr: 0.042, beta: 1.10, erp: 0.05,
+  corr: false, days: 75, noClock: false,
+  moatCell: 0.5, revCell: "aligned", kill: false,
+};
+
+const clone = o => JSON.parse(JSON.stringify(o));
+const r5 = x => Math.round(x * 20) / 20;
+
+function bucket(v, cuts) { for (const [test, label] of cuts) if (test(v)) return label; }
+
+function model(I) {
+  const cats = [I.c1, I.c2];
+  // DR: CAPM, T40 sanity band
+  const drRaw = I.rfr + I.beta * I.erp;
+  const dr = Math.min(0.20, Math.max(0.075, drRaw));
+  const drCapped = dr !== drRaw;
+
+  // Step 2/3: catalyst ledger
+  const ledger = cats.map(c => ({
+    name: c.name, full: c.fullEps, inwin: c.fullEps * c.inwin, exp: c.fullEps * c.inwin * c.p,
+    post: c.fullEps * (1 - c.inwin), p: c.p, a: c.a,
+  }));
+  const expTot = ledger.reduce((s, l) => s + l.exp, 0);
+  const topIdx = ledger[0].exp >= ledger[1].exp ? 0 : 1;
+  const topShare = expTot > 0 ? ledger[topIdx].exp / expTot : 0;
+
+  // Step 4: quarterly build (EPS, even-split base)
+  const quarters = [0, 1, 2, 3].map(q => {
+    const row = { base: I.baseEps / 4, c: [] };
+    cats.forEach(c => {
+      const ps = c.phase.reduce((s, x) => s + x, 0) || 1;
+      row.c.push(c.fullEps * c.inwin * c.p * (c.phase[q] / ps));
+    });
+    row.total = row.base + row.c[0] + row.c[1];
+    return row;
+  });
+  const buildEps = I.baseEps + expTot; // Z
+
+  // Step 6: twin reconcile
+  const gapCons = buildEps / I.consEps - 1;
+  const pricedEps = I.spot / I.hurdlePE; // X: what the price embeds at the hurdle multiple
+  const gapPriced = buildEps / pricedEps - 1;
+  const curPE = I.spot / I.consEps;
+
+  // Step 9a: scenarios
+  const sizing = { bear: 0, base: 0.5, bull: 1 }; // T52 partial = 50%
+  const arms = {};
+  for (const k of ["bear", "base", "bull"]) {
+    const eps = I.baseEps * (k === "bear" ? 1 - I.bearHaircut : 1) + cats.reduce((s, c) => s + sizing[k] * c.fullEps * c.inwin, 0);
+    const postEps = cats.reduce((s, c) => s + sizing[k] * c.fullEps * (1 - c.inwin), 0);
+    const routeA = eps * (1 + I.g[k]) * curPE;
+    const exitVal = eps * (1 + I.g[k]) * I.pe[k];
+    const postAdd = postEps * I.pe[k];
+    const und = exitVal + postAdd;
+    arms[k] = { eps, postEps, routeA, exitVal, postAdd, und, pv: und / (1 + dr), termShare: und > 0 ? (exitVal + postAdd) / und : 0 };
+  }
+
+  // Step 9b: weights
+  let bull = cats.reduce((s, c) => s * c.p, 1);
+  let bear = cats.reduce((s, c) => s * (1 - c.p), 1);
+  const piBull = bull, piBear = bear;
+  if (I.corr) { bull += 0.05; bear += 0.05; }
+  const floor = 1 - cats[topIdx].p;
+  const t48 = topShare >= 0.70;
+  const floorBinds = t48 && bear < floor;
+  if (floorBinds) bear = floor;
+  bull = r5(bull); bear = r5(bear);
+  if (bull + bear > 1) bull = r5(1 - bear);
+  const w = { bear, bull, base: Math.round((1 - bull - bear) * 100) / 100 };
+
+  const wPV = w.bear * arms.bear.pv + w.base * arms.base.pv + w.bull * arms.bull.pv;
+  const wU = w.bear * arms.bear.und + w.base * arms.base.und + w.bull * arms.bull.und;
+  const edge = wPV / I.spot - 1;
+  const undRet = wU / I.spot - 1;
+  const spread = arms.bull.pv - arms.bear.pv;
+  const spreadPct = spread / wPV;
+
+  // 9d breakevens (base arm)
+  const b = arms.base;
+  const beMult = I.spot * (1 + dr) / (b.eps * (1 + I.g.base) + b.postEps);
+  const beEps = (I.spot * (1 + dr) / I.pe.base - b.postEps) / (1 + I.g.base);
+  const beMultDist = beMult / I.pe.base - 1;
+  const beEpsDist = beEps / b.eps - 1;
+
+  // 10d asymmetry
+  const bp = arms.bull.pv, sp = arms.bear.pv, S = I.spot;
+  let ratio, degenerate = null;
+  if (S >= bp) { ratio = 0; degenerate = "spot at or above bull PV"; }
+  else if (S <= sp) { ratio = null; degenerate = "spot at or below bear PV: ratio undefined"; }
+  else ratio = (bp - S) / (S - sp);
+  const sStar = k => (bp + k * sp) / (1 + k);
+  const ratioW = (S < bp && S > sp) ? (w.bull * (bp - S)) / (w.bear * (S - sp) || 1e-9) : null;
+  const asymB = ratio === null ? "undefined" : ratio > 1.5 ? "favorable" : ratio >= 0.8 ? "neutral" : "exhausted";
+
+  // 10c reaction / discrimination
+  const contrib = cats.map(c => c.fullEps * curPE * c.p * (1 - c.a));
+  const contribPct = contrib.map(x => x / S);
+  const t26 = Math.max(...contribPct) < 0.003;
+
+  return { I, dr, drRaw, drCapped, ledger, expTot, topIdx, topShare, quarters, buildEps, pricedEps, gapCons, gapPriced, curPE,
+    arms, piBull, piBear, floor, t48, floorBinds, w, wPV, wU, edge, undRet, spread, spreadPct,
+    beMult, beEps, beMultDist, beEpsDist, ratio, ratioW, asymB, degenerate, sStar,
+    bandFav: sStar(1.5), bandExh: sStar(0.8), contrib, contribPct, t26 };
+}
+
+// 10e conviction
+function conviction(M, dial1Tag) {
+  const I = M.I, e = Math.abs(M.edge);
+  const top = [I.c1, I.c2][M.topIdx];
+  const cells = [
+    { k: "Edge |edge to weighted PV|", v: e > 0.12 ? 1 : e > 0.05 ? 0.5 : 0, why: (M.edge * 100).toFixed(1) + "% vs T28b (>12 / 5–12 / ≤5)", tag: "" },
+    { k: "Spread / PV", v: M.spreadPct < 0.35 ? 1 : M.spreadPct <= 0.50 ? 0.5 : 0, why: (M.spreadPct * 100).toFixed(0) + "% vs T31 (<35 / 35–50 / >50)", tag: "" },
+    { k: "Top-catalyst p", v: top.p >= 0.70 ? 1 : top.p >= 0.60 ? 0.5 : 0, why: (top.p * 100).toFixed(0) + "% vs T30 (≥70 / 60–69 / <60)", tag: "" },
+    { k: "Moat evidence", v: I.moatCell, why: I.moatCell === 1 ? "gate PASS" : I.moatCell === 0.5 ? "PARTIAL, score ≥2.5" : "FAIL or light read", tag: "" },
+    { k: "Revision vector", v: { aligned: 1, flat: 0.5, missing: 0.5, against: 0 }[I.revCell],
+      why: { aligned: "supplied, aligned with build", flat: "supplied, flat", missing: "not supplied", against: "supplied, against build" }[I.revCell],
+      tag: I.revCell === "missing" ? "MISSING INPUT · T35 credit" : I.revCell === "flat" ? "ANALYSIS" : "" },
+  ];
+  cells.forEach(c => { if (c.v < 1 && !c.tag) c.tag = "ANALYSIS"; });
+  const score = cells.reduce((s, c) => s + c.v, 0);
+  const raw = score >= 3.5 ? "full" : score >= 2.5 ? "half" : "quarter";
+  const t37 = dial1Tag === "A";
+  const missing = cells.filter(c => c.tag.startsWith("MISSING")).length;
+  const packLimited = missing >= 3;
+  let band = raw;
+  if ((t37 || packLimited) && band === "full") band = "half";
+  return { cells, score, raw, band, t37, packLimited };
+}
+
+// 10h setup classifier
+function axes(M, C) {
+  const I = M.I, g = M.gapPriced;
+  const edge = g < -0.08 ? "short" : Math.abs(g) <= 0.08 ? "none" : g > 0.15 ? "loud" : "edge";
+  const time = I.noClock ? "watch" : I.days < 60 ? "act" : I.days <= 365 ? "accumulate" : "watch";
+  const top = [I.c1, I.c2][M.topIdx];
+  const antic = top.a < 0.10 ? "unpriced" : top.a <= 0.90 ? "partial" : "priced";
+  return { edge, asym: M.asymB, time, antic, conv: C.band };
+}
+function classify(A) {
+  const pos = A.edge === "edge" || A.edge === "loud";
+  if (A.conv === "quarter") return 7;
+  if (A.edge === "short") return 6;
+  if (A.asym === "exhausted" || A.asym === "undefined") return 4;
+  if (pos && A.time === "watch") return 5;
+  if (pos && A.asym === "favorable" && A.antic !== "priced" && A.time === "act") return 2;
+  if (pos && A.asym === "favorable" && A.antic !== "priced" && A.time === "accumulate") return 1;
+  if (pos && A.asym === "neutral" && A.antic === "priced") return 3;
+  return 0;
+}
+function rating(M, C, setup, kill) {
+  if (kill) return { ent: "No Buy", hold: "Strong Trim", entPin: "kill switch fired", holdPin: "kill switch fired" };
+  let ent = "No Buy", entPin = "setup " + setup;
+  if (setup === 1 || setup === 2) { ent = C.band === "full" && M.asymB === "favorable" ? "Strong Buy" : "Weak Buy"; entPin = "setup " + setup + " at " + C.band + " band"; }
+  else if (setup === 3) ent = "Weak Buy";
+  const u = M.undRet;
+  let hold, holdPin = "undiscounted return " + (u * 100).toFixed(1) + "%";
+  if (u < -0.15) hold = "Strong Trim";
+  else if (u < 0) hold = "Trim";
+  else if ((setup === 1 || setup === 2) && C.band === "full" && M.asymB === "favorable") hold = "Strong Hold";
+  else hold = "Hold";
+  return { ent, hold, entPin, holdPin };
+}
+
+// 9c tornado
+const DIALS = [
+  { k: "Base NTM EPS", tag: "G", f: (I, s) => { I.baseEps *= s; } },
+  { k: "Exit multiple (all arms)", tag: "M", f: (I, s) => { for (const a in I.pe) I.pe[a] *= s; } },
+  { k: "Discount rate", tag: "A", f: (I, s) => { I.beta = ((I.rfr + I.beta * I.erp) * s - I.rfr) / I.erp; } },
+  { k: "g_roll (all arms)", tag: "M", f: (I, s) => { for (const a in I.g) I.g[a] *= s; } },
+  { k: "C1 full size", tag: "M", f: (I, s) => { I.c1.fullEps *= s; } },
+  { k: "C2 full size", tag: "M", f: (I, s) => { I.c2.fullEps *= s; } },
+  { k: "p · C1", tag: "M", f: (I, s) => { I.c1.p = Math.min(1, I.c1.p * s); } },
+  { k: "p · C2", tag: "M", f: (I, s) => { I.c2.p = Math.min(1, I.c2.p * s); } },
+  { k: "C1 in-window %", tag: "M", f: (I, s) => { I.c1.inwin = Math.min(1, I.c1.inwin * s); } },
+];
+function tornado(I) {
+  const base = model(I).wPV;
+  const rows = DIALS.map(d => {
+    const lo = clone(I), hi = clone(I);
+    d.f(lo, 0.9); d.f(hi, 1.1);
+    const vLo = model(lo).wPV, vHi = model(hi).wPV;
+    return { k: d.k, tag: d.tag, lo: vLo - base, hi: vHi - base, swing: Math.abs(vHi - vLo) };
+  });
+  const kept = rows.filter(r => r.swing >= 0.05).sort((a, b) => b.swing - a.swing);
+  const dropped = rows.filter(r => r.swing < 0.05);
+  const topP = rows.find(r => r.k === "p · C1");
+  return { base, kept, dropped, ratio: topP && topP.swing > 0 ? kept[0].swing / topP.swing : Infinity };
+}
+
+
+// ===== Static content =====
+const STEPS = [
+ {n:1,t:"Ingest",ph:"b",a:"#top",d:"States back the revenue model, the top-line driver identity (volume × price, subs × ARPU) and the operating-leverage profile. Flags stale, inconsistent or missing inputs and names the downstream cells each gap costs. Then one consolidated ask, and the provenance ledger opens.",T:"—",out:"S1 business_read · SP opened"},
+ {n:2,t:"Catalysts",ph:"b",a:"#s2",d:"Two or three catalysts, each with mechanism, driver math anchored to a disclosed cell, 4Q phasing, incremental margin, growth cost, in-window %, date and anticipation. Base first, catalysts layered above the disclosed trajectory. Double-count and materiality checks run here.",T:"T5 T6 T7 T8 T43 T51",out:"S2 catalyst_ledger"},
+ {n:3,t:"Probability",ph:"b",a:"#s2",d:"p per catalyst from its key risk: 70–90% underway, 40–65% announced, 15–35% speculative. p enters exactly two places: the Step-4 build and the Step-9 weights. Catalyst pairs sharing a driver are flagged for a tail shift.",T:"T1 T2 T3 T4",out:"S3 probability_table"},
+ {n:4,t:"Build 4Q",ph:"b",a:"#s4",d:"Revenue = base run-rate + Σ(in-window × phased × p). Margins fall out of revenue in strict order down to EPS on rolled shares and FCF after growth capex and working capital. Q1 anchor, continuity and EPS-vs-FCF gates.",T:"T9",out:"S4 ntm_build"},
+ {n:5,t:"Roll",ph:"b",a:"#s4",d:"Shares and net debt rolled quarter by quarter with SBC, buybacks, dividends and FCF. Buyback reality checks against authorization headroom and payout policy. One convert treatment end to end.",T:"T10",out:"S5 roll_forward"},
+ {n:6,t:"Twin reconcile",ph:"p",a:"#s6",d:"Build vs consensus after horizon and basis matching; build vs the growth the price embeds via per-growth-checker; revision vector. Produces the variant line PRICED X / CONSENSUS Y / BUILD Z with its driver D and observing event.",T:"T11 T12 T39",out:"S6 twin_reconcile"},
+ {n:7,t:"Anchor multiple",ph:"p",a:"#s7",d:"EV-to-equity bridge first, financial-form guard, method tree, capex-blind guard, cross-check band over horizon-matched routes, divergence priority, peer line.",T:"T13 T14 T15 T16 T45 T50",out:"S7 valuation_anchors"},
+ {n:8,t:"Exit stance",ph:"p",a:"#s7",d:"Moat score and gate from moat-analyzer (or pack-only), weakest driver named, then a bracket on the exit multiple capped by the sector regime.",T:"T17 T18 T46",out:"S8 exit_stance"},
+ {n:9,t:"Scenarios",ph:"v",a:"#s9",d:"Bear, base and bull valued with the roll to window close, discounted at a shown CAPM rate, weighted from the catalyst probabilities. Then tornado, valuation bridge and breakeven solve.",T:"T19–T25 T38 T40–T42 T44 T47 T48 T52",out:"S9 S9d S10 S11 S12"},
+ {n:10,t:"Overlay",ph:"d",a:"#s10d",d:"Calendar, reaction matrix, asymmetry map, conviction and sizing, kill switches, thesis-change register, setup classifier, action menu, event structure, theta and the dual rating. Deterministic sections read cells and select.",T:"T26–T35 T37 T49",out:"S13 execution_overlay"},
+ {n:11,t:"Bank",ph:"e",a:"#s11",d:"Emits S1–S13 with stable keys, the SM completion manifest with the figures behind every gate, and the SP provenance ledger.",T:"T36",out:"S1–S13 · SM · SP"},
+ {n:12,t:"Stop",ph:"e",a:"#s11",d:"The bank is written once. The engine never calls a downstream layer and never reads its rules. The field keys are the contract.",T:"—",out:"—"},
+];
+const PH = {b:"var(--base)",p:"var(--c1)",v:"var(--bull)",d:"var(--c2)",e:"var(--accent)"};
+const PHN = {b:"Build",p:"Price",v:"Value",d:"Decide",e:"Emit"};
+
+const REG = [
+["T1","p · underway/signed","70–90%","3","general"],["T2","p · announced/unproven","40–65%","3","general"],["T3","p · speculative/gated","15–35%","3","general"],
+["T4","Correlation tail shift","5–15pp","3, 9b","general"],["T5","Terminal-load flag","in-window <50%","2","general"],["T6","Materiality gate","Σ catalyst rev <2% of base NTM rev","2","general"],
+["T7","Incremental-margin ceiling","≤ gross margin","2","structural"],["T8","Delivery-cost margin probe","incr margin >~60% on compute-charged products","2","n=1"],
+["T9","Q1 anchor tolerance","rev >5% / EPS >8% vs build","4, 10f","general"],["T10","Buyback price-move recheck","spot moved >20% vs trailing avg repurchase","5","n=1"],
+["T11","Consensus ladder","≤5 in line / 5–8 minor / >8 name driver / >15 loud","6a","general"],["T12","Guide-midpoint proximity","consensus within ±1% of guide mid","6a","general"],
+["T13","Capex intensity split","<6% low / ≥6% high","7","general"],["T14","Distortion screens","ND/EBITDA >2.5x, D&A/EBITDA >25%, one-offs/|NI| >20%","7","general"],
+["T15","Pre-profit margin switch","3-period GM CoV >15%","7","general"],["T16","Cross-check band","15% × (1 + ND/EBITDA ÷ 4), 15–30%","7","general"],
+["T17","Moat stance","≥3.1 / 2.1–3.0 / ≤2.0","8","general"],["T18","Redeployment probe","buyback:capex > ~10:1","8","n=1"],
+["T19","DR linear fallback","r = 7.5% + 0.15 × g%","9","general"],["T20","DR route divergence","primary vs fallback >0.5pp","9","general"],
+["T21","DR unmappable default","10%","9","general"],["T22","Fade branch","terminal 4%, 10-yr glide","9a","general"],
+["T23","Tornado dial shock","±10% each","9c","general"],["T24","Tornado dial floor","drop swings <$0.05","9c","general"],
+["T25","Multiple-thesis probe","dial-1 : top-p dial > ~10:1","9c","n=1"],["T26","Calendar discrimination floor","no catalyst clears 0.3% of spot","10c","n=1"],
+["T27","Asymmetry buckets (unweighted)","favorable >1.5 / neutral 0.8–1.5 / exhausted <0.8","10d, 10h","general"],
+["T28","Edge buckets (setup + rating)","none ≤8% / edge 8–15% / loud >15%","10h, 10k","general"],
+["T28b","Conviction edge cell (10e only)","full >12% / half 5–12% / zero ≤5%","10e","general"],
+["T29","Time posture","act <60d / accumulate 60d–NTM / watch no-clock","10h, 10i-opt","general"],
+["T30","Conviction · top-catalyst p","full ≥70% / half 60–69% / zero <60%","10e","general"],["T31","Conviction · spread/PV","full <35% / half 35–50% / zero >50%","10e","general"],
+["T32","Conviction bands (one scale)","≥3.5 full · 2.5–3.0 half · ≤2.0 quarter","10e, 10h","general"],["T33","Theta slip ramp","0 to mid-window, then linear to 25% at close","10j","general"],
+["T34","Short-edge Strong Trim gate","loud gap >15%","10k","general"],["T35","Missing-input cell credit","0.5, max 2 cells; 3rd → pack-limited","10e","general"],
+["T36","Prose cap per bank section","60 words outside tables","11","general"],["T37","A-tag top-dial cap","dial 1 A-tagged → band capped at half","10e","structural"],
+["T38","Breakeven noise gate","|breakeven distance| < T23 shock","9d","structural"],
+["T39","Growth-basis guard","g = multi-year forward CAGR; one-year EPS deltas inadmissible","6b, 9, 9a","general"],
+["T40","DR sanity band","cost of equity in [7.5%, 20%]","9","general"],["T41","Route-shock dial","two route values differ >25% → shock = route delta","9c","n=1"],
+["T42","Linked-dial rule","identity-linked dials never shocked independently","9c","structural"],
+["T43","Solved-parameter midpoint","solved constant sits at corridor midpoint","2","general"],["T44","Tail-symmetry flag","un-modelled tail > 2× bear drawdown","9a/9b, 10d","n=1"],
+["T45","Tax-basis normalization","subject tax <10% vs peers >20% → normalized multiple","7, 8, 9a","general"],
+["T46","Fade-bind","bear exit cites fade convergence; bracket-low >30% above → re-justify","8, 9a","general"],
+["T47","Anchor-identity guard","exit = NTM × current multiple → INVALID","9a","structural"],
+["T48","Dominant-catalyst bear anchor","one catalyst ≥70% of expected value → bear weight ≥ 1 − p_top","9b","PROPOSED"],
+["T49","Route-shock conviction cap","dial 1 route-shock with delta > |edge| → cap half","10e","PROPOSED"],
+["T50","Borderline route","input within 10% of a bound → compute both routes","7","PROPOSED"],
+["T51","Anticipation numeric bucket","unpriced <10% / partial 10–90% / fully >90%","2, 10c, 10h, 10j","PROPOSED"],
+["T52","Base-arm partial sizing","50% of full size unless a disclosed anchor","9a","PROPOSED"],
+];
+const SM = [["Double-count","2"],["Materiality dual-read","2"],["Terminal-load","2"],["Anchor rule","2"],["Q1 anchor","4"],["Continuity","4"],["EPS vs FCF","4"],["Buyback reality","5"],["Horizon match","6a"],["Basis match","6a"],["EV↔equity bridge","7"],["Financial-form guard","7"],["Cross-check band","7"],["Divergences","7"],["Moat source","8"],["DR arithmetic","9"],["Correlation declaration","9b"],["Bear anchor T48","9b"],["Un-modelled tail","9a"],["Tornado pre-screen","9c"],["Breakeven noise T38","9d"],["Discrimination","10c"],["Asymmetry construction","10d"],["Conviction caps","10e"],["10f completeness","10f"],["Inoperable switches","10f"],["Menu gate","10i"],["Growth basis T39","6b, 9"],["DR category & sanity","9"],["Route-shock dials","9c"],["Linked dials","9c"],["Convert consistency","5, 7"],["Tax basis T45","7"],["Fade bind T46","9a"],["Tail symmetry T44","9a"],["Anchor identity T47","9a"],["Recomputation","11"]];
+const BANK = [["S1","business_read","Revenue model, driver identity, leverage profile; leads with the true driver if materiality fired"],["S2","catalyst_ledger","Step-2 table, double-count check with figures, materiality dual-read"],["S3","probability_table","p, a, reasons, expected in-window value, correlation flag"],["S4","ntm_build","Q1–Q4 + NTM table, key assumptions, Q1 anchor, EPS vs FCF, owner earnings"],["S5","roll_forward","Shares and net debt with the four movers, buyback checks"],["S6","twin_reconcile","Consensus gap and legs, market-implied on both bases, revision vector, variant line"],["S7","valuation_anchors","Primary method and tree path, Route-A value for all four methods, dispersion"],["S8","exit_stance","Moat source, score, gate, weakest driver, regime, both bracket ends"],["S9","scenarios","Per arm: realisation, routes, exit multiple, post-window add, DR, PV, weight"],["S9d","breakeven","Exit multiple, NTM EPS and growth breakevens with T38 result"],["S10","weighted_pv","Weighted PV, weighted undiscounted, undiscounted return, spread"],["S11","tornado","Ranked dials, pre-screen drops, dial-1 : top-p ratio, dial-1 tag"],["S12","valuation_bridge","Earnings growth, re-rate, post-window add; NI growth vs share shrink"],["S13","execution_overlay","13a calendar to kills · 13b setup, menu, theta · 13c dual rating and pins"]];
+const RULES = [
+ ["p lives in two places only","p × in-window × phasing in the build; p in the scenario weights","Scenario sizings are full, partial or zero. Multiplying a sizing by p charges the same probability twice."],
+ ["Base / catalyst boundary","implied total = base + increment vs disclosed run-rate","Total below disclosed: base is starved. Catalyst alone at or above disclosed: base growth was smuggled into the catalyst. Run it at pool level too."],
+ ["Axis independence","asymmetry bucket uses the unweighted ratio","Weighting it would make asymmetry a second copy of edge and the setup cascade would count the same thing twice."],
+ ["Two bases for two ratings","undiscounted = (1 + edge)(1 + DR) − 1","Entrant pins on the discounted edge, holder on the undiscounted return. A pin on the wrong basis is a contamination defect."],
+ ["Hurdle table is not a cost of equity","6b inverts with it; Step 9 discounts with CAPM","Using the growth table to discount a PV, or any round number for conservatism, is off-method."],
+ ["Horizon admissibility","forward multiple × NTM metric only","A trailing multiple × NTM metric is spot × growth by construction. It is excluded from the band, never counted as a vote."],
+ ["Provable-zero pre-screen","drop a dial only if it multiplies an exact zero","A dial expected to be small is still computed; T24 drops it after the arithmetic."],
+ ["Hedge the systematic, never the variant","notional = position × β(name, S)","If the shared factor is what explains Z − X it is D, and no hedge isolates it. Beta never comes from the Step-3 probability shift."],
+ ["Menus are conditional","setups 7 and 0 suppress the whole menu","One suppression line, no entry, hedge or exit level, and no proxy or beta named."],
+];
+const OPEN = [
+ "<b>Five constants are still PROPOSED (T48–T52).</b> They are live in every run. In the toy defaults T48 alone lifts the bear weight from Π(1 − p) = 16.5% to 30%, which moves the weighted PV by several dollars. Each deserves a deliberate promote or strike.",
+ "<b>Seven constants are calibrated n=1</b> (T8, T10, T18, T25, T26, T41, T44): fitted on a single observed run. Treat any rating pinned by one of them as provisional.",
+ "<b>cpv-core is a stale mirror.</b> The changelog says it matches the prior version until patched, so the T52 base sizing, the setup-1 fix and the T51 anticipation bucket are absent from tier-2 numbers.",
+ "<b>REFERENCE is inlined.</b> The eight fired-only routes now sit in context on every run, which spends part of the token saving the lean pass bought. Restoring the two-file split needs a writable skills folder.",
+ "<b>Setup 4 says \"edge fading\" without a numeric rule.</b> Asymmetry inverted is defined by T27; edge fading is not. It is the same kind of discretion point the v4.10 changelog closed for D1–D3. The toy uses only the asymmetry test.",
+ "<b>Theta's \"clears comfortably\" has no cut.</b> The verdicts clears / eroding / migrates to 4 need a number between the first two. The toy uses half the remaining edge, which is my choice.",
+ "<b>\"Quarter band downgrades one notch\" (10k) never changes an outcome.</b> A quarter band is the low Conviction axis, which lands setup 7 and No Buy before the entrant map is read; Strong Hold already needs a full band; the confirmatory path skips 10e. It reads as dead text under the authoring standard.",
+ "<b>The engine invariant and the reduced-form Step 10 sit uneasily.</b> \"Every module runs\" vs \"run only 10b + 10f\" when there is no variant view. The heading-plus-reason rule at Step 11 reconciles them, but the invariant line does not say so.",
+];
+/* END CPV MODEL */
+
+/* ===== Page code: controls and renderers. Only this part is new; the model above is the engine's. ===== */
+if (typeof window !== "undefined") window.CPV = { DEFAULTS, model, conviction, axes, classify, rating, tornado };
+
+// colour roles, all site tokens (light and dark follow the page theme)
+const K = { c1: "var(--accent)", c2: "var(--flag)", base: "var(--bench)", bear: "var(--flag)", bull: "var(--accent)", axis: "var(--line-strong)",
+  line: "var(--line)", ink: "var(--ink)", ink2: "var(--ink-2)", muted: "var(--muted)", accent: "var(--accent)", flag: "var(--flag)", tint: "var(--tint)" };
+const SETN = { 0: "No positioning", 1: "Accumulate before the catalyst", 2: "Event imminent", 3: "Already priced in, confirm", 4: "Upside to downside exhausted", 5: "Value-trap watch", 6: "Negative expected return, avoid", 7: "Low-conviction pass" };
+// display names for engine-side labels (the model block above is verbatim; these maps only change what the visitor reads)
+const DIALN = { "Exit multiple (all arms)": "Exit multiple (all scenarios)", "g_roll (all arms)": "Year-two growth (all scenarios)", "C1 full size": "Catalyst 1 full size", "C2 full size": "Catalyst 2 full size", "p · C1": "Probability, catalyst 1", "p · C2": "Probability, catalyst 2", "C1 in-window %": "Catalyst 1 share inside twelve months" };
+const dn = k => DIALN[k] || k;
+const CELLN = { "Edge |edge to weighted PV|": "Upside to fair value", "Spread / PV": "Bear–bull spread over fair value", "Top-catalyst p": "Top-catalyst probability", "Revision vector": "Estimate revisions" };
+const STEPN = { "Twin reconcile": ["Reconcile", "twin reconcile"], "Anchor multiple": ["Valuation anchor", "anchor multiple"], "Exit stance": ["Exit multiple", "exit stance"], "Bank": ["Model output", "bank"] };
+const RULEN = { "p lives in two places only": ["Probability is charged in two places only", "p"], "Base / catalyst boundary": ["Where the base ends and the catalyst begins", ""], "Axis independence": ["Upside to downside is read unweighted", "10d"], "Two bases for two ratings": ["Two ratings on two bases", "10k"], "Hurdle table is not a cost of equity": ["The hurdle table is not a cost of equity", "6b · 9"], "Horizon admissibility": ["Forward multiples only", "band"], "Provable-zero pre-screen": ["Drop an input only on a provable zero", "T24"], "Hedge the systematic, never the variant": ["Hedge the market factor, never the view", "β"], "Menus are conditional": ["The action menu is conditional", "10i"] };
+const BUCKN = { short: "negative", edge: "positive", undefined: "ratio undef." };
+const bl = s => BUCKN[s] || s;
+const pin = s => s.replace(/^setup /, "positioning ").replace("kill switch fired", "thesis-break condition met").replace("undiscounted return", "return before discounting");
+const cd = s => `<span class="code">${esc(s)}</span>`;
+
+// helpers
+const hasDoc = typeof document !== "undefined" && document && typeof document.getElementById === "function";
+const byId = id => hasDoc ? document.getElementById(id) : null;
+const put = (id, html) => { const el = byId(id); if (el) el.innerHTML = html; };
+const txt = (id, s) => { const el = byId(id); if (el) el.textContent = s; };
+const d2 = x => (x < 0 ? "−$" : "$") + Math.abs(x).toFixed(2);
+const pc = (x, dp = 1) => (x < 0 ? "−" : x > 0 ? "+" : "") + Math.abs(x * 100).toFixed(dp) + "%";
+const pp = (x, dp = 0) => (x * 100).toFixed(dp) + "%";
+const mx = x => x.toFixed(1) + "x";
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+const tip = s => ` data-tip="${esc(s)}"`;
+const sv = (w, h, inner, label) => `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label)}">${inner}</svg>`;
+const T = (x, y, s, o = {}) => `<text x="${x}" y="${y}" font-size="${o.fs || 11.5}" text-anchor="${o.a || "start"}" ${o.w ? `font-weight="${o.w}"` : ""}${o.m ? ' class="m"' : ""} style="fill:${o.c || K.ink2}${o.halo ? ";stroke:var(--paper);stroke-width:3px;stroke-linejoin:round;paint-order:stroke" : ""}">${esc(s)}</text>`;
+const L = (x1, y1, x2, y2, c = K.line, w = 1) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="stroke:${c};stroke-width:${w}"/>`;
+const R = (x, y, w, h, c, o = {}) => `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" rx="${o.rx ?? 0}" style="fill:${c};${o.op != null ? `fill-opacity:${o.op};` : ""}${o.st ? `stroke:${o.st};stroke-width:${o.sw || 1};` : ""}"${o.tip ? tip(o.tip) : ""}/>`;
+const hbar = (x0, y, len, h, c, o = {}) => { const l = Math.max(0, len), r = Math.min(3, l / 2, h / 2);
+  return `<path d="M${x0},${y}h${l - r}a${r},${r} 0 0 1 ${r},${r}v${h - 2 * r}a${r},${r} 0 0 1 ${-r},${r}h${-(l - r)}z" style="fill:${c};${o.op != null ? `fill-opacity:${o.op}` : ""}"${o.tip ? tip(o.tip) : ""}/>`; };
+const vbar = (x, yBase, hgt, w, c, o = {}) => { const h = Math.max(0, hgt), r = Math.min(3, h / 2, w / 2);
+  return `<path d="M${x},${yBase}v${-(h - r)}a${r},${r} 0 0 1 ${r},${-r}h${w - 2 * r}a${r},${r} 0 0 1 ${r},${r}v${h - r}z" style="fill:${c};${o.op != null ? `fill-opacity:${o.op}` : ""}"${o.tip ? tip(o.tip) : ""}/>`; };
+const dot = (x, y, c, t, r = 5) => `<circle cx="${x}" cy="${y}" r="${r}" style="fill:${c};stroke:var(--paper);stroke-width:2"${t ? tip(t) : ""}/>`;
+const tri = (x, y, c, t, up = true) => `<path d="M${x},${y} l-5,${up ? -9 : 9} h10 z" style="fill:${c}"${t ? tip(t) : ""}/>`;
+const lin = (d0, d1, r0, r1) => v => r0 + (v - d0) / (d1 - d0) * (r1 - r0);
+const leg = items => items.map(([c, s, op]) => `<span><i style="background:${c};${op ? `opacity:${op}` : ""}"></i>${esc(s)}</span>`).join("");
+const chip = (cls, s) => `<span class="chip ${cls}">${esc(s)}</span>`;
+
+// ===== Controls (ids, ranges, steps and labels as in the field guide) =====
+let S = clone(DEFAULTS);
+const CTL = [
+ {id:"spot",l:"Spot price",min:40,max:120,step:1,get:()=>S.spot,set:v=>S.spot=v,f:v=>"$"+v.toFixed(0)},
+ {id:"p1",l:"Probability · catalyst 1, new product line",min:.15,max:.95,step:.05,get:()=>S.c1.p,set:v=>S.c1.p=v,f:v=>pp(v)},
+ {id:"p2",l:"Probability · catalyst 2, pricing reset",min:.15,max:.95,step:.05,get:()=>S.c2.p,set:v=>S.c2.p=v,f:v=>pp(v)},
+ {id:"a1",l:"Already in the price · catalyst 1",min:0,max:1,step:.05,get:()=>S.c1.a,set:v=>S.c1.a=v,f:v=>pp(v)},
+ {id:"peb",l:"Exit P/E · bear",min:10,max:26,step:.5,get:()=>S.pe.bear,set:v=>S.pe.bear=v,f:mx},
+ {id:"pem",l:"Exit P/E · base",min:10,max:26,step:.5,get:()=>S.pe.base,set:v=>S.pe.base=v,f:mx},
+ {id:"peu",l:"Exit P/E · bull",min:10,max:26,step:.5,get:()=>S.pe.bull,set:v=>S.pe.bull=v,f:mx},
+ {id:"beta",l:"Beta, sets the discount rate",min:.5,max:2.5,step:.05,get:()=>S.beta,set:v=>S.beta=v,f:v=>v.toFixed(2)+" → "+pp(Math.min(.2,Math.max(.075,S.rfr+v*S.erp)),1)},
+ {id:"days",l:"Days to first dated event",min:5,max:400,step:5,get:()=>S.days,set:v=>S.days=v,f:v=>v+"d"},
+];
+const SEL = [
+ {id:"moat",l:"Moat evidence, conviction criterion 4",opts:[[1,"Test passed · full"],[.5,"Partial, score ≥2.5 · half"],[0,"Failed or light read · zero"]],get:()=>S.moatCell,set:v=>S.moatCell=+v},
+ {id:"rev",l:"Estimate revisions, conviction criterion 5",opts:[["aligned","Supplied, aligned"],["flat","Supplied, flat"],["missing","Not supplied"],["against","Supplied, against"]],get:()=>S.revCell,set:v=>S.revCell=v},
+];
+const CHK = [
+ {id:"corr",l:"Catalysts share a driver, +5pp to each tail",get:()=>S.corr,set:v=>S.corr=v},
+ {id:"noclock",l:"No dated event (undated catalyst)",get:()=>S.noClock,set:v=>S.noClock=v},
+ {id:"kill",l:"A thesis-break condition has been met",get:()=>S.kill,set:v=>S.kill=v},
+];
+function buildControls() {
+  put("controls",
+    CTL.map(c => `<div class="ctl"><label for="c-${c.id}"><span>${esc(c.l)}</span><output id="o-${c.id}" for="c-${c.id}"></output></label><input type="range" id="c-${c.id}" min="${c.min}" max="${c.max}" step="${c.step}"></div>`).join("") +
+    SEL.map(c => `<div class="ctl"><label for="c-${c.id}"><span>${esc(c.l)}</span></label><select id="c-${c.id}">${c.opts.map(o => `<option value="${o[0]}">${o[1]}</option>`).join("")}</select></div>`).join("") +
+    CHK.map(c => `<label class="ctl check" for="c-${c.id}"><input type="checkbox" id="c-${c.id}"><span>${esc(c.l)}</span></label>`).join(""));
+  CTL.forEach(c => { const el = byId("c-" + c.id); if (el) el.addEventListener("input", e => { c.set(+e.target.value); render(); }); });
+  SEL.forEach(c => { const el = byId("c-" + c.id); if (el) el.addEventListener("change", e => { c.set(e.target.value); render(); }); });
+  CHK.forEach(c => { const el = byId("c-" + c.id); if (el) el.addEventListener("change", e => { c.set(e.target.checked); render(); }); });
+  const rs = byId("reset"); if (rs) rs.addEventListener("click", () => { S = clone(DEFAULTS); render(); });
+}
+function syncControls() {
+  CTL.forEach(c => { const el = byId("c-" + c.id), o = byId("o-" + c.id); if (el) el.value = c.get(); if (o) o.textContent = c.f(c.get()); });
+  SEL.forEach(c => { const el = byId("c-" + c.id); if (el) el.value = String(c.get()); });
+  CHK.forEach(c => { const el = byId("c-" + c.id); if (el) el.checked = c.get(); });
+}
+
+// ===== Static renders (data tables that do not move with the controls) =====
+function renderStatic() {
+  txt("tileReg", String(REG.length)); const nSec = BANK.filter(b => /^S\d+$/.test(b[0])).length; txt("tileBank", String(nSec)); txt("statReg", String(REG.length)); txt("statBank", String(nSec)); txt("statSteps", String(STEPS.length)); txt("statSM", String(SM.length)); txt("statRules", String(RULES.length));
+  txt("statSetups", String(Object.keys(SETN).length - 1)); txt("statCells", String(conviction(model(DEFAULTS), "").cells.length));
+  if (hasDoc && document.querySelectorAll) { const kr = document.querySelectorAll("#killrows tr").length; if (kr) { txt("statKill", String(kr)); txt("tileKill", String(kr)); } }
+  put("spine", STEPS.map(s => `<div class="step"><span class="mono">Step ${String(s.n).padStart(2, "0")} · ${PHN[s.ph]}</span><strong>${esc(STEPN[s.t] ? STEPN[s.t][0] : s.t)}${STEPN[s.t] ? cd(STEPN[s.t][1]) : ""}</strong><p>${esc(s.d)}</p><p class="thr"><span>Constants</span> ${esc(s.T)}<br><span>Writes</span> ${esc(s.out)}</p></div>`).join(""));
+  put("moatrows", [["≥3.1, widening or stable, test PASS", "Hold → modest re-rate", "+2–3 EBITDA turns / +20% P/E"], ["2.1–3.0 or test PARTIAL", "Hold → mild compression", "−1 to +1 turn"], ["≤2.0, FAIL or narrowing", "Compress regardless of growth", "−2–3 turns / −20% P/E"]]
+    .map((r, i) => `<tr data-moat="${i}"><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join(""));
+  put("bank", BANK.map(b => `<tr><td class="m">${b[0]}</td><td class="m">${b[1]}</td><td>${esc(b[2])}</td></tr>`).join(""));
+  txt("sm-count", SM.length + " tests. Each prints its status and the figures that produced it; a tick with no arithmetic beside it is an incomplete checklist.");
+  put("sm", SM.map(g => `<span class="chip"${tip("Step " + g[1])}>${esc(g[0])}<i>${esc(g[1])}</i></span>`).join(""));
+  put("rulecards", RULES.map(r => `<div class="band"><strong>${esc(RULEN[r[0]] ? RULEN[r[0]][0] : r[0])}${RULEN[r[0]] && RULEN[r[0]][1] ? cd(RULEN[r[0]][1]) : ""}</strong><span class="act formula">${esc(r[1])}</span><p>${esc(r[2])}</p></div>`).join(""));
+  put("openitems", OPEN.map(s => `<li>${s}</li>`).join(""));
+  const tree = [["Not profitable", "EV/Sales, or EV/gross profit if the margin switch fires", "T15"], ["Leverage-distorted", "EV/EBITDA", "T14"], ["High capex, ≥6%", "EV/FCF; EV/EBITDA barred as primary", "T13"], ["D&A-distorted", "EV/EBITDA", ""], ["Default", "P/E", ""]];
+  put("tree", tree.map((r, i) => `<div class="${i === 4 ? "on" : ""}"><span class="mono">${i + 1}</span><span>${esc(r[0])}${r[2] ? cd(r[2]) : ""}</span><span class="formula">→ ${esc(r[1])}</span></div>`).join(""));
+  // calibration bar
+  const cal = k => REG.filter(r => r[4] === k).length;
+  const cats = [["general", K.base, 1], ["structural", K.accent, 1], ["n=1", K.flag, .55], ["PROPOSED", K.flag, 1]];
+  let x = 0; const W = 640, tot = REG.length; let inner = "";
+  cats.forEach(([k, c, op]) => { const n = cal(k), w = n / tot * W; inner += R(x, 4, w - 2, 26, c, { op, tip: `${k}: ${n} of ${tot}` }); if (w > 70) inner += T(x + 8, 22, `${k} · ${n}`, { c: K.ink, halo: true, w: 600, fs: 12 }); else inner += T(x + w / 2 - 1, 46, `${k} · ${n}`, { a: "middle", fs: 11 }); x += w; });
+  put("ch-cal", sv(W, 54, inner, "Calibration mix of threshold constants"));
+  // register filters
+  let filt = "all";
+  const rf = byId("regfilters");
+  if (rf) rf.insertAdjacentHTML("afterbegin", ["all", ...cats.map(c => c[0])].map(k => `<button type="button" data-f="${k}" aria-pressed="${k === "all"}">${k === "all" ? "All" : k}</button>`).join(""));
+  const drawReg = () => {
+    const q = (byId("regq") && byId("regq").value || "").toLowerCase();
+    const rows = REG.filter(r => (filt === "all" || r[4] === filt) && r.join(" ").toLowerCase().includes(q));
+    put("regrows", rows.map(r => `<tr><td class="m">${r[0]}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td class="m">${r[3]}</td><td>${chip(r[4] === "PROPOSED" ? "warn" : r[4] === "n=1" ? "" : "acc", r[4])}</td></tr>`).join(""));
+    txt("regcount", rows.length + " of " + REG.length);
+  };
+  if (rf) rf.querySelectorAll("button").forEach(b => b.addEventListener("click", () => { filt = b.dataset.f; rf.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); drawReg(); }));
+  if (byId("regq")) byId("regq").addEventListener("input", drawReg);
+  drawReg();
+}
+
+// ===== Dynamic renders: everything here recomputes from the controls =====
+function render() {
+  syncControls();
+  const M = model(S), TD = tornado(S), C = conviction(M, TD.kept[0] ? TD.kept[0].tag : ""), A = axes(M, C), setup = classify(A), RT = rating(M, C, setup, S.kill);
+
+  // readout in the control panel
+  put("readout", [["Fair value, probability-weighted", d2(M.wPV)], ["Upside to fair value", pc(M.edge)], ["Expected return at exit, before discounting", pc(M.undRet)],
+    ["Upside : downside", M.ratio === null ? "undef." : M.ratio.toFixed(2) + " · " + M.asymB], ["Conviction", C.score.toFixed(1) + " · " + C.band],
+    ["Positioning", setup + " · " + SETN[setup], true], ["New money", RT.ent], ["Existing holders", RT.hold]].map(([a, b, wide]) => `<div${wide ? ' class="wide"' : ""}><dt>${a}</dt><dd>${esc(b)}</dd></div>`).join(""));
+
+  // --- funnel
+  { const W = 640, rowH = 20, gap = 6, x0 = 150, xs = lin(0, 1.0, x0, W - 70); let y = 6, inner = "";
+    M.ledger.forEach((l, i) => { const c = i ? K.c2 : K.c1;
+      [["full size", l.full, .3], ["inside twelve months", l.inwin, .6], ["× probability", l.exp, 1]].forEach(([nm, v, op]) => {
+        inner += T(x0 - 10, y + 14, `C${i + 1} · ${nm}`, { a: "end" }) + hbar(x0, y, xs(v) - x0, rowH, c, { op, tip: `C${i + 1} ${l.name} · ${nm}: ${d2(v)}` }) + T(xs(v) + 6, y + 14, d2(v), { c: K.ink });
+        y += rowH + gap; });
+      inner += T(x0, y + 8, `after the window ${d2(l.post)}, returns at Step 9 · probability ${pp(l.p)}`, { fs: 11, c: K.muted }); y += 28; });
+    inner = L(x0, 0, x0, y - 22, K.axis) + inner;
+    put("ch-funnel", sv(W, y, inner, "Catalyst sizing funnel"));
+    put("lg-funnel", leg([[K.c1, "C1 new product line"], [K.c2, "C2 pricing reset"]]) + `<span>Shade deepens from full size to inside-twelve-months to × probability</span>`); }
+
+  // --- probability buckets
+  { const W = 640, H = 120, xs = lin(0, 1, 20, W - 20); let inner = "";
+    for (let t = 0; t <= 1.0001; t += .1) inner += L(xs(t), 10, xs(t), 92, K.line) + T(xs(t), 110, pp(t), { a: "middle", fs: 10.5, c: K.muted });
+    [["speculative or gated", .15, .35], ["announced, unproven", .40, .65], ["underway or signed", .70, .90]].forEach(([n, a, b], i) => { inner += R(xs(a), 18 + i * 22, xs(b) - xs(a), 16, K.accent, { rx: 2, op: .16 + i * .14, tip: `${n}: ${pp(a)}–${pp(b)}` }) + T(xs(a) + 6, 30 + i * 22, n, { fs: 11, c: K.ink }); });
+    inner += dot(xs(S.c1.p), 86, K.c1, `catalyst 1 probability ${pp(S.c1.p)}`) + dot(xs(S.c2.p), 86, K.c2, `catalyst 2 probability ${pp(S.c2.p)}`);
+    inner += T(xs(S.c1.p), 76, "C1", { a: "middle", fs: 10.5 }) + T(xs(S.c2.p), 76, "C2", { a: "middle", fs: 10.5 });
+    put("ch-pbuckets", sv(W, H, inner, "Probability bands with each catalyst's probability")); }
+
+  // --- gates at step 2
+  { const tot = M.ledger.reduce((s, l) => s + l.full, 0), iw = M.ledger.reduce((s, l) => s + l.inwin, 0);
+    put("gates2", `<div class="gate">${chip("good", "Materiality clear")}<span>full size ${d2(tot)} = ${pp(tot / S.baseEps, 1)} of base EPS; inside twelve months ${d2(iw)} = ${pp(iw / S.baseEps, 1)}. The materiality test fires under 2% on either read.${cd("T6")}</span></div>
+      <div class="gate">${chip(M.ledger.every(l => l.inwin / l.full >= .5) ? "good" : "warn", "Terminal load " + (iw / tot >= .5 ? "clear" : "fired"))}<span>blended share inside twelve months ${pp(iw / tot)} vs the 50% line.${cd("T5")} Below 50% the thesis is mostly an exit-multiple bet.</span></div>
+      <div class="gate">${chip(M.t48 ? "warn" : "", "Dominant catalyst " + (M.t48 ? "fires" : "clear"))}<span>top catalyst carries ${pp(M.topShare)} of expected value inside the window (rule at 70%).${cd("T48")}</span></div>`); }
+
+  // --- quarters
+  { const W = 640, H = 240, b = 200, x0 = 50, maxV = Math.max(...M.quarters.map(q => q.total)) * 1.18, ys = lin(0, maxV, b, 16); let inner = "";
+    [0, .5, 1, 1.5].forEach(t => { if (t <= maxV) inner += L(x0, ys(t), W - 10, ys(t)) + T(x0 - 8, ys(t) + 4, "$" + t.toFixed(2), { a: "end", fs: 10.5, c: K.muted }); });
+    const bw = 48, step = (W - x0 - 20) / 4;
+    M.quarters.forEach((q, i) => { const x = x0 + step * i + step / 2 - bw / 2; let y = b;
+      const segs = [[q.base, K.base, "Base trajectory"], [q.c[0], K.c1, "Catalyst 1 × probability"], [q.c[1], K.c2, "Catalyst 2 × probability"]];
+      segs.forEach(([v, c, n], j) => { const h = ys(0) - ys(v); if (h <= 0) return; const last = segs.slice(j + 1).every(s => s[0] <= 0);
+        inner += last ? vbar(x, y, h, bw, c, { tip: `Q${i + 1} ${n}: ${d2(v)}` }) : R(x, y - h, bw, h, c, { tip: `Q${i + 1} ${n}: ${d2(v)}` }); y -= h + 2; });
+      inner += T(x + bw / 2, y - 6, d2(q.total), { a: "middle", c: K.ink, w: 600 }) + T(x + bw / 2, b + 18, "Q" + (i + 1), { a: "middle" }); });
+    inner += L(x0, b, W - 10, b, K.axis) + T(W - 10, 12, `NTM forecast ${d2(M.buildEps)} · consensus ${d2(S.consEps)}`, { a: "end", c: K.ink, w: 600 });
+    put("ch-quarters", sv(W, H, inner, "NTM EPS by quarter"));
+    put("lg-quarters", leg([[K.base, "Base trajectory"], [K.c1, "Catalyst 1 × probability (timing 25/50/75/100)"], [K.c2, "Catalyst 2 × probability (timing 0/50/100/100)"]])); }
+
+  // --- XYZ
+  { const W = 640, H = 120, vals = [M.pricedEps, S.consEps, M.buildEps, S.baseEps], lo = Math.min(...vals) - .25, hi = Math.max(...vals) + .25, xs = lin(lo, hi, 30, W - 30); let inner = L(30, 70, W - 30, 70, K.axis);
+    for (let t = Math.ceil(lo * 4) / 4; t <= hi; t += .25) inner += L(xs(t), 66, xs(t), 74, K.axis) + T(xs(t), 92, "$" + t.toFixed(2), { a: "middle", fs: 10.5, c: K.muted });
+    inner += `<path d="M${xs(M.pricedEps)},48 V40 H${xs(M.buildEps)} V48" style="fill:none;stroke:${K.accent};stroke-width:1.5"/>` + T((xs(M.pricedEps) + xs(M.buildEps)) / 2, 34, "Z − X " + pc(M.gapPriced), { a: "middle", c: K.accent, w: 600 });
+    [[S.baseEps, "base", K.axis], [M.pricedEps, "X price-implied", K.ink], [S.consEps, "Y consensus", K.muted], [M.buildEps, "Z our forecast", K.accent]].forEach(([v, n, c]) => { inner += dot(xs(v), 70, c, `${n}: ${d2(v)}`, 6); });
+    inner += T(xs(S.baseEps), 110, "base", { a: "middle", fs: 10.5 }) + T(xs(M.pricedEps), 110, "X price-implied", { a: "middle", fs: 11, c: K.ink }) + T(xs(S.consEps), 58, "Y", { a: "middle", fs: 11 }) + T(xs(M.buildEps), 58, "Z", { a: "end", fs: 11, c: K.accent, w: 600 });
+    put("ch-xyz", sv(W, H, inner, "Price-implied, consensus and forecast EPS"));
+    const vs = Math.abs(M.gapCons) <= .05 && Math.abs(M.gapPriced) > .08 ? "We differ from the price, not from the estimates." : Math.abs(M.gapPriced) <= .08 ? "No difference from the market: confirmatory model; Step 10 runs 10b and 10f only." : "Our forecast differs from both consensus and the price.";
+    txt("xyz-read", `PRICE-IMPLIED ${d2(M.pricedEps)} (spot ÷ ${S.hurdlePE.toFixed(1)}x hurdle multiple) / CONSENSUS ${d2(S.consEps)} / FORECAST ${d2(M.buildEps)}. Z vs Y ${pc(M.gapCons)}, Z vs X ${pc(M.gapPriced)}. Engine label: "${vs}" Driver D in the toy is catalyst 1 adoption; it becomes observable at the first dated print.`); }
+
+  // --- T11 ladder
+  { const W = 640, H = 70, xs = lin(0, .2, 20, W - 20), g = Math.abs(M.gapCons); let inner = "";
+    [[0, .05, "in line"], [.05, .08, "minor"], [.08, .15, "name the driver"], [.15, .2, "loud: re-check"]].forEach(([a, b, n], i) => { inner += R(xs(a), 10, xs(b) - xs(a) - 2, 22, K.accent, { op: .1 + i * .13, tip: `${n}: ${pp(a)}–${b === .2 ? "" : pp(b)}` }) + T(xs(a) + 5, 25, n, { fs: 10.5, c: K.ink }); });
+    [0, .05, .08, .15, .2].forEach(t => inner += T(xs(t), 50, pp(t), { a: "middle", fs: 10.5, c: K.muted }));
+    inner += tri(xs(Math.min(g, .2)), 34, K.ink, "|forecast vs consensus| " + pp(g, 1), false) + T(xs(Math.min(g, .2)), 66, "toy " + pp(g, 1), { a: "middle", fs: 10.5, c: K.ink });
+    put("ch-t11", sv(W, H, inner, "Consensus gap ladder")); }
+
+  // --- moat row highlight
+  if (hasDoc) document.querySelectorAll("#moatrows tr").forEach(tr => { const on = +tr.dataset.moat === (S.moatCell === 1 ? 0 : S.moatCell === .5 ? 1 : 2); tr.classList.toggle("hi", on); });
+
+  // --- multiples axis
+  { const W = 640, H = 120, vals = [S.pe.bear, S.pe.base, S.pe.bull, M.curPE, S.hurdlePE, M.beMult], lo = Math.floor(Math.min(...vals) - 1), hi = Math.ceil(Math.max(...vals) + 1), xs = lin(lo, hi, 30, W - 30); let inner = "";
+    inner += R(xs(S.pe.bear), 52, xs(S.pe.bull) - xs(S.pe.bear), 12, K.accent, { rx: 6, op: .14, tip: `Exit range ${mx(S.pe.bear)}–${mx(S.pe.bull)}` });
+    inner += L(30, 58, W - 30, 58, K.axis);
+    for (let t = lo; t <= hi; t++) inner += L(xs(t), 54, xs(t), 62, K.axis) + (t % 2 === 0 ? T(xs(t), 80, t + "x", { a: "middle", fs: 10.5, c: K.muted }) : "");
+    const above = [[M.curPE, K.ink, "current " + mx(M.curPE)], [M.beMult, K.muted, "breakeven " + mx(M.beMult)]];
+    const below = [[S.pe.bear, K.bear, "bear"], [S.pe.base, K.base, "base"], [S.pe.bull, K.bull, "bull"], [S.hurdlePE, K.axis, "hurdle"]];
+    below.forEach(([v, c, n]) => inner += dot(xs(v), 58, c, `${n} ${mx(v)}`, 6));
+    above.forEach(([v, c, n], i) => inner += tri(xs(v), 46, c, n, true) + T(xs(v), 28, n, { a: i ? "start" : "end", fs: 11, c: K.ink }));
+    below.slice(0, 3).forEach(([v, c, n]) => inner += T(xs(v), 104, n + " " + mx(v), { a: "middle", fs: 11 }));
+    put("ch-mult", sv(W, H, inner, "Exit multiples, current and breakeven"));
+    put("lg-mult", leg([[K.bear, "Bear exit"], [K.base, "Base exit"], [K.bull, "Bull exit"], [K.axis, "Hurdle " + mx(S.hurdlePE)]]) + `<span>Triangles: current forward P/E and the base-scenario breakeven</span>`); }
+
+  // --- scenarios
+  { const W = 640, H = 260, b = 220, x0 = 50, maxV = Math.max(M.arms.bull.und, S.spot) * 1.12, ys = lin(0, maxV, b, 14); let inner = "";
+    for (let t = 0; t <= maxV; t += 20) inner += L(x0, ys(t), W - 10, ys(t)) + T(x0 - 8, ys(t) + 4, "$" + t, { a: "end", fs: 10.5, c: K.muted });
+    const bw = 64, step = (W - x0 - 20) / 3;
+    ["bear", "base", "bull"].forEach((k, i) => { const a = M.arms[k], x = x0 + step * i + step / 2 - bw / 2;
+      inner += R(x, ys(a.und), bw, ys(0) - ys(a.und), "none", { st: K[k], sw: 1, tip: `${k} value at exit, before discounting ${d2(a.und)}` });
+      inner += vbar(x, b, ys(0) - ys(a.pv), bw, K[k], { tip: `${k} present value ${d2(a.pv)} · weight ${pp(M.w[k])}` });
+      inner += T(x + bw / 2, ys(a.und) - 6, d2(a.pv), { a: "middle", c: K.ink, w: 600 }) + T(x + bw / 2, b + 16, `${k} · weight ${pp(M.w[k])}`, { a: "middle" }); });
+    inner += L(x0, b, W - 10, b, K.axis);
+    inner += L(x0, ys(S.spot), W - 10, ys(S.spot), K.ink, 1.5) + T(W - 10, ys(S.spot) - 5, "spot " + d2(S.spot), { a: "end", c: K.ink, w: 600 });
+    inner += L(x0, ys(M.wPV), W - 10, ys(M.wPV), K.accent, 1.5) + T(x0 + 4, ys(M.wPV) - 5, "fair value " + d2(M.wPV), { c: K.accent, w: 600 });
+    put("ch-scen", sv(W, H, inner, "Scenario present values vs spot"));
+    put("lg-scen", leg([[K.bear, "Bear"], [K.base, "Base"], [K.bull, "Bull"]]) + `<span>Outline = value at exit, before discounting; solid = present value at ${pp(M.dr, 1)}</span>`); }
+
+  // --- weights build-up
+  { const W = 640, rows = [], bwN = M.piBear, buN = M.piBull;
+    rows.push(["Π(p) raw", bwN, buN]);
+    const cb = S.corr ? bwN + .05 : bwN, cu = S.corr ? buN + .05 : buN; rows.push([S.corr ? "+ correlation 5pp" : "correlation: none", cb, cu]);
+    const fb = M.floorBinds ? M.floor : cb; rows.push([M.t48 ? (M.floorBinds ? "dominant-catalyst floor binds" : "dominant-catalyst floor clear") : "dominant-catalyst rule n/a", fb, cu]);
+    rows.push(["rounded to 5%", M.w.bear, M.w.bull]);
+    const x0 = 140, xs = lin(0, 1, x0, W - 10); let inner = "", y = 4;
+    rows.forEach(([n, be, bu]) => { const ba = Math.max(0, 1 - be - bu); let x = x0;
+      [[be, K.bear, "bear"], [ba, K.base, "base"], [bu, K.bull, "bull"]].forEach(([v, c, k]) => { const w = xs(v) - x0; inner += R(x, y, w - 2, 24, c, { tip: `${n} · ${k} ${pp(v, 1)}` }); if (w > 44) inner += T(x + 6, y + 16, pp(v, 1), { c: K.ink, halo: true, fs: 11, w: 600 }); x += w; });
+      inner += T(x0 - 10, y + 16, n, { a: "end" }); y += 34; });
+    put("ch-weights", sv(W, y, inner, "Scenario weight construction"));
+    put("lg-weights", leg([[K.bear, "Bear"], [K.base, "Base"], [K.bull, "Bull"]]));
+    put("weights-read", `Bull ~ Π(p) = ${pp(M.piBull, 1)}, bear ~ Π(1 − p) = ${pp(M.piBear, 1)}, base is the residual. ${M.t48 ? `Catalyst ${M.topIdx + 1} carries ${pp(M.topShare)} of expected value inside the window, so the dominant-catalyst rule floors the bear weight at 1 − p_top = ${pp(M.floor)}${M.floorBinds ? " and the floor binds." : "; the floor does not bind."}` : "No catalyst reaches 70% of expected value, so the dominant-catalyst rule does not apply."}${cd("T48")} Correlation declaration: ${S.corr ? "+5pp to each tail (shared driver)." : "none, no catalyst pair shares a driver in the toy."}${cd("T4")}`); }
+
+  // --- arms table
+  { const A2 = M.arms, ks = ["bear", "base", "bull"], row = (n, f) => `<tr><td>${n}</td>${ks.map(k => `<td class="n">${f(k)}</td>`).join("")}</tr>`;
+    put("tbl-arms", `<thead><tr><th></th>${ks.map(k => `<th class="n">${k}</th>`).join("")}</tr></thead><tbody>` +
+      row("Catalyst sizing", k => ({ bear: "zero", base: "50%, partial" + cd("T52"), bull: "full" })[k]) + row("NTM EPS", k => d2(A2[k].eps)) + row("Year-two growth, g_roll", k => pp(S.g[k], 1)) +
+      row("Value at the current " + mx(M.curPE) + cd("route A"), k => d2(A2[k].routeA)) + row("Exit P/E" + cd("route B"), k => mx(S.pe[k])) + row("Exit value", k => d2(A2[k].exitVal)) + row("After-window add", k => d2(A2[k].postAdd)) +
+      row("Value at exit, before discounting", k => d2(A2[k].und)) + row("Present value", k => d2(A2[k].pv)) + row("Weight", k => pp(M.w[k])) + `<tr class="sum"><td>Contribution to fair value</td>${ks.map(k => `<td class="n">${d2(M.w[k] * A2[k].pv)}</td>`).join("")}</tr></tbody>`);
+    put("dr-line", `Discount rate = ${pp(S.rfr, 1)} + ${S.beta.toFixed(2)} × ${pp(S.erp, 1)} = ${pp(M.drRaw, 2)}${M.drCapped ? `, capped at ${pp(M.dr, 1)} by the sanity band` : " (CAPM, inside the sanity band)"}.${cd("T40")} Fair value ${d2(M.wPV)} × (1 + discount rate) = ${d2(M.wPV * (1 + M.dr))} vs expected value at exit ${d2(M.wU)}: identity holds. Bear–bull spread ${d2(M.spread)} = ${pp(M.spreadPct)} of fair value.`); }
+
+  // --- tornado
+  { const W = 640, rows = TD.kept, x0 = 170, maxA = Math.max(...rows.map(r => Math.max(Math.abs(r.lo), Math.abs(r.hi)))) * 1.25 || 1, xs = lin(-maxA, maxA, x0, W - 20); let inner = "", y = 6;
+    rows.forEach((r, i) => { const z = xs(0);
+      [[r.lo, K.c2, "−10%"], [r.hi, K.base, "+10%"]].forEach(([v, c, n]) => { const w = Math.abs(xs(v) - z); if (w < .5) return;
+        inner += v >= 0 ? hbar(z, y, w, 18, c, { tip: `${dn(r.k)} ${n}: ${v >= 0 ? "+" : "−"}$${Math.abs(v).toFixed(2)}` }) : `<g transform="translate(${2 * z},0) scale(-1,1)">${hbar(z, y, w, 18, c, { tip: `${dn(r.k)} ${n}: −$${Math.abs(v).toFixed(2)}` })}</g>`; });
+      inner += T(x0 - 10, y + 13, `${dn(r.k)} [${r.tag}]`, { a: "end", c: i === 0 ? K.ink : K.ink2, w: i === 0 ? 600 : 400 });
+      const ext = Math.max(r.lo, r.hi); inner += T(xs(Math.max(ext, 0)) + 6, y + 13, "$" + r.swing.toFixed(2), { fs: 10.5, c: K.muted }); y += 26; });
+    inner = L(xs(0), 0, xs(0), y, K.axis) + inner;
+    put("ch-tornado", sv(W, y + 4, inner, "Tornado of fair-value sensitivities"));
+    put("lg-tornado", leg([[K.c2, "Input −10%"], [K.base, "Input +10%"]]) + `<span>Label shows total swing; bracket shows the provenance tag: D disclosed, G from guidance, M modelled, A assumed</span>`);
+    const d1 = rows[0], t25 = TD.ratio > 10;
+    put("tornado-read", `The biggest input is ${esc(dn(d1.k))} [${d1.tag}], swinging $${d1.swing.toFixed(2)} = ${pp(d1.swing / M.wPV, 1)} of fair value. ${isFinite(TD.ratio) ? `Biggest input : top-catalyst-probability ratio ${TD.ratio.toFixed(1)} : 1${t25 ? ", above the ~10:1 probe, so the output would say \"a multiple thesis wearing a catalyst costume\"." : ", under the ~10:1 probe."}${cd("T25")}` : `The probability input for catalyst 1 moves no weight at the 5% rounding, so the ratio cannot be read here.${cd("T25")}`} ${TD.dropped.length ? "Dropped under the $0.05 floor: " + esc(TD.dropped.map(r => dn(r.k)).join(", ")) + "." : "No input fell under the $0.05 floor."}${cd("T24")} The probability inputs move in 5% steps because the engine rounds weights.`); }
+
+  // --- breakeven
+  { const W = 640, H = 110, xs = lin(-.3, .3, 160, W - 20); let inner = R(xs(-.1), 8, xs(.1) - xs(-.1), 74, K.flag, { op: .14, tip: "Noise band: the ±10% input shock" });
+    [-.3, -.2, -.1, 0, .1, .2, .3].forEach(t => inner += L(xs(t), 8, xs(t), 82, t === 0 ? K.axis : K.line) + T(xs(t), 100, pc(t, 0), { a: "middle", fs: 10.5, c: K.muted }));
+    [["Exit multiple", M.beMultDist, mx(M.beMult)], ["NTM EPS", M.beEpsDist, d2(M.beEps)]].forEach(([n, v, s], i) => { const y = 28 + i * 34, c = Math.abs(v) < .1 ? K.flag : K.accent;
+      inner += T(150, y + 4, `${n} → ${s}`, { a: "end", c: K.ink }) + L(xs(0), y, xs(Math.max(-.3, Math.min(.3, v))), y, K.axis, 2) + dot(xs(Math.max(-.3, Math.min(.3, v))), y, c, `${n} breakeven ${s}, ${pc(v)} from modelled`, 6); });
+    put("ch-be", sv(W, H, inner, "Breakeven distances"));
+    const inN = Math.abs(M.beMultDist) < .1;
+    put("be-read", `The price requires a ${mx(M.beMult)} base exit (${pc(M.beMultDist)} vs ${mx(S.pe.base)} modelled) or ${d2(M.beEps)} NTM EPS (${pc(M.beEpsDist)}). ${inN ? "Both sit inside the ±10% shock band, so the noise test fires: a routine move in one of the model's own inputs crosses breakeven and the upside is not separable from model error on that input." : "Noise test clear: breakeven sits outside the ±10% shock band."}${cd("T38")} The toy has no revenue line, so breakeven growth is not shown.`); }
+
+  // --- asymmetry curve (click to move spot)
+  { const W = 640, H = 260, bp = M.arms.bull.pv, sp = M.arms.bear.pv, lo = sp - (bp - sp) * .06, hi = bp + (bp - sp) * .06, xs = lin(lo, hi, 50, W - 20), ymax = 4, ys = lin(0, ymax, 220, 14); let inner = "";
+    const f = M.bandFav, e = M.bandExh;
+    inner += R(xs(sp), 14, xs(f) - xs(sp), 206, K.bull, { op: .1, tip: `Favorable: spot ≤ ${d2(f)}` }) + R(xs(f), 14, xs(e) - xs(f), 206, K.tint, { tip: "Neutral" }) + R(xs(e), 14, xs(bp) - xs(e), 206, K.bear, { op: .1, tip: `Exhausted: spot ≥ ${d2(e)}` });
+    [0, 1, 2, 3, 4].forEach(t => inner += L(50, ys(t), W - 20, ys(t)) + T(42, ys(t) + 4, t.toFixed(1), { a: "end", fs: 10.5, c: K.muted }));
+    inner += L(50, ys(1.5), W - 20, ys(1.5), K.bull, 1) + L(50, ys(.8), W - 20, ys(.8), K.bear, 1) + T(W - 22, ys(1.5) - 4, "1.5", { a: "end", fs: 10.5 }) + T(W - 22, ys(.8) - 4, "0.8", { a: "end", fs: 10.5 });
+    let d = ""; for (let i = 0; i <= 200; i++) { const s = sp + (bp - sp) * (0.002 + i / 200 * .998); const r = (bp - s) / (s - sp); if (r > ymax) continue; d += (d ? "L" : "M") + xs(s).toFixed(1) + "," + ys(r).toFixed(1); }
+    inner += `<path d="${d}" style="fill:none;stroke:${K.ink};stroke-width:2;stroke-linejoin:round"/>`;
+    [[sp, "bear PV " + d2(sp)], [f, "entry s*(1.5) " + d2(f)], [e, "trim s*(0.8) " + d2(e)], [bp, "bull PV " + d2(bp)]].forEach(([v, n], i) => inner += L(xs(v), 220, xs(v), 226, K.axis) + T(xs(v), 240 + (i % 2) * 14, n, { a: "middle", fs: 10.5, c: K.ink2 }));
+    if (M.ratio !== null && S.spot > sp && S.spot < bp) inner += L(xs(S.spot), 14, xs(S.spot), 220, K.accent, 1.5) + dot(xs(S.spot), ys(Math.min(ymax, M.ratio)), K.accent, `spot ${d2(S.spot)} · ratio ${M.ratio.toFixed(2)}`, 6) + T(xs(S.spot) + 8, 28, "spot " + d2(S.spot), { c: K.accent, w: 600 });
+    inner += `<rect x="50" y="14" width="${W - 70}" height="206" style="fill:transparent;cursor:crosshair" id="asym-hit"/>`;
+    put("ch-asym", sv(W, H + 6, inner, "Upside-to-downside ratio vs spot; click to move spot"));
+    const svg = byId("ch-asym") && byId("ch-asym").querySelector("svg"), hit = byId("asym-hit");
+    if (svg && hit && svg.createSVGPoint) hit.addEventListener("click", ev => { const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY; const p = pt.matrixTransform(svg.getScreenCTM().inverse()); const v = lo + (p.x - 50) / (W - 70) * (hi - lo); S.spot = Math.round(Math.max(40, Math.min(120, v))); render(); });
+    put("lg-asym", leg([[K.bull, "Favorable: entry zone", .35], [K.tint, "Neutral"], [K.bear, "Exhausted: trim zone", .35]]));
+    const wb = M.ratioW === null ? null : M.ratioW > 1.5 ? "favorable" : M.ratioW >= .8 ? "neutral" : "exhausted";
+    txt("asym-read", (M.degenerate ? `Degenerate: ${M.degenerate}. ` : `At spot ${d2(S.spot)}: upside ${d2(bp - S.spot)}, downside ${d2(S.spot - sp)}, ratio ${M.ratio.toFixed(2)} (${M.asymB}). `) + `Entry level at or below ${d2(f)}, trim level at or above ${d2(e)}; ratios verified back at 1.50 and 0.80. Weighted cross-check ${M.ratioW === null ? "n/a" : M.ratioW.toFixed(2) + " (" + wb + ")"}${wb && wb !== M.asymB ? `: shape ${M.asymB} vs weighted ${wb}.` : "."}`); }
+
+  // --- conviction
+  put("cells", C.cells.map((c, i) => `<div class="cellrow"><span class="k"><span class="mono">${i + 1}</span> ${esc(CELLN[c.k] || c.k)}</span><span class="seg"${tip("grade " + c.v)}><span class="${c.v >= .5 ? "on" : ""}"></span><span class="${c.v >= 1 ? "on" : ""}"></span></span><span class="why">${esc(c.why)} ${c.tag ? chip(c.tag.startsWith("MISSING") ? "warn" : "", c.tag) : ""}</span></div>`).join(""));
+  { const W = 640, H = 80, xs = lin(0, 5, 20, W - 20); let inner = "";
+    [[0, 2.25, "quarter / low"], [2.25, 3.25, "half / mid"], [3.25, 5, "full / high"]].forEach(([a, b, n], i) => inner += R(xs(a), 14, xs(b) - xs(a) - 2, 26, K.accent, { op: .1 + i * .14, tip: n }) + T(xs(a) + 6, 31, n, { fs: 11, c: K.ink }));
+    for (let t = 0; t <= 5; t += .5) inner += T(xs(t), 58, t.toFixed(1), { a: "middle", fs: 10.5, c: K.muted });
+    inner += `<path d="M${xs(C.score)},42 l-6,10 h12 z" style="fill:${K.ink}"${tip("score " + C.score)}/>` + T(xs(C.score), 74, `score ${C.score.toFixed(1)} → ${C.band}${C.band !== C.raw ? " (capped)" : ""}`, { a: "middle", fs: 11, c: K.ink, w: 600 });
+    put("ch-conv", sv(W, H, inner, "Conviction score out of five")); }
+  { const d1 = TD.kept[0];
+    put("caps", `<div class="gate">${chip(C.t37 ? "crit" : "good", "Assumed top input " + (C.t37 ? "binds" : "not fired"))}${chip(C.packLimited ? "crit" : "good", "Limited by missing inputs: " + (C.packLimited ? "binds" : "no"))}${chip("good", "Route-shock limit not fired")}${cd("T37 · T35 · T49")}</div><p class="src">Anti-drift: conviction ${C.score.toFixed(1)}, of which ${C.cells.filter(c => c.tag.startsWith("MISSING")).length * .5} is missing-input credit; band ${C.band}; the biggest input is ${esc(dn(d1.k))} tagged ${d1.tag}${C.t37 ? ", so the assumed-input limit caps the band at half" : ", so the assumed-input limit does not bind"}. Raise beta far enough and the discount rate, tagged A for assumed, can become the biggest input.</p>`); }
+  { const loss = (S.spot - M.arms.bear.pv) / S.spot;
+    txt("poscap", loss < .05 ? `Adverse-scenario loss ${pp(loss, 1)} is under 5% of spot: position limit not computable; the book's own per-name maximum applies.` : `Long positioning, adverse scenario is bear: loss at the thesis-break level = (spot − bear PV) ÷ spot = ${pp(loss, 1)}. With an assumed risk budget of 1% of book, the limit is 1% ÷ ${pp(loss, 1)} = ${pp(.01 / loss, 1)} of book. Gap-through and correlated book exposure sit outside this limit.`); }
+
+  // --- axes + cascade
+  { const bk = bl;
+    const rows = [["Gap to the price", "our forecast vs what the price implies, Z − X (Steps 6a, 6b)" + cd("T28"), pc(M.gapPriced), bl(A.edge)], ["Upside to downside", "unweighted ratio (Step 10d)" + cd("T27"), M.ratio === null ? "undef." : M.ratio.toFixed(2), bk(A.asym)], ["Time to the event", "nearest dated event (Step 10b)" + cd("T29"), S.noClock ? "no dated event" : S.days + " days", A.time], ["Already in the price", "top catalyst, share already priced (Step 2)" + cd("T51"), pp([S.c1, S.c2][M.topIdx].a), A.antic], ["Conviction", "Step 10e band after limits" + cd("T32"), C.score.toFixed(1), A.conv]];
+    put("tbl-axes", `<thead><tr><th>Criterion</th><th>Source</th><th class="n">Value</th><th>Bucket</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r[0]}</td><td class="dim">${r[1]}</td><td class="n">${r[2]}</td><td>${chip("acc", r[3])}</td></tr>`).join("")}</tbody>`);
+    const order = [[7, "Conviction low"], [6, "Forecast below what the price implies"], [4, "Upside to downside exhausted"], [5, "Positive gap, no dated event"], [2, "Positive gap, favorable, not fully priced, under 60 days"], [1, "Positive gap, favorable, not fully priced, 60 days to twelve months"], [3, "Positive gap, neutral, priced in"], [0, "Nothing matched"]];
+    let hit = false;
+    put("cascade", order.map(([n, rule]) => { const isHit = n === setup; const cls = isHit ? "hit" : hit ? "skip" : ""; const st = isHit ? "lands" : hit ? "not reached" : "no match"; if (isHit) hit = true;
+      return `<div class="cas ${cls}"><span class="st mono">${st}</span><b>${n} · ${SETN[n]}</b><span>${rule}</span></div>`; }).join(""));
+    const BK = { edge: ["short", "none", "edge", "loud"], asym: ["exhausted", "neutral", "favorable"], time: ["act", "accumulate", "watch"], antic: ["unpriced", "partial", "priced"], conv: ["quarter", "half", "full"] };
+    const NM = { edge: "Gap to the price", asym: "Upside to downside", time: "Time to the event", antic: "Already in the price", conv: "Conviction" };
+    const ent = (s, band, asym) => (s === 1 || s === 2) ? (band === "full" && asym === "favorable" ? "Strong Buy" : "Weak Buy") : s === 3 ? "Weak Buy" : "No Buy";
+    const sens = [];
+    for (const k in BK) { const i = BK[k].indexOf(A[k]); [i - 1, i + 1].forEach(j => { if (j < 0 || j >= BK[k].length) return; const A2 = { ...A, [k]: BK[k][j] }; const s2 = classify(A2); sens.push([NM[k], bk(A[k]) + " → " + bl(BK[k][j]), s2, ent(s2, A2.conv, A2.asym)]); }); }
+    put("tbl-sens", `<thead><tr><th>Criterion</th><th>Bucket change</th><th>Positioning</th><th>New money</th></tr></thead><tbody>${sens.map(r => `<tr class="${r[2] !== setup ? "hi" : "dim"}"><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]} · ${SETN[r[2]]}</td><td>${r[3]}</td></tr>`).join("")}</tbody>`); }
+
+  // --- ratings
+  { put("ratings", `<div class="band"><span class="act">New money · after the cost of capital${cd("entrant")}</span><strong>${RT.ent}</strong><p>Pinned by ${esc(pin(RT.entPin))}; upside to fair value ${pc(M.edge)}.</p></div><div class="band"><span class="act">Existing holders · before the cost of capital${cd("holder")}</span><strong>${RT.hold}</strong><p>Pinned by ${esc(pin(RT.holdPin))}.</p></div>` +
+      (S.kill ? `<div class="band kill"><span class="act">Precedence rule 1</span><strong>Thesis-break condition met${cd("kill switch")}</strong><p>Overrides every positioning and both bases. Re-entry needs a full re-run of Steps 2–6.</p></div>` : ""));
+    const W = 640, H = 96, xs = lin(-.3, .3, 20, W - 20), tl = -M.dr / (1 + M.dr), st = .85 / (1 + M.dr) - 1; let inner = "";
+    inner += R(xs(-.3), 14, xs(st) - xs(-.3), 30, K.flag, { op: .28, tip: "Strong Trim: return before discounting below −15%" }) + R(xs(st), 14, xs(tl) - xs(st), 30, K.flag, { op: .14, tip: "Trim: return before discounting below 0" }) + R(xs(tl), 14, xs(.3) - xs(tl), 30, K.accent, { op: .12, tip: "Hold or better" });
+    inner += T(xs(-.3) + 6, 33, "Strong Trim", { fs: 11, c: K.ink }) + T(xs(st) + 6, 33, "Trim", { fs: 11, c: K.ink }) + T(xs(tl) + 6, 33, "Hold floor · no-trade until a positioning lands", { fs: 11, c: K.ink });
+    [-.3, -.2, -.1, 0, .1, .2, .3].forEach(t => inner += T(xs(t), 64, pc(t, 0), { a: "middle", fs: 10.5, c: K.muted }));
+    const e = Math.max(-.3, Math.min(.3, M.edge)); inner += `<path d="M${xs(e)},46 l-6,10 h12 z" style="fill:${K.accent}"${tip("upside " + pc(M.edge))}/>` + T(xs(e), 86, "upside " + pc(M.edge), { a: "middle", fs: 11, c: K.accent, w: 600 });
+    put("ch-rating", sv(W, H, inner, "Existing-holder lines on the upside axis"));
+    txt("rating-read", `With a discount rate of ${pp(M.dr, 1)}, the Trim line sits at upside −DR/(1 + DR) = ${pc(tl)} and Strong Trim at ${pc(st)} (return before discounting −15%). Between the Trim line and an entry-grade positioning lies the no-trade region: existing holders keep the position, new money buys nothing.`); }
+
+  // --- reaction matrix + theta
+  { const top = [S.c1, S.c2][M.topIdx], a = top.a, col = a < .1 ? "u" : a > .9 ? "p" : "b";
+    const hl = c => (col === "b" || col === c) ? "hl" : "";
+    put("matrix", `<div class="h"></div><div class="h">Priced</div><div class="h">Unpriced</div><div class="h">Lands</div><div class="${hl("p")}">Muted</div><div class="${hl("u")}">Pop</div><div class="h">Misses</div><div class="${hl("p")}">Air pocket</div><div class="${hl("u")}">Relief</div>`);
+    put("matrix-read", `Top catalyst: ${pp(a)} already in the price (${a < .1 ? "unpriced" : a > .9 ? "fully priced" : "partially priced, both columns live"}). Expected price contribution ≈ size × probability × (1 − share already priced): catalyst 1 ${d2(M.contrib[0])} (${pp(M.contribPct[0], 1)} of spot), catalyst 2 ${d2(M.contrib[1])} (${pp(M.contribPct[1], 1)}). ${M.t26 ? "The calendar cannot discriminate this thesis: the discrimination test fires." : "At least one catalyst clears 0.3% of spot: the discrimination test is clear."}${cd("T26")}`);
+    const W = 640, H = 220, b = 180, x0 = 50, edge = M.contrib[M.topIdx];
+    if (S.noClock) { put("ch-theta", sv(W, 60, T(20, 34, "No dated event: no time decay. An undated catalyst routes to positioning 5, value-trap watch.", { c: K.ink }), "No time decay")); put("lg-theta", ""); txt("theta-read", ""); }
+    else { const Wm = S.days / 30.4, cum = m => edge * M.dr * m / 12 + edge * (m <= Wm / 2 ? 0 : .25 * (m - Wm / 2) / (Wm / 2));
+      const maxY = Math.max(edge, cum(Wm)) * 1.2, xs = lin(0, Wm, x0, W - 20), ys = lin(0, maxY, b, 14); let inner = "";
+      for (let k = 0; k <= 4; k++) { const v = maxY / 4 * k; inner += L(x0, ys(v), W - 20, ys(v)) + T(x0 - 8, ys(v) + 4, "$" + v.toFixed(1), { a: "end", fs: 10.5, c: K.muted }); }
+      let d = ""; for (let i = 0; i <= 60; i++) { const m = Wm * i / 60; d += (i ? "L" : "M") + xs(m).toFixed(1) + "," + ys(cum(m)).toFixed(1); }
+      const da = d + `L${xs(Wm)},${b}L${x0},${b}Z`;
+      inner += `<path d="${da}" style="fill:${K.c2};fill-opacity:.12"/><path d="${d}" style="fill:none;stroke:${K.c2};stroke-width:2"/>`;
+      inner += L(x0, ys(edge), W - 20, ys(edge), K.c1, 2) + T(x0 + 4, ys(edge) - 6, "remaining upside " + d2(edge), { c: K.ink, w: 600 });
+      inner += L(xs(Wm / 2), 14, xs(Wm / 2), b, K.axis) + T(xs(Wm / 2) + 4, 26, "slip ramp starts", { fs: 10.5, c: K.muted });
+      inner += dot(xs(Wm), ys(cum(Wm)), K.c2, "cumulative time decay at close " + d2(cum(Wm))) + L(x0, b, W - 20, b, K.axis);
+      for (let m = 0; m <= Wm + .01; m += Wm > 6 ? 2 : 1) inner += T(xs(m), b + 16, m.toFixed(0) + "m", { a: "middle", fs: 10.5, c: K.muted });
+      put("ch-theta", sv(W, H, inner, "Time decay of the thesis"));
+      put("lg-theta", leg([[K.c1, "Remaining upside"], [K.c2, "Cumulative time decay"]]));
+      const ratio = cum(Wm) / edge, v = ratio >= 1 ? "migrates to positioning 4: trim regardless of headline gap" : ratio >= .5 ? "eroding" : "clears";
+      txt("theta-read", `time decay per month ≈ upside × r/12 + upside × d_slip. Over ${Wm.toFixed(1)} months: carry ${d2(edge * M.dr * Wm / 12)} + slip ${d2(edge * .25)} = ${d2(cum(Wm))}, ${pp(ratio)} of the ${d2(edge)} upside → ${v}. The 50% cut between clears and eroding is the toy's, not the skill's.`); } }
+}
+
+// ===== Page behaviour: tooltip, control panel, on-page marker =====
+function init() {
+  buildControls(); renderStatic(); render();
+  // tooltip for data-tip shapes
+  const tipEl = byId("tip");
+  if (tipEl && document.addEventListener) document.addEventListener("mousemove", e => { const t = e.target && e.target.closest && e.target.closest("[data-tip]"); if (!t) { tipEl.hidden = true; return; }
+    tipEl.textContent = t.getAttribute("data-tip"); tipEl.hidden = false;
+    const x = Math.min(window.innerWidth - tipEl.offsetWidth - 8, e.clientX + 14), y = e.clientY + 16 + tipEl.offsetHeight > window.innerHeight ? e.clientY - tipEl.offsetHeight - 10 : e.clientY + 16;
+    tipEl.style.left = x + "px"; tipEl.style.top = y + "px"; });
+  // controls panel: open on wide screens, collapsed on phones
+  const dp = byId("ctlpanel");
+  if (dp && typeof window !== "undefined" && window.matchMedia) { const mq = window.matchMedia("(min-width: 900px)"); const set = () => { dp.open = mq.matches; }; set(); if (mq.addEventListener) mq.addEventListener("change", set); }
+  // on-page row follows the spine
+  if (typeof IntersectionObserver !== "undefined") { const links = [...document.querySelectorAll(".onpage a[data-ph]")]; const secs = [...document.querySelectorAll(".plate[data-ph]")];
+    const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { const ph = en.target.getAttribute("data-ph"); links.forEach(a => { if (a.getAttribute("data-ph") === ph) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); }); } }), { rootMargin: "-30% 0px -60% 0px" });
+    secs.forEach(s => io.observe(s)); }
+}
+if (hasDoc) init();
+})();
+</script>
+<script>
+/* engine-code tags: on by default, switchable, remembered per browser */
+(function () {
+  var b = document.getElementById("codeSwitch"); if (!b) return;
+  var set = function (on) { document.body.classList.toggle("codes-off", !on); b.setAttribute("aria-pressed", on ? "true" : "false"); b.textContent = "Engine codes · " + (on ? "on" : "off"); };
+  var on = true; try { on = localStorage.getItem("fl-codes") !== "off"; } catch (e) {}
+  set(on);
+  b.addEventListener("click", function () { on = !on; set(on); try { localStorage.setItem("fl-codes", on ? "on" : "off"); } catch (e) {} });
+})();
+</script>
+</body>
+</html>

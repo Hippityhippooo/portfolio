@@ -1,0 +1,1433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Engine Library</title>
+<meta name="description" content="Twenty-five Claude skills Faldo Lyon built at Gotrade for the research desk. One rulebook, three valuation engines on a ladder, a ticker-to-PDF pipeline whose tests can stop a bad build, a card per skill saying what it reads, writes and may never touch, four dossiers and the CPV model you can drive.">
+<!-- HEAD v1 start -->
+<script>(function(){try{var t=localStorage.getItem('fl-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<!-- HEAD v1 end -->
+<style>
+/* BASE v1 start */
+:root {
+  --paper: #F6F1EA; --surface: #FFFDF9; --ink: #141210; --ink-2: #3E3832; --muted: #6E6660; --line: #DED5CA; --line-strong: #141210;
+  --accent: #1F4FD6; --accent-ink: #FFFFFF; --bench: #9A8C7D; --flag: #B8741A; --tint: #EFE6DA;
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif; --sans: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif; --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme: dark; --paper: #15120F; --surface: #1D1915; --ink: #F1EBE3; --ink-2: #CFC6BB; --muted: #9B9187; --line: #332C26; --line-strong: #F1EBE3; --accent: #8DB0FF; --accent-ink: #0B1220; --bench: #7A6E63; --flag: #E0A04A; --tint: #27211B; } }
+:root[data-theme="dark"] { color-scheme: dark; --paper: #15120F; --surface: #1D1915; --ink: #F1EBE3; --ink-2: #CFC6BB; --muted: #9B9187; --line: #332C26; --line-strong: #F1EBE3; --accent: #8DB0FF; --accent-ink: #0B1220; --bench: #7A6E63; --flag: #E0A04A; --tint: #27211B; }
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 72px; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--flag); outline-offset: 3px; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+img { max-width: 100%; height: auto; }
+table { border-collapse: collapse; }
+button { font: inherit; color: inherit; }
+.mono { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.num { font-variant-numeric: tabular-nums; }
+.page { max-width: 1040px; margin: 0 auto; padding-inline: 24px; padding-block: 0 80px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Site bar */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding-block: 12px; }
+.bar .who { font-family: var(--serif); font-size: 18px; font-weight: 500; color: var(--ink); text-decoration: none; display: inline-flex; align-items: baseline; gap: 10px; }
+.bar .who .desk { font-size: 10.5px; }
+.bar nav { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; }
+.bar nav a { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.bar nav a:hover, .bar nav a[aria-current] { color: var(--ink); }
+.bar nav a[aria-current] { border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+.bar .theme { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 4px 8px; cursor: pointer; color: var(--muted); font-size: 10.5px; }
+.bar .theme:hover { color: var(--ink); border-color: var(--line-strong); }
+.onpage { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 48px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.onpage span { color: var(--muted); }
+.onpage a { color: var(--muted); text-decoration: none; }
+.onpage a:hover { color: var(--ink); }
+
+/* Masthead */
+.mast { padding-block: 56px 36px; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 40px; align-items: end; }
+.mast.narrow { grid-template-columns: minmax(0, 1fr) 260px; }
+.wordmark { font-family: var(--serif); font-weight: 500; font-size: clamp(64px, 11vw, 132px); line-height: 0.88; letter-spacing: -0.04em; }
+.wordmark span { color: var(--bench); }
+.wordmark em { font-style: italic; font-weight: 400; color: var(--accent); }
+.mast .back { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; display: inline-block; margin-bottom: 18px; }
+.mast .thesis, .thesis { margin-top: 22px; font-family: var(--serif); font-size: clamp(20px, 2.4vw, 25px); line-height: 1.35; max-width: 34ch; color: var(--ink-2); border-left: 2px solid var(--line-strong); padding-left: 18px; }
+.mast .role { font-family: var(--mono); font-size: 12px; color: var(--ink); margin-top: 18px; max-width: 60ch; line-height: 1.6; }
+.mast figure { margin: 0; }
+.mast figure img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; display: block; border-radius: 2px; }
+.mast figcaption { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+.sheet { border-top: 2px solid var(--line-strong); font-size: 13.5px; margin-top: 28px; }
+.sheet > div { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding-block: 8px; border-bottom: 1px solid var(--line); }
+.sheet > div > span:first-child { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+.sheet code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); user-select: all; }
+.copy { font: 500 10.5px var(--mono); letter-spacing: 0.05em; text-transform: uppercase; border: 0; background: transparent; color: var(--accent); cursor: pointer; padding: 0; margin-left: 8px; }
+.tiles { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 2px solid var(--line-strong); border-left: 1px solid var(--line); }
+.tiles > div { padding: 16px 14px 18px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+.tiles strong { font-family: var(--serif); font-size: 38px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.tiles.row4 { grid-template-columns: repeat(4, 1fr); }
+
+.price { display: flex; align-items: baseline; gap: 14px; margin-top: 18px; border-left: 2px solid var(--line-strong); padding-left: 18px; }
+.price strong { font-family: var(--serif); font-size: 56px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.price span { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+
+/* Figures tape */
+.figures { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 2px solid var(--line-strong); border-bottom: 1px solid var(--line); margin-bottom: 56px; }
+.figures.four { grid-template-columns: repeat(4, 1fr); }
+.figures > * { color: inherit; text-decoration: none; padding: 18px 18px 18px 0; border-left: 1px solid var(--line); padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.figures > *:first-child { border-left: 0; padding-left: 0; }
+.figures a:hover strong { color: var(--accent); }
+.figures strong { font-family: var(--serif); font-size: 38px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.figures .mono { line-height: 1.35; }
+
+/* Sections and text */
+section { margin-bottom: 64px; }
+section > header { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; align-items: baseline; padding-bottom: 12px; border-bottom: 2px solid var(--line-strong); margin-bottom: 24px; }
+section > header h2 { font-family: var(--serif); font-size: 34px; font-weight: 400; letter-spacing: -0.02em; line-height: 1; }
+.lede { font-size: 17px; color: var(--ink-2); max-width: 66ch; }
+.lede b { color: var(--ink); font-weight: 600; }
+.note { font-size: 13px; color: var(--muted); max-width: 70ch; margin-top: 10px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; align-items: start; }
+.block h3, h3.h { font-family: var(--serif); font-size: 22px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 10px; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 36px; margin: 18px 0; }
+.stats > div { display: flex; flex-direction: column; gap: 2px; }
+.stats strong { font-family: var(--serif); font-size: 32px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.stats strong.up { color: var(--accent); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
+.steps.five { grid-template-columns: repeat(5, 1fr); }
+.step { border-top: 2px solid var(--line-strong); padding-top: 10px; }
+.step .mono { color: var(--ink); }
+.step strong { display: block; font-family: var(--serif); font-size: 20px; font-weight: 500; margin: 4px 0 6px; }
+.step p { font-size: 14px; color: var(--ink-2); }
+.t { width: 100%; font-size: 14px; }
+.t th, .t td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.t th { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.t th button { background: transparent; border: 0; padding: 0; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.t th button:hover { color: var(--ink); }
+.t td.n, .t th.n { text-align: right; font-variant-numeric: tabular-nums; }
+.t td.m { font-family: var(--mono); font-size: 12px; }
+.t tr.hi td { font-weight: 600; color: var(--ink); background: var(--tint); }
+.t tr.sum td { border-top: 2px solid var(--line-strong); font-weight: 600; }
+.tscroll { overflow-x: auto; }
+.chart { margin-top: 8px; }
+.chart .ttl { font-size: 13.5px; font-weight: 600; margin-bottom: 8px; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .src { font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+.bands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.band { border: 1px solid var(--line); background: var(--surface); padding: 12px 14px; border-radius: 3px; }
+.band strong { display: block; font-family: var(--serif); font-size: 20px; font-weight: 500; }
+.band .act { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--flag); margin-top: 6px; display: block; }
+.band p { font-size: 13.5px; color: var(--ink-2); margin-top: 6px; }
+.bullets { margin: 12px 0 0; padding-left: 18px; max-width: 64ch; display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: var(--ink-2); }
+.bullets li::marker { color: var(--accent); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.tag { font-family: var(--mono); font-size: 11.5px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 2px 8px; text-decoration: none; }
+.tag:hover { border-color: var(--line-strong); }
+.more { display: inline-block; margin-top: 18px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.more.big { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 22px; padding: 14px 16px; border: 1px solid var(--line-strong); color: var(--ink); text-decoration: none; max-width: 760px; font-family: var(--serif); font-size: 19px; letter-spacing: 0; text-transform: none; }
+.more.big span { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.more.big:hover { background: var(--tint); }
+
+/* Entries (experience ledger) */
+.entry { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; padding-block: 30px; border-bottom: 1px solid var(--line); }
+.entry > *, .claim > * { min-width: 0; }
+.entry .side { display: flex; flex-direction: column; gap: 4px; }
+.entry .side .when { font-family: var(--mono); font-size: 12px; color: var(--ink); }
+.entry h3 { font-family: var(--serif); font-size: 26px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.15; }
+.entry .org { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.entry .what { margin-top: 14px; max-width: 62ch; font-size: 16px; color: var(--ink-2); }
+.entry .what b { color: var(--ink); font-weight: 600; }
+
+/* Photos */
+.slides { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 8px; }
+.slides.portrait { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+.slide { margin: 0; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; cursor: zoom-in; padding: 0; text-align: left; font: inherit; color: inherit; display: block; width: 100%; }
+.slide img { width: 100%; display: block; aspect-ratio: 16 / 9; object-fit: cover; }
+.slides.portrait .slide img { aspect-ratio: 3 / 4; }
+.slide span { display: block; padding: 6px 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--line); }
+.wall { columns: 3; column-gap: 8px; margin-top: 8px; }
+.wall figure { margin: 0 0 8px; break-inside: avoid; }
+.wall img { width: 100%; display: block; border-radius: 2px; }
+.wall figcaption { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.dl { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; font-size: 14px; }
+.strip { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 22px; max-width: 760px; }
+.strip figure { margin: 0; }
+.strip img { width: 100%; height: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; border-radius: 2px; }
+.strip figure.tall img { aspect-ratio: 3 / 4; }
+.strip figcaption { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+.sheet-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; max-width: 760px; }
+.sheet-row figure { margin: 0; }
+.sheet-row img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; border-radius: 2px; }
+.sheet-row .wide img { aspect-ratio: 3 / 2; }
+.sheet-row figcaption { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+/* Exhibits */
+.exhibits { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; max-width: 760px; }
+.ex { border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; display: flex; flex-direction: column; margin: 0; }
+.ex .lab { display: flex; justify-content: space-between; gap: 8px; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+.ex .lab .mono { color: var(--ink); }
+.ex .lab .flag { color: var(--flag); }
+.ex img { display: block; width: 100%; height: 150px; object-fit: cover; }
+.ex .empty { height: 150px; background: repeating-linear-gradient(135deg, transparent 0 9px, var(--line) 9px 10px); opacity: 0.6; }
+.ex .cap { padding: 8px 10px; font-size: 13px; color: var(--ink-2); line-height: 1.4; }
+.ex.todo { border-style: dashed; background: transparent; }
+.ex.todo .cap { color: var(--muted); }
+.ex a, .ex button.slide { cursor: zoom-in; }
+
+/* Stamps, banners, chips */
+.stamp { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--flag); border: 1px solid var(--flag); padding: 2px 6px; border-radius: 2px; background: var(--surface); white-space: nowrap; }
+.banner { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--tint); border: 1px solid var(--line); padding: 10px 14px; font-size: 13.5px; color: var(--ink-2); margin-bottom: 24px; }
+.tk { display: inline-block; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line); padding: 1px 6px; border-radius: 2px; color: var(--ink); text-decoration: none; }
+a.tk:hover { color: var(--accent); border-color: var(--accent); }
+.rating { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.chip { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 2px; border: 1px solid var(--bench); color: var(--ink-2); white-space: nowrap; }
+.chip.ent { border-color: var(--accent); color: var(--accent); }
+.rating .px { font-family: var(--mono); font-size: 11.5px; color: var(--ink); }
+.rating .none { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--muted); }
+
+/* Document cards */
+.shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.doc { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; padding: 0 0 12px; display: flex; flex-direction: column; gap: 6px; position: relative; }
+.doc .doc-open { display: block; width: 100%; border: 0; padding: 0; background: transparent; cursor: pointer; text-align: left; position: relative; }
+.doc .doc-open[aria-disabled="true"] { cursor: default; }
+.doc .cover { display: block; aspect-ratio: 1 / 1.414; background: #FFFFFF; border-bottom: 1px solid var(--line); overflow: hidden; position: relative; }
+.doc .cover img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.doc .cover.empty { background: var(--paper); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.doc .cover.empty::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, transparent 0 9px, var(--line) 9px 10px); opacity: 0.5; }
+.doc .cover.empty b { position: relative; font-family: var(--serif); font-weight: 500; font-size: 40px; color: var(--bench); letter-spacing: -0.02em; }
+.doc .cover.empty i { position: relative; font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.doc .cover .stamp { position: absolute; top: 8px; right: 8px; }
+.doc .meta { padding: 8px 12px 0; font-size: 11px; line-height: 1.5; }
+.doc .ttl { font-family: var(--serif); font-size: 18px; font-weight: 500; line-height: 1.2; padding: 0 12px; letter-spacing: -0.01em; }
+.doc .ttl a { color: var(--ink); text-decoration: none; }
+.doc .ttl a:hover { color: var(--accent); }
+.doc .rating { padding: 0 12px; }
+.doc .lineage, .doc .proves { padding: 0 12px; font-size: 10.5px; line-height: 1.5; }
+.doc .proves a { color: var(--muted); }
+.doc .proves a:hover { color: var(--ink); }
+.doc .thesis { padding: 0 12px; margin: 0; font-family: var(--sans); font-size: 13.5px; color: var(--ink-2); border: 0; max-width: none; line-height: 1.45; }
+.doc.slot { border-style: dashed; }
+.doc.slot .ttl a { color: var(--ink-2); }
+
+/* Library layout */
+.lib { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; align-items: start; }
+.rail { position: sticky; top: 64px; display: flex; flex-direction: column; gap: 18px; font-size: 13.5px; }
+.rail .grp { display: flex; flex-direction: column; gap: 4px; }
+.rail .grp .mono { margin-bottom: 4px; }
+.rail label { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+.rail input[type="checkbox"] { accent-color: var(--accent); margin: 0; }
+.rail select, .search input { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 2px; padding: 8px 10px; }
+.rail .count { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.rail .clear { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.railscroll { display: none; }
+.search { margin-top: 18px; max-width: 420px; }
+.search input { width: 100%; font-family: var(--mono); font-size: 13px; }
+.search input::placeholder { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.views { display: inline-flex; gap: 0; margin-top: 14px; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
+.views button { border: 0; background: transparent; padding: 6px 12px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.views button[aria-pressed="true"] { background: var(--tint); color: var(--ink); }
+.series { margin-bottom: 36px; }
+.series > h3 { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 14px; font-family: var(--serif); font-size: 22px; font-weight: 500; }
+.series > h3 .mono { font-size: 10.5px; }
+.catalogue { margin-top: 24px; font-size: 13.5px; }
+.catalogue summary { cursor: pointer; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.catalogue ul { padding-left: 18px; }
+.catalogue li { margin: 4px 0; }
+
+/* Document pane */
+.pane-back { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.35); z-index: 20; display: none; }
+.pane { position: fixed; top: 0; right: 0; bottom: 0; width: 480px; max-width: 100vw; background: var(--surface); border-left: 1px solid var(--line); z-index: 21; overflow-y: auto; padding: 16px 20px 40px; transform: translateX(100%); display: none; }
+.pane.open, .pane-back.open { display: block; }
+.pane.open { transform: none; }
+.pane .pane-ctl { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+.pane .pane-ctl button { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 5px 10px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.pane .pane-ctl button:hover { color: var(--ink); border-color: var(--line-strong); }
+.pane .cover { display: block; max-height: 48vh; background: #FFFFFF; border: 1px solid var(--line); overflow: hidden; }
+.pane .cover img { width: 100%; height: auto; max-height: 48vh; object-fit: contain; object-position: top; display: block; }
+.pane .cover.empty { aspect-ratio: 1.414 / 1; background: var(--paper); display: flex; align-items: center; justify-content: center; gap: 10px; position: relative; }
+.pane .cover.empty::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, transparent 0 9px, var(--line) 9px 10px); opacity: 0.5; }
+.pane .cover.empty b { position: relative; font-family: var(--serif); font-weight: 500; font-size: 40px; color: var(--bench); }
+.pane .cover.empty i { position: relative; font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.pane h2 { font-family: var(--serif); font-size: 24px; font-weight: 500; line-height: 1.2; margin-top: 10px; letter-spacing: -0.01em; }
+.pane .meta { margin-top: 12px; }
+.pane .byline { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.pane .call { border-top: 2px solid var(--line-strong); margin-top: 14px; padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.pane .call p { font-size: 14.5px; color: var(--ink-2); }
+.pane .status { font-size: 13px; color: var(--flag); margin-top: 10px; }
+.pane .lineage, .pane .proves { margin-top: 10px; font-size: 11px; line-height: 1.8; }
+.pane .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.pane .actions a, .pane .actions span { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line-strong); color: var(--ink); text-decoration: none; padding: 7px 10px; border-radius: 2px; }
+.pane .actions a:hover { background: var(--tint); }
+.pane .actions span { color: var(--muted); border-color: var(--line); }
+.pane .pages { margin-top: 18px; }
+.pane .pages .slides.portrait { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+body.pane-open { overflow: hidden; }
+
+/* Engines */
+.eng { background: var(--surface); border: 1px solid var(--line); border-left: 2px solid var(--accent); border-radius: 3px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.eng .head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.eng .name { font-family: var(--mono); font-size: 13px; color: var(--ink); }
+.eng .flavor { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line); padding: 1px 6px; border-radius: 2px; color: var(--muted); }
+.eng .size { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.eng .kv { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 4px 10px; font-size: 13.5px; color: var(--ink-2); }
+.eng .kv .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.eng .rule { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--ink); border-left: 2px solid var(--line); padding-left: 10px; }
+.eng .produced { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.engs { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+details.dossier { border-top: 1px solid var(--line); padding: 14px 0; }
+details.dossier summary { cursor: pointer; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+details.dossier summary::-webkit-details-marker { display: none; }
+details.dossier summary h3 { font-family: var(--serif); font-size: 22px; font-weight: 500; }
+details.dossier summary h3::after { content: " +"; color: var(--muted); }
+details.dossier[open] summary h3::after { content: " −"; }
+details.dossier .body { margin-top: 16px; display: flex; flex-direction: column; gap: 18px; }
+.diagram { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; padding: 12px; margin-top: 16px; }
+.diagram svg { min-width: 640px; width: 100%; height: auto; display: block; }
+.diagram .node { fill: var(--paper); stroke: var(--line); }
+.diagram .hub { fill: var(--accent); stroke: var(--accent); }
+.diagram .store { fill: var(--paper); stroke: var(--line); stroke-dasharray: 4 3; }
+.diagram .edge { stroke: var(--muted); fill: none; stroke-width: 1; }
+.diagram text { fill: var(--ink); font-family: var(--sans); font-size: 13px; }
+.diagram text.mono { fill: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.diagram .hub + text, .diagram text.on { fill: var(--accent-ink); }
+.diagram a { cursor: pointer; }
+.frame { aspect-ratio: 16 / 10; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; margin-top: 14px; }
+.frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+/* Claims (CV line + evidence), ventures, certificates */
+.claim { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; padding-block: 28px; border-bottom: 1px solid var(--line); }
+.claim blockquote { margin: 0; font-family: var(--serif); font-size: 19px; line-height: 1.4; color: var(--ink); max-width: 60ch; }
+.claim blockquote p + p { margin-top: 6px; }
+.ventures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.venture { border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; display: flex; flex-direction: column; }
+.venture img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; }
+.venture .vbody { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.venture h3 { font-family: var(--serif); font-size: 22px; font-weight: 500; }
+.venture p { font-size: 14px; color: var(--ink-2); }
+.venture .stats { margin: 8px 0 0; gap: 6px 22px; }
+.venture .stats strong { font-size: 26px; }
+.venture .more { margin-top: 10px; }
+.certs .fam { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 12px; }
+.certs .fam button { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 3px 9px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.certs .fam button[aria-pressed="true"] { background: var(--tint); color: var(--ink); border-color: var(--line-strong); }
+.certs .slides { grid-template-columns: repeat(6, 1fr); }
+.certs .slide img { aspect-ratio: 4 / 3; }
+.certs .showall { margin-top: 12px; border: 1px solid var(--line-strong); background: transparent; border-radius: 2px; padding: 7px 12px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); }
+.thumb { width: 56px; height: 56px; object-fit: cover; border: 1px solid var(--line); border-radius: 2px; display: inline-block; vertical-align: middle; margin-right: 4px; cursor: zoom-in; }
+
+/* Lightbox */
+dialog#lb { border: 0; padding: 0; background: transparent; max-width: min(96vw, 1200px); }
+dialog#lb::backdrop { background: rgba(0, 0, 0, 0.85); }
+dialog#lb img { max-width: 96vw; max-height: 86vh; display: block; border-radius: 2px; margin: 0 auto; }
+dialog#lb .ctl { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; color: #fff; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+dialog#lb button { font: inherit; color: #fff; background: transparent; border: 1px solid rgba(255, 255, 255, 0.5); padding: 6px 12px; cursor: pointer; border-radius: 2px; }
+
+/* Promoted from the page builds */
+.doc .cover .stamp + .stamp { top: 32px; }
+.ledger .t { min-width: 860px; }
+.ledger .t th, .ledger .t td { white-space: nowrap; }
+.ledger .t td.tt { white-space: normal; min-width: 240px; }
+.ledger .t th.on button { color: var(--ink); }
+.pane button.cover { width: 100%; padding: 0; cursor: zoom-in; text-align: left; border: 1px solid var(--line); }
+.exhibits { align-items: start; }
+.certs .slide[hidden], .certs .showall[hidden] { display: none; }
+.t .flag { color: var(--flag); }
+.cov { min-width: 820px; }
+.cov.macro { min-width: 560px; }
+.cov .rating { flex-wrap: wrap; }
+.cov .stamp { white-space: nowrap; }
+.cov td .stamp { display: block; width: fit-content; max-width: 150px; white-space: normal; line-height: 1.3; margin: 0 0 4px; }
+.cov td.num { white-space: nowrap; }
+.band strong a { color: inherit; text-decoration: none; }
+.band strong a:hover { color: var(--accent); }
+.claim .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.claim > div > .stats { margin-top: 16px; }
+.sheet-row a, .strip figure a { display: block; }
+.venture .side { display: block; margin-top: -2px; }
+.eng .note { font-size: 13px; color: var(--muted); margin: 0; max-width: none; }
+.eng .produced .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.eng .flavor.prop { color: var(--flag); border-color: var(--flag); }
+.dossier .body h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 6px; }
+.formula { font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
+.dossier .body .line { font-family: var(--serif); font-size: 17px; font-style: italic; color: var(--ink); max-width: 60ch; }
+.frame .fallback { display: none; }
+.frame.failed { aspect-ratio: auto; border: 0; background: transparent; }
+.frame.failed iframe { display: none; }
+.frame.failed .fallback { display: block; }
+
+/* Claim plates: a claim set beside its evidence, with a source line */
+.plate { padding-block: 72px 64px; border-top: 1px solid var(--line); margin: 0; }
+.plate:first-of-type { border-top: 0; }
+.plate .idx { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.plate .idx::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.claim-x { font-family: var(--serif); font-weight: 400; font-size: clamp(36px, 5.2vw, 68px); line-height: 1.02; letter-spacing: -0.03em; max-width: 16ch; text-wrap: balance; }
+.claim-x .num { font-weight: 500; font-variant-numeric: tabular-nums; }
+.claim-x em { font-style: italic; color: var(--accent); }
+.claim-x .arrow { color: var(--bench); font-weight: 400; }
+.sub { margin-top: 20px; font-family: var(--serif); font-size: clamp(18px, 2vw, 22px); line-height: 1.4; color: var(--ink-2); max-width: 40ch; }
+.sub b { color: var(--ink); font-weight: 500; }
+.srcline { display: inline-flex; align-items: baseline; gap: 10px; margin-top: 22px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-top: 1px solid var(--line-strong); padding-top: 10px; }
+.srcline::before { content: "↳"; color: var(--bench); }
+.srcline .go { color: var(--accent); }
+.srcline:hover .go { text-decoration: underline; text-underline-offset: 3px; }
+.plate .side { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: start; }
+.plate .side.flip { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.plate figure { margin: 0; }
+.plate figure img { width: 100%; display: block; border-radius: 2px; }
+.plate figcaption, .cap-m { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+.pageimg { border: 1px solid var(--line); background: #FFFFFF; }
+.bleed { margin-inline: calc(50% - 50vw); padding-inline: calc(50vw - 50%); }
+.triptych { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 28px; }
+.triptych img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; border-radius: 2px; }
+.wide { margin-top: 8px; }
+.wide img { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; object-position: center 40%; display: block; border-radius: 2px; }
+.fan { display: flex; align-items: flex-end; margin-top: 36px; padding-bottom: 12px; min-height: 240px; }
+.fan a { display: block; width: 170px; flex: 0 0 auto; margin-right: -46px; border: 1px solid var(--line); background: #FFFFFF; box-shadow: 0 1px 0 var(--line); transform: rotate(var(--r, 0deg)) translateY(var(--y, 0px)); transform-origin: bottom center; }
+.fan a img { width: 100%; aspect-ratio: 1 / 1.414; object-fit: cover; object-position: top; display: block; }
+.fan a:nth-child(1) { --r: -6deg; --y: 6px; } .fan a:nth-child(2) { --r: -3deg; } .fan a:nth-child(3) { --r: -1deg; --y: 4px; } .fan a:nth-child(4) { --r: 1deg; } .fan a:nth-child(5) { --r: 3deg; --y: 6px; } .fan a:nth-child(6) { --r: 5deg; } .fan a:nth-child(7) { --r: 7deg; --y: 8px; }
+.fan a:hover, .fan a:focus-visible { z-index: 2; transform: rotate(0deg) translateY(-14px); border-color: var(--line-strong); }
+.fan .more-fan { width: auto; margin-left: 72px; margin-right: 0; align-self: center; border: 0; background: transparent; box-shadow: none; transform: none; white-space: nowrap; }
+.lines { margin-top: 28px; border-top: 2px solid var(--line-strong); max-width: 760px; }
+.lines > a, .lines > div { display: grid; grid-template-columns: 84px minmax(0, 1fr) minmax(0, 300px); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); color: inherit; text-decoration: none; align-items: baseline; font-size: 15px; }
+.lines > a:hover .ttl { color: var(--accent); }
+.lines .tk { justify-self: start; }
+.lines .ttl { font-family: var(--serif); font-size: 19px; }
+.lines .r { font-family: var(--mono); font-size: 11px; line-height: 1.6; color: var(--muted); text-align: right; }
+.trace { margin-top: 36px; overflow-x: auto; }
+.trace svg { min-width: 760px; width: 100%; height: auto; display: block; }
+.trace .rail { stroke: var(--line-strong); stroke-width: 2; fill: none; }
+.trace .stop { fill: var(--paper); stroke: var(--line-strong); stroke-width: 2; }
+.trace .stop.hub { fill: var(--accent); stroke: var(--accent); }
+.trace .gate { fill: var(--flag); }
+.trace text { font-family: var(--sans); font-size: 13px; fill: var(--ink); }
+.trace text.mono { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; fill: var(--muted); }
+.trace text.flag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.04em; fill: var(--flag); }
+.write { padding-block: 80px 40px; border-top: 1px solid var(--line); }
+.write .mail { display: inline-flex; align-items: baseline; gap: 14px; margin-top: 24px; font-family: var(--mono); font-size: clamp(18px, 3vw, 30px); color: var(--ink); word-break: break-all; }
+.write .mail code { font-family: inherit; user-select: all; }
+.write .meta { margin-top: 18px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; gap: 20px; flex-wrap: wrap; }
+.write .meta a { color: var(--ink); }
+.toc { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 2px solid var(--line-strong); border-bottom: 1px solid var(--line); margin-top: 56px; }
+.toc a { color: inherit; text-decoration: none; padding: 18px 16px 18px 0; border-left: 1px solid var(--line); padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
+.toc a:first-child { border-left: 0; padding-left: 0; }
+.toc strong { font-family: var(--serif); font-size: clamp(30px, 3.4vw, 40px); font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.toc a:hover strong { color: var(--accent); }
+.toc .mono { line-height: 1.4; }
+.toc .mono em { font-style: normal; color: var(--ink); }
+@media (max-width: 900px) { .toc { grid-template-columns: repeat(2, 1fr); } .toc a { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); } .toc a:nth-child(-n+2) { border-top: 0; } .toc a:nth-child(2n) { border-left: 1px solid var(--line); padding-left: 16px; } }
+@media (max-width: 820px) {
+  .plate { padding-block: 48px 40px; }
+  .plate .side, .plate .side.flip { grid-template-columns: 1fr; gap: 24px; }
+  .plate .side.flip > :first-child { order: 2; }
+  .triptych { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .wide img { aspect-ratio: 4 / 3; }
+  .fan { overflow-x: auto; padding-bottom: 20px; min-height: 0; }
+  .fan a { width: 120px; margin-right: -24px; }
+  .lines > a, .lines > div { grid-template-columns: 64px minmax(0, 1fr); }
+  .lines .r { grid-column: 2; text-align: left; }
+  .write { padding-block: 64px 56px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fan a { transition: transform .25s ease, border-color .15s; }
+  .srcline::before { transition: transform .2s; display: inline-block; }
+  .srcline:hover::before { transform: translateX(3px); }
+  .open .wordmark, .open .intro { animation: rise .7s ease both; }
+  .open .intro { animation-delay: .12s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+}
+
+/* Two registers: market term as text, engine code as a tag; a page can switch the tags off */
+.code { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.04em; text-transform: none; color: var(--muted); border: 1px solid var(--line); border-radius: 2px; padding: 0 5px; line-height: 1.6; vertical-align: 0.15em; margin-left: 6px; white-space: nowrap; font-weight: 500; font-style: normal; }
+h1 .code, h2 .code, .claim-x .code { font-size: 12px; vertical-align: 0.6em; margin-left: 10px; letter-spacing: 0.06em; }
+.mono .code { margin-left: 4px; }
+.codes-off .code { display: none; }
+.codeswitch { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 2px; padding: 5px 10px; background: transparent; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.codeswitch[aria-pressed="true"] { color: var(--ink); border-color: var(--line-strong); }
+.codeswitch:hover { color: var(--ink); }
+.gloss { margin-top: 20px; max-width: 760px; }
+.gloss .t td:first-child { font-weight: 600; color: var(--ink); width: 34%; }
+.gloss .t td.m { color: var(--muted); }
+
+footer { color: var(--muted); font-size: 13px; max-width: 64ch; line-height: 1.5; }
+footer p + p { margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .lib { grid-template-columns: 1fr; gap: 16px; }
+  .rail { position: static; display: none; }
+  .railscroll { display: flex; gap: 6px; overflow-x: auto; white-space: nowrap; padding-bottom: 8px; align-items: center; }
+  .railscroll button, .railscroll select { flex: 0 0 auto; border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 4px 9px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+  .railscroll button[aria-pressed="true"] { background: var(--tint); color: var(--ink); border-color: var(--line-strong); }
+  .shelf { grid-template-columns: repeat(2, 1fr); }
+  .engs { grid-template-columns: 1fr; }
+}
+@media (max-width: 820px) {
+  .page { padding-inline: 16px; }
+  .bar { gap: 8px 14px; }
+  .bar .who .desk { display: none; }
+  .bar .theme { margin-left: auto; order: 2; }
+  .bar nav { order: 3; flex-basis: 100%; margin-left: 0; gap: 12px; }
+  .bar nav a { font-size: 11px; }
+  .mast, .mast.narrow { grid-template-columns: 1fr; gap: 28px; padding-block: 36px 28px; }
+  .mast figure { max-width: 300px; order: 2; }
+  .figures, .figures.four { grid-template-columns: repeat(2, 1fr); margin-bottom: 48px; }
+  .figures > * { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); }
+  .figures > *:nth-child(-n+2) { border-top: 0; }
+  .figures > *:nth-child(2n) { border-left: 1px solid var(--line); padding-left: 16px; }
+  .figures strong, .tiles strong { font-size: 32px; }
+  .tiles.row4 { grid-template-columns: repeat(2, 1fr); }
+  section { margin-bottom: 48px; }
+  section > header { grid-template-columns: 1fr; gap: 8px; }
+  .grid2, .bands, .ventures, .steps, .steps.five { grid-template-columns: 1fr; }
+  .steps, .steps.five { grid-template-columns: repeat(2, 1fr); }
+  .entry, .claim { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .entry > *, .claim > *, .grid2 > * { min-width: 0; }
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .entry .side { flex-direction: row; gap: 14px; align-items: baseline; }
+  .strip { grid-template-columns: 1fr; }
+  .sheet-row { grid-template-columns: repeat(2, 1fr); }
+  .wall { columns: 2; }
+  .t { font-size: 13px; }
+  .pane { width: 100vw; border-left: 0; }
+  .certs .slides { grid-template-columns: repeat(3, 1fr); }
+  .shelf { grid-template-columns: repeat(2, 1fr); }
+  .frame { aspect-ratio: 3 / 4; }
+}
+@media (max-width: 820px) { .pane.open { animation: none; } .sheet-row figure:nth-child(3) { grid-column: 1 / -1; max-width: calc(50% - 4px); } }
+@media (max-width: 480px) { .bar .who .desk { display: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .figures strong, .bar nav a, .copy, .tag, .tk, .doc, .doc .ttl a { transition: color .15s, border-color .15s, transform .15s; }
+  .doc:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+  .pane.open { animation: paneIn .2s ease; }
+  @keyframes paneIn { from { transform: translateX(100%); } to { transform: none; } }
+}
+@media print {
+  .bar, .pane, .pane-back, .rail, .railscroll, .views, .search, dialog { display: none !important; }
+  .catalogue { display: block; }
+  .catalogue[open], .catalogue { open: true; }
+  .page { max-width: none; padding: 0; }
+}
+/* BASE v1 end */
+</style>
+<style>
+/* engines.html page styles (candidates for base.css are marked PROMOTE) */
+.mast .tiles { margin-top: 0; }
+.eng .note { font-size: 13px; color: var(--muted); margin: 0; }                 /* PROMOTE: a one-line note on an engine card */
+.eng .produced .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); } /* PROMOTE */
+.eng .flavor.prop { color: var(--flag); border-color: var(--flag); }            /* PROMOTE: a [PROPOSED] flavor variant badge */
+.dossier .body h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 6px; } /* PROMOTE: dossier sub-heading */
+.dossier .body .t { font-size: 13.5px; }
+.dossier .body .t td.m { white-space: nowrap; }
+.dossier .body .steps { margin-top: 6px; }
+.dossier .body .lede { font-size: 16px; }
+.formula { font-family: var(--mono); font-size: 12.5px; color: var(--ink); }   /* PROMOTE: inline formula */
+.dossier .body .line { font-family: var(--serif); font-size: 17px; font-style: italic; color: var(--ink); max-width: 60ch; }  /* PROMOTE: the one quoted line in a dossier */
+.frame .fallback { display: none; }
+.frame.failed { aspect-ratio: auto; border: 0; background: transparent; }
+.frame.failed iframe { display: none; }
+.frame.failed .fallback { display: block; }
+.gloss h3 { font-family: var(--serif); font-size: 22px; font-weight: 500; }               /* PROMOTE: the "How to read this page" heading */
+.guide .dl { margin-top: 14px; margin-bottom: 0; align-items: baseline; }
+.guide .dl .note { margin-top: 0; }
+.ex.todo.inline { max-width: 300px; margin-top: 12px; }
+@media (max-width: 820px) {
+  .dossier .body .t { font-size: 12.5px; }
+}
+</style>
+</head>
+<body data-page="engines">
+<div class="page">
+<!-- CHROME v1 start -->
+<div class="bar" id="siteBar"><a class="who" href="index.html">Faldo Lyon <span class="desk mono">Research desk</span></a><nav aria-label="Site"><a href="research.html" data-page="research">Research</a><a href="engines.html" data-page="engines">Engines</a><a href="cpv.html" data-page="cpv">CPV</a><a href="index.html#clients">Clients</a><a href="analyst.html" data-page="analyst">Analyst</a><a href="kopi.html" data-page="kopi">Kopi Satset</a></nav><button class="theme mono" type="button" id="themeBtn" aria-label="Switch colour theme">Theme · auto</button></div>
+<!-- CHROME v1 end -->
+
+<main id="main">
+  <header class="mast" id="top">
+    <div>
+      <h1 class="wordmark">Engines<span>.</span></h1>
+      <p class="thesis">Twenty-five Claude skills under one rulebook. Each declares what it reads and what it writes, and most name the fields they may never touch.</p>
+      <p class="note">Built at Gotrade in 2026 for the research desk. Line counts are from the skill files as of October 2026. Every rule quoted here is verbatim from the skill's own file.</p>
+      <p class="note"><button class="codeswitch" type="button" id="codeSwitch" aria-pressed="true">Engine codes · on</button></p>
+    </div>
+    <div class="tiles" aria-label="Library in four figures">
+      <div><strong class="num" id="tileSkills">25</strong><span class="mono">skills under one rulebook</span></div>
+      <div><strong class="num">4</strong><span class="mono">skill types, each with its own rules</span></div>
+      <div><strong class="num" id="tileLines">533</strong><span class="mono">lines in the main engine</span></div>
+      <div><strong class="num">7</strong><span class="mono">documents in the energy store</span></div>
+    </div>
+  </header>
+
+  <section id="scale">
+    <header><span class="mono">Scale</span><h2>The scale of the logic</h2></header>
+    <p class="lede">What one run of the full engine holds, in plain numbers.</p>
+    <div class="stats" aria-label="The scale of the logic">
+      <div><strong class="num" id="statSkills">25</strong><span class="mono">skills under one rulebook</span></div>
+      <div><strong class="num" id="statStops">7</strong><span class="mono">stops from ticker to PDF, each with a test that can stop the run</span></div>
+      <div><strong class="num">12</strong><span class="mono">steps in one fixed order</span></div>
+      <div><strong class="num">13</strong><span class="mono">output sections, each a set of named fields, plus a checklist and a provenance log</span></div>
+      <div><strong class="num">53</strong><span class="mono">constants in one register, each tagged with how far to trust it</span></div>
+      <div><strong class="num">3</strong><span class="mono">scenarios to 1 probability-weighted fair value; 4 valuation methods cross-checked</span></div>
+      <div><strong class="num">5</strong><span class="mono">thesis-break conditions, none of them the price</span></div>
+      <div><strong class="num">2</strong><span class="mono">ratings on 2 bases; 7 positioning outcomes; 5 conviction criteria</span></div>
+      <div><strong class="num" id="statStoreDocs">7</strong><span class="mono">documents in the energy store, written under one contract</span></div>
+    </div>
+    <div class="gloss">
+      <h3>How to read this page</h3>
+      <p class="note">The engine's own names are shown as small tags; switch them off for a plain read.</p>
+      <table class="t">
+        <thead><tr><th>Market term</th><th>Engine term</th></tr></thead>
+        <tbody>
+          <tr><td>the model output: thirteen sections of named fields</td><td class="m">bank · S1–S13</td></tr>
+          <tr><td>completion checklist</td><td class="m">SM</td></tr>
+          <tr><td>provenance log: where every number came from</td><td class="m">SP</td></tr>
+          <tr><td>disclosed / from guidance / modelled / assumed</td><td class="m">D / G / M / A</td></tr>
+          <tr><td>probability-weighted fair value (per share)</td><td class="m">weighted PV · S10</td></tr>
+          <tr><td>scenario (bear / base / bull)</td><td class="m">arm</td></tr>
+          <tr><td>thesis-break condition</td><td class="m">kill switch</td></tr>
+          <tr><td>a test, named, that can stop the run</td><td class="m">gate</td></tr>
+          <tr><td>is the model output complete?</td><td class="m">admissibility</td></tr>
+          <tr><td>no untraced number in the report</td><td class="m">containment C1–C4</td></tr>
+          <tr><td>report writer: writes the document, types no number</td><td class="m">composer</td></tr>
+          <tr><td>PDF layout</td><td class="m">renderer</td></tr>
+          <tr><td>input models: moat score, hurdle-rate surface, energy store</td><td class="m">feeder engines</td></tr>
+          <tr><td>skill type: analytical / advisory / operational / transform</td><td class="m">flavor A / B / C / D</td></tr>
+          <tr><td>rating for new money / rating for existing holders</td><td class="m">Entrant / Holder</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="first">
+    <header><span class="mono">Two minutes</span><h2>Three rules, read first</h2></header>
+    <div class="bands">
+      <div class="band"><strong>Where a number came from<span class="code">D G M A</span></strong><span class="act">disclosed, from guidance, modelled, assumed</span><p>Every material figure carries a tag: D disclosed, G from guidance, M modelled, A assumed, in that order of precedence. A figure that could have been disclosed or taken from guidance but was modelled is an error. The provenance log prints the share of the fair value that rests on modelled or assumed figures.</p></div>
+      <div class="band"><strong>Who may type a number<span class="code">composer</span></strong><span class="act">The report writer types no number</span><p>The engines do the arithmetic. The report writer re-expresses and types no number of its own: every printed number in an IC note is a reference such as <code class="formula">{{S10.weighted_pv}}</code> that the PDF layout resolves against the model output and stamps with its key.</p></div>
+      <div class="band"><strong>What stops a run<span class="code">gates</span></strong><span class="act">A refused build is a correct outcome</span><p>Five thesis-break conditions, a completeness test on the model output, four checks that no untraced number reaches the note, sixteen plain-English rules on the prose, a date limit on every data row. When a test fails, the fix goes upstream of it; the test itself is never edited.</p></div>
+    </div>
+  </section>
+
+  <section id="run">
+    <header><span class="mono">One run</span><h2>From ticker to PDF</h2></header>
+    <p class="lede">Seven stops. Each one has a test that can stop the run, and the fix is always upstream of the test, never inside it.</p>
+    <div class="tscroll" style="margin-top:16px"><table class="t" style="min-width:760px">
+      <thead><tr><th>Stop</th><th>In</th><th>Out</th><th>The test that can stop the run</th></tr></thead>
+      <tbody>
+        <tr><td class="m">1 · Ask once</td><td>ticker, filings, the risk budget</td><td>one consolidated input pack</td><td>a Required item missing stops the run at step 1; it is never asked twice</td></tr>
+        <tr><td class="m">2 · Retrieve into a registry</td><td>filings, data pages, news</td><td>registered source pages with ids</td><td>a figure not in a registered source does not exist</td></tr>
+        <tr><td class="m">3 · Input models<span class="code">feeders</span></td><td>the registry</td><td>moat scorecard (step 8), hurdle-rate surface (step 6b), the industry block I1–I7 from the energy store, the sector output E0–E6<span class="code">sector bank</span></td><td>a data row past its date limit prints n/a<span class="code">window_d</span></td></tr>
+        <tr><td class="m">4 · CPV computes the model output<span class="code">bank</span></td><td>the input pack plus the input models</td><td>thirteen sections of named fields, the completion checklist, the provenance log<span class="code">S1–S13 · SM · SP</span></td><td>the forecast off the last reported quarter by more than 5% on revenue or 8% on EPS<span class="code">T9</span>; an exit value that is just today's price carried forward<span class="code">T47</span>; a discount rate that is not a cost of equity; a mixed convert basis</td></tr>
+        <tr><td class="m">5 · Write by reference<span class="code">compose</span></td><td>the model output as one file, byte for byte<span class="code">bank.md</span></td><td>the report spec: every number a reference<span class="code">note.json</span></td><td>is the model output complete?<span class="code">admissibility</span> header absent, sections missing, run scope not full, a summary instead of the model output, two model outputs for one ticker</td></tr>
+        <tr><td class="m">6 · No untraced number, plain prose<span class="code">C1–C4 · R1–R16</span></td><td>the report spec</td><td>a passing spec</td><td>a number typed rather than referenced<span class="code">C1</span>; a figure cited from the wrong section<span class="code">C2</span>; a bare numeral in prose<span class="code">C3</span>; a one-page summary that differs from the full note<span class="code">C4</span>; a reference to a field that does not exist<span class="code">R0</span>; sixteen plain-English rules on the body<span class="code">R1–R16</span></td></tr>
+        <tr><td class="m">7 · Lay out the PDF<span class="code">render</span></td><td>the spec and the frozen token file</td><td>the branded A4 PDF plus the one-page summary</td><td>the PDF layout introduces nothing; a build that reaches for the stylesheet has crossed the line</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Stops 1 to 4 are <a href="#catalyst-projection-valuation">catalyst-projection-valuation</a> with its input models; stops 5 to 7 are <a href="#gotrade-ic-note">gotrade-ic-note</a>. The energy write-ups run the same shape through <a href="#stock-writeup-composer">stock-writeup-composer</a> and <a href="#stock-writeup-pdf">stock-writeup-pdf</a>.</p>
+  </section>
+
+  <section id="ladder">
+    <header><span class="mono">Three depths</span><h2>The ladder</h2></header>
+    <p class="lede">One question at three depths. Each tier asks for more inputs and returns more fields; the full engine reads its two input models once each.</p>
+    <div class="diagram">
+<svg viewBox="0 0 720 240" role="img" aria-labelledby="ladderTitle" xmlns="http://www.w3.org/2000/svg">
+<title id="ladderTitle">The valuation ladder: quick-stock-verdict, cpv-core, catalyst-projection-valuation, with per-growth-checker and moat-analyzer read once by the full engine</title>
+<defs><marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="var(--muted)"/></marker></defs>
+<a href="#quick-stock-verdict"><rect class="node" x="20" y="104" width="200" height="92" rx="3"/>
+<text class="mono" x="32" y="124">Tier 1</text>
+<text x="32" y="145" font-weight="600">quick-stock-verdict</text>
+<text class="mono" x="32" y="168">thirty seconds</text>
+<text x="32" y="184" font-size="12">GOOD / MID / BAD</text>
+</a>
+<a href="#cpv-core"><rect class="node" x="260" y="104" width="200" height="92" rx="3"/>
+<text class="mono" x="272" y="124">Tier 2</text>
+<text x="272" y="145" font-weight="600">cpv-core</text>
+<text class="mono" x="272" y="168">three numbers</text>
+<text x="272" y="184" font-size="12">entry, fair value, conviction</text>
+</a>
+<a href="#catalyst-projection-valuation"><rect class="hub" x="500" y="104" width="200" height="92" rx="3"/>
+<text class="mono on" x="512" y="124">Tier 3</text>
+<text class="on" x="512" y="145" font-weight="600">catalyst-projection-</text>
+<text class="on" x="512" y="161" font-weight="600">valuation</text>
+<text class="mono on" x="512" y="184">full run</text>
+</a>
+<text class="on" x="568" y="124" font-size="12">the full model output</text>
+<path class="edge" d="M220,150.0 L258,150.0" marker-end="url(#arr)"/>
+<path class="edge" d="M460,150.0 L498,150.0" marker-end="url(#arr)"/>
+<a href="#per-growth-checker"><rect class="node" x="430" y="16" width="128" height="40" rx="3"/>
+<text x="494.0" y="41" text-anchor="middle" font-size="12.5">per-growth-checker</text></a>
+<path class="edge" d="M494.0,56 L494.0,102" marker-end="url(#arr)"/>
+<text class="mono" x="500.0" y="84" text-anchor="start">read once at step 6b</text>
+<a href="#moat-analyzer"><rect class="node" x="580" y="16" width="128" height="40" rx="3"/>
+<text x="644.0" y="41" text-anchor="middle" font-size="12.5">moat-analyzer</text></a>
+<path class="edge" d="M644.0,56 L644.0,102" marker-end="url(#arr)"/>
+<text class="mono" x="638.0" y="84" text-anchor="end">read once at step 8</text>
+<path class="edge" d="M20,222 L700,222" marker-end="url(#arr)"/>
+<text class="mono" x="20" y="216">inputs required →</text>
+<text class="mono" x="700" y="216" text-anchor="end">fields returned →</text>
+</svg>
+    </div>
+    <p class="note">Every box is a link to its card. On a phone the diagram scrolls inside its frame.</p>
+  </section>
+
+  <section id="pipeline">
+    <header><span class="mono">Provenance</span><h2>The pipeline</h2></header>
+    <p class="lede">Sources on the left, documents on the right. Nothing crosses from the engine column to the report-writer column except the model output, and nothing in a report writer is a typed number.</p>
+    <div class="diagram">
+<svg viewBox="0 0 960 320" role="img" aria-labelledby="pipeTitle" xmlns="http://www.w3.org/2000/svg">
+<title id="pipeTitle">The pipeline: sources and the energy store feed the input models and CPV; CPV emits the model output; report writers write by reference; the PDF layout builds the PDFs in the library</title>
+<defs><marker id="arr2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="var(--muted)"/></marker></defs>
+<text class="mono" x="8" y="14">Sources</text>
+<text class="mono" x="178" y="14">Input models</text>
+<text class="mono" x="348" y="14">CPV</text>
+<text class="mono" x="518" y="14">Report writers</text>
+<text class="mono" x="688" y="14">PDF layout</text>
+<text class="mono" x="858" y="14">Documents</text>
+<a href="#run"><rect class="node" x="8" y="28" width="155" height="92" rx="3"/>
+<text x="85.5" y="63.5" text-anchor="middle">filings</text>
+<text x="85.5" y="78.5" text-anchor="middle">data pages</text>
+<text x="85.5" y="93.5" text-anchor="middle">news</text>
+</a>
+<a href="#energy-store"><rect class="store" x="8" y="150" width="155" height="70" rx="3"/>
+<text x="85.5" y="182.0" text-anchor="middle" font-size="12.5">energy store</text>
+<text x="85.5" y="197.0" text-anchor="middle" font-size="12.5">seven documents</text>
+</a>
+<a href="#moat-analyzer"><rect class="node" x="178" y="28" width="155" height="42" rx="3"/>
+<text x="255.5" y="53.5" text-anchor="middle" font-size="12.5">moat-analyzer</text>
+</a>
+<a href="#per-growth-checker"><rect class="node" x="178" y="80" width="155" height="42" rx="3"/>
+<text x="255.5" y="105.5" text-anchor="middle" font-size="12.5">per-growth-checker</text>
+</a>
+<a href="#energy-macro-pack"><rect class="node" x="178" y="132" width="155" height="42" rx="3"/>
+<text x="255.5" y="157.5" text-anchor="middle" font-size="12.5">energy-macro-pack</text>
+</a>
+<a href="#energy-sector-analysis"><rect class="node" x="178" y="184" width="155" height="42" rx="3"/>
+<text x="255.5" y="209.5" text-anchor="middle" font-size="12.5">energy-sector-analysis</text>
+</a>
+<path class="edge" d="M163,60 L176,49.0" marker-end="url(#arr2)"/>
+<path class="edge" d="M163,80 L176,101.0" marker-end="url(#arr2)"/>
+<path class="edge" d="M163,185 L176,153.0" marker-end="url(#arr2)"/>
+<path class="edge" d="M163,195 L176,205.0" marker-end="url(#arr2)"/>
+<a href="#catalyst-projection-valuation"><rect class="hub" x="348" y="84" width="155" height="84" rx="3"/>
+<text class="on" x="425.5" y="123.0" text-anchor="middle">catalyst-projection-</text>
+<text class="on" x="425.5" y="138.0" text-anchor="middle">valuation</text>
+</a>
+<path class="edge" d="M333,49.0 L346,126.0" marker-end="url(#arr2)"/>
+<path class="edge" d="M333,101.0 L346,126.0" marker-end="url(#arr2)"/>
+<path class="edge" d="M333,153.0 L346,126.0" marker-end="url(#arr2)"/>
+<path class="edge" d="M333,205.0 L346,126.0" marker-end="url(#arr2)"/>
+<a href="#cpv-core"><rect class="node" x="348" y="200" width="155" height="42" rx="3"/>
+<text x="425.5" y="225.5" text-anchor="middle" font-size="12.5">cpv-core</text>
+</a>
+<text class="mono" x="425.5" y="256" text-anchor="middle">same arithmetic,</text>
+<text class="mono" x="425.5" y="270" text-anchor="middle">three outputs</text>
+<a href="#gotrade-ic-note"><rect class="node" x="518" y="28" width="155" height="42" rx="3"/>
+<text x="595.5" y="53.5" text-anchor="middle" font-size="12.5">gotrade-ic-note</text>
+</a>
+<a href="#stock-writeup-composer"><rect class="node" x="518" y="80" width="155" height="42" rx="3"/>
+<text x="595.5" y="98.0" text-anchor="middle" font-size="12.5">stock-writeup-</text>
+<text x="595.5" y="113.0" text-anchor="middle" font-size="12.5">composer</text>
+</a>
+<a href="#dhany-writeup-composer"><rect class="node" x="518" y="132" width="155" height="42" rx="3"/>
+<text x="595.5" y="150.0" text-anchor="middle" font-size="12.5">dhany-writeup-</text>
+<text x="595.5" y="165.0" text-anchor="middle" font-size="12.5">composer</text>
+</a>
+<a href="#weekly-market-note"><rect class="node" x="518" y="184" width="155" height="42" rx="3"/>
+<text x="595.5" y="209.5" text-anchor="middle" font-size="12.5">weekly-market-note</text>
+</a>
+<path class="edge" d="M503,126.0 L516,49.0" marker-end="url(#arr2)"/>
+<path class="edge" d="M503,126.0 L516,101.0" marker-end="url(#arr2)"/>
+<path class="edge" d="M503,126.0 L516,153.0" marker-end="url(#arr2)"/>
+<path class="edge" d="M503,221 L516,101.0" marker-end="url(#arr2)"/>
+<text class="mono" x="425.5" y="76" text-anchor="middle">model output</text>
+<path class="edge" d="M85.5,220 L85.5,292 L595.5,292 L595.5,228" marker-end="url(#arr2)"/>
+<a href="#energy-refresh"><text class="mono" x="188" y="286">energy-refresh → energy-read</text></a>
+<text class="mono" x="518" y="248">every number a reference</text>
+<text class="mono" x="518" y="262">to the model output</text>
+<a href="#stock-writeup-pdf"><rect class="node" x="688" y="54" width="155" height="42" rx="3"/>
+<text x="765.5" y="79.5" text-anchor="middle" font-size="12.5">stock-writeup-pdf</text>
+</a>
+<a href="#dhany-writeup-pdf"><rect class="node" x="688" y="106" width="155" height="42" rx="3"/>
+<text x="765.5" y="131.5" text-anchor="middle" font-size="12.5">dhany-writeup-pdf</text>
+</a>
+<a href="#gotrade-ic-note"><rect class="node" x="688" y="158" width="155" height="42" rx="3"/>
+<text x="765.5" y="183.5" text-anchor="middle" font-size="12.5">the ic-note build</text>
+</a>
+<path class="edge" d="M673,101.0 L686,75.0" marker-end="url(#arr2)"/>
+<path class="edge" d="M673,153.0 L686,127.0" marker-end="url(#arr2)"/>
+<path class="edge" d="M673,49.0 L686,179.0" marker-end="url(#arr2)"/>
+<rect class="node" x="868" y="60" width="62" height="84" rx="2"/>
+<rect class="node" x="876" y="68" width="62" height="84" rx="2"/>
+<rect class="node" x="884" y="76" width="62" height="84" rx="2"/>
+<rect class="node" x="892" y="84" width="62" height="84" rx="2"/>
+<a href="research.html"><rect x="858" y="54" width="94" height="124" fill="transparent"/>
+<text class="mono" x="905" y="202" text-anchor="middle">the library</text></a>
+<path class="edge" d="M843,75.0 L860,110" marker-end="url(#arr2)"/>
+<path class="edge" d="M843,127.0 L860,110" marker-end="url(#arr2)"/>
+<path class="edge" d="M843,179.0 L860,110" marker-end="url(#arr2)"/>
+<path class="edge" d="M673,205.0 L860,148" marker-end="url(#arr2)"/>
+<text class="mono" x="841" y="199.0" text-anchor="end">.docx, scripted</text>
+</svg>
+    </div>
+    <p class="note">The energy store is drawn dashed because it is a governed dataset, not a skill: four skills read and write it under a contract (see the <a href="#energy-store">dossier</a>).</p>
+  </section>
+
+  <section id="standard">
+    <header><span class="mono">Governance</span><h2>One rulebook, four skill types<span class="code">flavors A–D</span></h2></header>
+    <p class="lede">Four questions, asked in order. The first yes names the skill type, and the type decides which rules apply and which are banned.</p>
+    <div class="steps">
+      <div class="step"><span class="mono">1 · Operational<span class="code">C</span></span><strong>Writes persistent state read again later?</strong><p>Operational / tracking: <a href="#energy-refresh">energy-refresh</a>, <a href="#energy-explore">energy-explore</a>.</p></div>
+      <div class="step"><span class="mono">2 · Transform<span class="code">D</span></span><strong>Zero analytical authority, every figure traceable upstream?</strong><p>Transform / render: <a href="#gotrade-ic-note">gotrade-ic-note</a>, <a href="#stock-writeup-composer">stock-writeup-composer</a>, <a href="#stock-writeup-pdf">stock-writeup-pdf</a>, <a href="#dhany-writeup-pdf">dhany-writeup-pdf</a>, <a href="#energy-macro-pack">energy-macro-pack</a>, <a href="#human-voice">human-voice</a>.</p></div>
+      <div class="step"><span class="mono">3 · Analytical<span class="code">A</span></span><strong>Numeric structure, same inputs same output?</strong><p>Analytical / scoring: <a href="#catalyst-projection-valuation">CPV</a>, <a href="#cpv-core">cpv-core</a>, <a href="#quick-stock-verdict">quick-stock-verdict</a>, <a href="#moat-analyzer">moat-analyzer</a>, <a href="#per-growth-checker">per-growth-checker</a>, <a href="#energy-read">energy-read</a>, <a href="#energy-sector-analysis">energy-sector-analysis</a>, <a href="#energy-view">energy-view</a>, <a href="#sector-tilt-book">sector-tilt-book</a>, <a href="#dhany-writeup-composer">dhany-writeup-composer</a>.</p></div>
+      <div class="step"><span class="mono">4 · Advisory<span class="code">B</span></span><strong>People, motive, judgement?</strong><p>Advisory / interpretive: <a href="#weekly-market-note">weekly-market-note</a> (editorial variant), <a href="#situation-reflector-skill">situation-reflector</a>, <a href="#talk-progressor">talk-progressor</a>.</p></div>
+    </div>
+    <p class="note">Each type is quarantined: analytical skills must not judge people or intent; advisory skills must not fake determinism; operational skills produce status only; transform skills introduce no number, rating or conclusion. Every threshold a skill introduces is [PROPOSED] until Faldo promotes it; no skill writes compliance text. A card with no type badge is a file that does not declare one in its first body line; the rulebook's registry says which type it expects, and the card says so.</p>
+  </section>
+
+  <section id="library">
+    <header><span class="mono">Contracts</span><h2>Twenty-five cards</h2></header>
+    <p class="lede">One card per skill: its type, size, what it reads, what it writes, what it may never touch, one rule quoted from its file, and the documents it produced.</p>
+    <div id="engineGroups" style="margin-top:24px"></div>
+  </section>
+
+  <section id="dossiers">
+    <header><span class="mono">Four dossiers</span><h2>How the numbers are made</h2></header>
+
+    <details class="dossier" id="dossier-cpv">
+      <summary><span class="mono">Dossier</span><h3>The full valuation engine<span class="code">catalyst-projection-valuation</span></h3></summary>
+      <div class="body">
+        <p class="lede">One company, user-supplied data only, every module on every run. Version v4.10-lean, every constant in one register<span class="code">T1–T52</span>. The model output it emits is what the IC notes are built from.</p>
+        <div>
+          <h4>Twelve steps in five stages<span class="code">the spine</span></h4>
+          <div class="steps five">
+            <div class="step"><span class="mono">Steps 2–5</span><strong>Build</strong><p>Catalysts sized, dated and probability-weighted; the four-quarter build; shares and net debt rolled.</p></div>
+            <div class="step"><span class="mono">Steps 6–8</span><strong>Price</strong><p>Reconciliation against consensus and against the market price; the multiple the valuation is anchored on; the exit-multiple assumption, bounded by moat quality and the sector regime.</p></div>
+            <div class="step"><span class="mono">Step 9</span><strong>Value</strong><p>Bear, base and bull to one probability-weighted fair value; the sensitivity ranking (tornado); the breakeven solve.</p></div>
+            <div class="step"><span class="mono">Step 10</span><strong>Decide</strong><p>Upside-to-downside ratio, conviction, thesis-break conditions, positioning, the two ratings.</p></div>
+            <div class="step"><span class="mono">Step 11</span><strong>Emit<span class="code">S1–S13 · SM · SP</span></strong><p>The model output in thirteen sections, the completion checklist, the provenance log. No summary section.</p></div>
+          </div>
+        </div>
+        <div>
+          <h4>Catalyst sizing: one uncertainty, one field</h4>
+          <table class="t">
+            <thead><tr><th>Uncertainty</th><th>The one field that carries it</th></tr></thead>
+            <tbody>
+              <tr><td>Whether it happens</td><td>p, the probability it happens, set by the catalyst's key risk<span class="code">T1–T3</span></td></tr>
+              <tr><td>When it lands</td><td>share inside the twelve-month window × timing<span class="code">in-window · phasing</span></td></tr>
+              <tr><td>How much</td><td>size, net of named offsets</td></tr>
+              <tr><td>How long</td><td>what happens after the window, and the fade</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Charging the same uncertainty twice (p shaded for a slip and the window cut for the same slip) is flagged by the engine<span class="code">double-conservatism</span> and assigned to one field. p enters exactly two places: the build and the scenario weights.</p>
+        </div>
+        <p class="lede">The reconciliation against consensus and against the market price<span class="code">step 6 · twin reconcile</span> is where a view that differs from the market is born: <b>what the price implies (X), consensus (Y), our forecast (Z)</b>, the single driver that explains Z − X, and the event that makes it observable. Z near X means no difference from the market, and the run continues in confirmatory form.</p>
+        <div>
+          <h4>Three scenarios, one probability-weighted fair value<span class="code">arms · S10</span></h4>
+          <table class="t">
+            <thead><tr><th>Guard</th><th>What it checks</th></tr></thead>
+            <tbody>
+              <tr><td>Not just today's price carried forward<span class="code">T47</span></td><td><span class="formula">NTM metric × current multiple = spot × build ÷ consensus</span>, a present value by identity. An exit value equal to it means the year-two roll-forward was dropped; the run is invalid and the fix is the roll-forward, never a lower discount rate.</td></tr>
+              <tr><td>The discount rate is a cost of equity<span class="code">CAPM DR</span></td><td><span class="formula">r = RFR + β × ERP</span>, written out, inside 7.5–20%<span class="code">T40</span>. The sector × growth table is a hurdle-rate surface for backing growth out of a multiple; it never discounts a value.</td></tr>
+              <tr><td>Discounted and undiscounted agree<span class="code">undiscounted identity</span></td><td><span class="formula">weighted PV × (1 + DR) = weighted undiscounted</span>, checked to rounding. The rating for new money reads the discounted value, the rating for existing holders the value before the cost of capital<span class="code">entrant · holder</span>.</td></tr>
+              <tr><td>Upside-to-downside band<span class="code">asymmetry · 10d</span></td><td><span class="formula">s*(k) = (bull + k × bear) ÷ (1 + k)</span>: favourable at or below the entry level s*(1.5), exhausted at or above the trim level s*(0.8). Bucketed on the unweighted ratio; the weighted ratio is stored as a cross-check only.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h4>Conviction: five criteria graded 0, ½ or 1<span class="code">10e · T32</span></h4>
+          <table class="t">
+            <thead><tr><th>Criterion</th><th>Grading</th></tr></thead>
+            <tbody>
+              <tr><td>1 · Upside to fair value<span class="code">edge</span></td><td>the gap between price and fair value, after the cost of capital, either way: full above 12%, half 5–12%, zero at or below 5%<span class="code">T28b</span></td></tr>
+              <tr><td>2 · Spread</td><td>bear-to-bull spread over fair value: full below 35%, half 35–50%, zero above 50%<span class="code">T31</span></td></tr>
+              <tr><td>3 · Probability of the top catalyst<span class="code">p</span></td><td>full at or above 70%, half 60–69%, zero below 60%<span class="code">T30</span></td></tr>
+              <tr><td>4 · Moat evidence</td><td>full when the proof-of-moat test is PASS, or PARTIAL with score ≥ 3.1 and direction not narrowing; half on PARTIAL with score ≥ 2.5; zero on FAIL, score below 2.5, or a genuine light read</td></tr>
+              <tr><td>5 · Estimate revisions<span class="code">revision vector</span></td><td>full when supplied and aligned; half when flat or missing; zero when against</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Half-credit rule<span class="code">T35</span>: a criterion failing purely on a missing input takes 0.5, at most two criteria; a third missing input makes the run limited by missing inputs and caps the conviction band at half. Two further limits: an assumed figure at the top of the sensitivity ranking<span class="code">T37</span> and a valuation-method shock at the top (proposed)<span class="code">T49</span>. All three are stated even when they do not fire.</p>
+        </div>
+        <div>
+          <h4>Two ratings on two bases<span class="code">dual rating · 10k</span></h4>
+          <table class="t">
+            <thead><tr><th>Rating</th><th>Basis</th><th>How it maps</th></tr></thead>
+            <tbody>
+              <tr><td>New money<span class="code">entrant</span></td><td>discounted: upside to fair value after the cost of capital, through the positioning</td><td>positioning 1–2 at full conviction Strong Buy, at half conviction Weak Buy; positioning 3 Weak Buy; positioning 4–7 and 0 No Buy</td></tr>
+              <tr><td>Existing holders<span class="code">holder</span></td><td>expected return before the cost of capital</td><td>below −15% and the re-check survives Strong Trim; below 0 Trim; 0 or above Hold; 0 or above with positioning 1 or 2, full conviction, favourable upside-to-downside and no thesis-break condition met Strong Hold</td></tr>
+            </tbody>
+          </table>
+          <p class="note">A thesis-break condition that has been met overrides both ratings: No Buy for new money, Strong Trim for existing holders.<span class="code">kill switch · 10k</span></p>
+          <p class="note">In market terms: a thesis-break condition that has been met overrides both ratings.</p>
+          <p class="note">The gap between the two bases is the no-trade region: Weak Buy beside Hold is not a contradiction. Ratings are model ratings for information only, never investment advice.</p>
+        </div>
+        <div>
+          <h4>Five thesis-break conditions<span class="code">kill switches · 10j</span></h4>
+          <table class="t">
+            <thead><tr><th>Condition</th><th>What it means</th><th>Consequence</th></tr></thead>
+            <tbody>
+              <tr><td>1 · The first reported quarter misses the forecast beyond tolerance<span class="code">T9</span></td><td>thesis-wrong</td><td>full rebuild</td></tr>
+              <tr><td>2 · A dated catalyst slips its window</td><td>timing-wrong</td><td>re-date; the time decay of the thesis reprices<span class="code">theta</span></td></tr>
+              <tr><td>3 · Estimate revisions against the thesis for two marks</td><td>thesis-wrong</td><td>full rebuild</td></tr>
+              <tr><td>4 · The proof-of-moat test is downgraded</td><td>thesis-wrong</td><td>full rebuild</td></tr>
+              <tr><td>5 · The sector regime breaches the multiple-compression bracket</td><td>environment-wrong</td><td>exit-multiple assumption rebuilt</td></tr>
+            </tbody>
+          </table>
+          <p class="note">The share price is never a thesis-break condition on its own; it feeds the upside-to-downside map instead.<span class="code">10d</span></p>
+          <p class="note">In market terms: price is never a thesis-break condition; it feeds the upside-to-downside ratio.</p>
+        </div>
+        <p class="note">The register of constants<span class="code">T1–T52</span>: every constant lives in one register with a tag saying how far to trust it (standard practice, follows from the method, fitted on one run, or [PROPOSED])<span class="code">general · structural · n=1</span>; a user override is stamped in the provenance log as old → new. The log also prints the census of disclosed, guidance, modelled and assumed figures<span class="code">D G M A</span>, the share resting on modelled or assumed figures, every default that fired and what would repair the run.</p>
+      </div>
+    </details>
+
+    <details class="dossier" id="dossier-ic-note">
+      <summary><span class="mono">Dossier</span><h3>The IC note writer<span class="code">gotrade-ic-note</span></h3></summary>
+      <div class="body">
+        <p class="lede">The report writer that turns the model output into the IC note PDF. It owns what the document says, never how it looks (a frozen token file and stylesheet do that) and never a number of its own.</p>
+        <div>
+          <h4>Is the model output complete? Five refusals, checked before a line is written<span class="code">admissibility</span></h4>
+          <table class="t">
+            <thead><tr><th>#</th><th>Condition</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td class="m">1</td><td>Header line absent, or the model output's skill version older than the engine on disk</td><td>stop: re-run the engine</td></tr>
+              <tr><td class="m">2</td><td>The parser reports missing sections</td><td>stop: name them (a truncated paste, not an absent finding)</td></tr>
+              <tr><td class="m">3</td><td>Run scope is not full</td><td>stop: no complete checklist to publish</td></tr>
+              <tr><td class="m">4</td><td>The text is a summary, a narrative, or a rating without field rows</td><td>stop: this is not a model output</td></tr>
+              <tr><td class="m">5</td><td>Two model outputs for the same ticker in scope</td><td>stop and ask which; never merge, never diff</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h4>Two voices in one binding<span class="code">registers</span></h4>
+          <table class="t">
+            <thead><tr><th></th><th>Body (cover, sections 1–9)</th><th>Audit appendices (A, B, C)</th></tr></thead>
+            <tbody>
+              <tr><td class="m">Reader</td><td>a PM who has never seen the engine and never will</td><td>whoever has to reproduce the run</td></tr>
+              <tr><td class="m">Subject</td><td>the company, a number, a customer, the analyst</td><td>may be the test, the rule, the field</td></tr>
+              <tr><td class="m">Vocabulary</td><td>investment English; the lexicon translates</td><td>the engine's own terms, keys, T-codes</td></tr>
+              <tr><td class="m">Figures</td><td>decision-relevant precision; three-decimal figures stay in tables</td><td>full precision, verbatim</td></tr>
+              <tr><td class="m">Test results</td><td>only where the result changes what the reader should think, in words</td><td>every test, every status, every figure</td></tr>
+              <tr><td class="m">Fired diagnostics</td><td>one callout, in words, in the section where it matters</td><td>the checklist row</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h4>The lexicon the writer translates with, an excerpt</h4>
+          <table class="t">
+            <thead><tr><th>Engine term</th><th>What the reader is told</th></tr></thead>
+            <tbody>
+              <tr><td class="m">arm</td><td>scenario</td></tr>
+              <tr><td class="m">kill switch</td><td>thesis-break condition</td></tr>
+              <tr><td class="m">gate</td><td>the test, named (proof of the moat, the first-quarter anchor)</td></tr>
+              <tr><td class="m">D / G / M / A</td><td>disclosed / from guidance / modelled / assumed</td></tr>
+              <tr><td class="m">variant</td><td>where we differ from the market (at most twice)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h4>No untraced number, enforced by script<span class="code">containment C1–C4</span></h4>
+          <table class="t">
+            <thead><tr><th>Check</th><th>Refuses the build on</th></tr></thead>
+            <tbody>
+              <tr><td class="m">C1</td><td>a number typed by the report writer rather than referenced<span class="code">orphan numeral</span></td></tr>
+              <tr><td class="m">C2</td><td>a figure cited from a section of the model output it does not live in<span class="code">section scope</span></td></tr>
+              <tr><td class="m">C3</td><td>a bare numeral in prose</td></tr>
+              <tr><td class="m">C4</td><td>a (key, value) pair in the one-page summary that is not identical in the full note<span class="code">one-pager subset</span></td></tr>
+              <tr><td class="m">R0</td><td>a reference to a field the model output does not define</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Rail budget: five items, hard. Sixteen plain-English rules<span class="code">R1–R16</span> lint the body's prose; audit sections are exempt. The fix is always to the report spec, never to the test.</p>
+        </div>
+        <p class="line">Selection decides where a finding lives, never whether it exists.</p>
+      </div>
+    </details>
+
+    <details class="dossier" id="energy-store">
+      <summary><span class="mono">Dossier</span><h3>The energy store, a dataset under contract</h3></summary>
+      <div class="body">
+        <p class="lede">The store is not a skill. It is seven project documents under a data contract (v1.0, 11 September 2026) that four skills read and write, each confined to named columns. Scope v1: oil, gas, LNG.</p>
+        <div>
+          <h4>The seven documents and who writes which columns</h4>
+          <div class="tscroll"><table class="t" style="min-width:720px">
+            <thead><tr><th>File</th><th>Holds</th><th>Who writes which columns</th></tr></thead>
+            <tbody>
+              <tr><td class="m">CONTRACT.md</td><td>this document</td><td>Faldo</td></tr>
+              <tr><td class="m">registry.md</td><td>71 series: source chain, cadence, date limit<span class="code">window_d</span>, last pull</td><td>Faldo: series, name, unit, cadence, release_rule, window_d, primary · energy-explore: new rows, fallback · energy-refresh: last_retrieved, last_source, last_id, blocked</td></tr>
+              <tr><td class="m">ledger.md</td><td>119 dated observations; a sources table</td><td>energy-refresh and energy-explore append rows and sources; no skill edits or deletes a row</td></tr>
+              <tr><td class="m">graph.md</td><td>53 nodes and typed edges</td><td>energy-explore: new nodes, node fields, edges with status proposed, evidence ids · energy-read: score · Faldo only: status</td></tr>
+              <tr><td class="m">theses.md</td><td>8 hypotheses with confirm and kill observables</td><td>Faldo: his own rows and every status · energy-explore: agency-attributed rows · energy-read: evaluation, last_evaluated</td></tr>
+              <tr><td class="m">gaps.md</td><td>21 open questions</td><td>energy-read: new rows · energy-explore: new rows, status, outcome, closed · Faldo: anything</td></tr>
+              <tr><td class="m">passes/YYYY-MM-DD.md</td><td>the dated output of energy-read</td><td>energy-read only. Never an input to any skill.</td></tr>
+            </tbody>
+          </table></div>
+          <p class="note">Counts as inventoried for this site in October 2026. A column not listed for a skill is a forbidden field for that skill; a write to a forbidden field is a failed run.</p>
+        </div>
+        <div>
+          <h4>Who writes which file</h4>
+          <div class="tscroll"><table class="t" style="min-width:640px">
+            <thead><tr><th>File</th><th>refresh</th><th>explore</th><th>read</th><th>view</th><th>Faldo</th></tr></thead>
+            <tbody>
+              <tr><td class="m">CONTRACT</td><td>—</td><td>—</td><td>—</td><td>—</td><td>writes</td></tr>
+              <tr><td class="m">registry</td><td>updates last pull</td><td>appends rows, fallbacks</td><td>—</td><td>—</td><td>owns the series</td></tr>
+              <tr><td class="m">ledger</td><td>appends</td><td>appends</td><td>—</td><td>—</td><td>—</td></tr>
+              <tr><td class="m">graph</td><td>—</td><td>proposes</td><td>scores</td><td>—</td><td>promotes</td></tr>
+              <tr><td class="m">theses</td><td>—</td><td>appends agency rows</td><td>evaluates</td><td>offers rows on adoption</td><td>owns rows and status</td></tr>
+              <tr><td class="m">gaps</td><td>—</td><td>appends, closes</td><td>appends</td><td>—</td><td>anything</td></tr>
+              <tr><td class="m">passes</td><td>—</td><td>—</td><td>writes</td><td>reads</td><td>—</td></tr>
+            </tbody>
+          </table></div>
+          <p class="note">So energy-explore may only propose an edge, energy-read may only score it, and only Faldo promotes it.</p>
+        </div>
+        <div>
+          <h4>A usable data row<span class="code">admissible</span></h4>
+          <div class="tscroll"><table class="t" style="min-width:860px">
+            <thead><tr><th>series</th><th>period</th><th>value</th><th>unit</th><th>report_date</th><th>retrieved</th><th>tag</th><th>source</th><th>Reads as</th></tr></thead>
+            <tbody>
+              <tr><td class="m">BH-RIGS-US</td><td class="m">2026-09-04</td><td class="m">588</td><td>count</td><td class="m">2026-09-04</td><td class="m">2026-09-11</td><td class="m">M</td><td class="m">S-20260911-10</td><td>588, the source's string, on 11 September 2026</td></tr>
+              <tr><td class="m">BH-RIGS-US</td><td class="m">2026-09-04</td><td class="m">588</td><td>count</td><td class="m"></td><td class="m">2026-09-11</td><td class="m">M</td><td class="m">S-20260911-10</td><td>n/a (inadmissible: L-…), the report date is missing</td></tr>
+              <tr><td class="m">BH-RIGS-US</td><td class="m">2026-09-04</td><td class="m">588</td><td>count</td><td class="m">2026-09-04</td><td class="m">2026-09-11</td><td class="m">M</td><td class="m">S-20260911-10</td><td>n/a (stale: BH-RIGS-US, 28 d &gt; 9), read on 2 October 2026</td></tr>
+            </tbody>
+          </table></div>
+          <p class="note">The first row is ledger row L-20260911-074 as the store holds it; the second and third show the same row failing the usability rule and the weekly date limit<span class="code">admissibility · window_d</span>. Values are the source's strings; means, spreads and differences are computed at read time and never stored.</p>
+        </div>
+        <div>
+          <h4>Date limits by cadence (proposed)<span class="code">freshness window</span></h4>
+          <table class="t">
+            <thead><tr><th>Cadence</th><th class="n">window_d</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr><td>daily</td><td class="n">4</td><td>a weekend plus one holiday</td></tr>
+              <tr><td>weekly</td><td class="n">9</td><td>one missed release</td></tr>
+              <tr><td>monthly</td><td class="n">40</td><td>one edition plus slippage</td></tr>
+              <tr><td>quarterly</td><td class="n">110</td><td>one edition plus slippage; replaces a flat 60-day rule that excluded a current quarterly edition on 11 September 2026</td></tr>
+              <tr><td>event</td><td class="n">until superseded</td><td>a decision stands until the next decision row</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Identifiers: ledger rows L-YYYYMMDD-NNN, sources S-YYYYMMDD-NN, nodes N-&lt;slug&gt;, edges E-NNN, theses T-NNN, gaps G-NNN; numbers are never reused. Series are UPPER-KEBAB with the publisher prefix first: IEA-, EIA-, OPEC-, OPECPLUS-, BH-, PX-, GMR-. Tags: M a market or third-party figure, D disclosed by a company, G guidance, A assumed with derivation.</p>
+        <div>
+          <h4>The loop</h4>
+          <div class="steps five">
+            <div class="step"><span class="mono">1 · <a href="#energy-refresh">refresh</a></span><strong>Pull what is due</strong><p>Status logic only: due, fresh, stale, failed. Appends the source's string with its report date.</p></div>
+            <div class="step"><span class="mono">2 · <a href="#energy-read">read</a></span><strong>Band lookups</strong><p>Emits a dated pass P0–PM. A prior pass is never an input.</p></div>
+            <div class="step"><span class="mono">3 · <a href="#energy-explore">explore</a></span><strong>Work the gaps</strong><p>Records what a source says: rows, node fields, proposed edges with the source's own sentence.</p></div>
+            <div class="step"><span class="mono">4 · <a href="#energy-view">view</a></span><strong>The price call</strong><p>Brent over three horizons, a five-part rubric; bands [PROPOSED]: act above 65, position for the floor at 45–64, a view below 45.</p></div>
+            <div class="step"><span class="mono">5 · <a href="#energy-macro-pack">macro-pack</a></span><strong>The industry block<span class="code">I1–I7</span></strong><p>I1–I7, the block a write-up needs, copied with ledger ids; no new number, no rounding.</p></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="dossier" id="dossier-qsv">
+      <summary><span class="mono">Dossier</span><h3>The thirty-second verdict<span class="code">quick-stock-verdict</span></h3></summary>
+      <div class="body">
+        <p class="lede">The thirty-second tier. One name in, one fixed card out, every judgment a threshold or a table lookup. Built for Sonnet at medium effort.</p>
+        <div>
+          <h4>One search batch</h4>
+          <p class="note" style="margin-top:0">Six calls fired in one parallel block, then at most one retry for a must-have slot (price, multiple or RSI); after that an unfilled slot reads n/a and the card ships. Price and market cap; forward P/E, consensus EPS and the sector median; the latest quarter, guidance and the reaction; catalysts and estimate revisions; gross margin, free cash flow and net debt; one live technicals page for RSI(14) and moving-average summaries.</p>
+        </div>
+        <div>
+          <h4>Freshness checklist, all five, every run</h4>
+          <table class="t">
+            <tbody>
+              <tr><td class="m">1</td><td>A price needs an as-of stamp from the current session or last close; no stamp, not a price.</td></tr>
+              <tr><td class="m">2</td><td>Banned sources for price, cap and RSI: undated pages, ratio explainers, screener metric pages, snippets older than two trading days.</td></tr>
+              <tr><td class="m">3</td><td>Cap cross-check: implied shares at or beyond 3% off the latest filing, recompute cap and mark it calc.</td></tr>
+              <tr><td class="m">4</td><td>A published P/E implying a price 3% off the verified one is recomputed and marked calc.</td></tr>
+              <tr><td class="m">5</td><td>Only a stale price found: the verdict is prefixed (STALE PRICE, with its date).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h4>Base matrix: valuation × momentum</h4>
+          <table class="t">
+            <thead><tr><th>VAL \ MOM</th><th>Improving</th><th>Stable</th><th>Deteriorating</th></tr></thead>
+            <tbody>
+              <tr><td class="m">Cheap</td><td>GOOD</td><td>MID</td><td>MID</td></tr>
+              <tr><td class="m">Fair</td><td>GOOD if quality passes, else MID</td><td>MID</td><td>MID</td></tr>
+              <tr><td class="m">Expensive</td><td>MID</td><td>MID if quality passes, else BAD</td><td>BAD</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Valuation is sector-relative: forward P/E over the sector median, cheap below 0.85, expensive above 1.15, with one growth-adjusted shift at most. Driver overlay<span class="code">EDGE</span>, with the veto still final: a present, dated driver and momentum not deteriorating promotes one step; no driver caps at MID; a negative driver demotes one step.</p>
+        </div>
+        <div>
+          <h4>Entry read: RSI(14) × trend on the filter timeframe</h4>
+          <table class="t">
+            <thead><tr><th>RSI(14)</th><th>Trend up</th><th>Trend flat</th><th>Trend down</th></tr></thead>
+            <tbody>
+              <tr><td class="m">&lt; 30</td><td>GOOD</td><td>MID</td><td>BAD</td></tr>
+              <tr><td class="m">30–45</td><td>GOOD</td><td>MID</td><td>BAD</td></tr>
+              <tr><td class="m">45–55</td><td>MID</td><td>MID</td><td>BAD</td></tr>
+              <tr><td class="m">55–70</td><td>MID</td><td>BAD</td><td>BAD</td></tr>
+              <tr><td class="m">&gt; 70</td><td>BAD</td><td>BAD</td><td>BAD</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Two horizons: 2–3 days on the 4-hour RSI with the daily trend as filter; 2–3 weeks on the daily RSI with the weekly trend. The entry read and the verdict never pull each other.</p>
+        </div>
+        <p class="line">GOOD always carries a named, dated, confirmed driver; a rich multiple alone no longer blocks GOOD; DETERIORATING never promotes. Most names land MID — correct base rate.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="guide" class="guide">
+    <header><span class="mono">Drive it</span><h2>The CPV model, live on this site</h2></header>
+    <p class="lede">The catalyst projection engine rebuilt as a page of its own: one invented company, ExampleCo, every input on a control, every chart recomputed through the rules the skill states. Move an input and the model output, the ratings and the thesis-break conditions move with it.</p>
+    <a class="srcline" href="cpv.html">Open<span class="go">The CPV model →</span></a>
+  </section>
+
+  <section id="produced">
+    <header><span class="mono">Output</span><h2>Five documents these engines made</h2></header>
+    <p class="lede">One per pipeline: two IC notes from the full engine, an energy write-up, an editorial report and the oil weekly from the store. Each opens in the research library.</p>
+    <div class="shelf" id="producedShelf" style="margin-top:20px"></div>
+    <a class="more" href="research.html">All documents in the research library →</a>
+  </section>
+</main>
+
+<!-- FOOT v1 start -->
+<footer id="footnote"><p>Nothing on this site is not on my CV or in work I did myself. Gotrade figures and documents are the firm's data, shown with permission pending. Four energy write-ups are drafts and are stamped as such; the house-format report is a sample on a worked-example company; Kopi Satset plan figures are model outputs. Research is for information only and is not investment advice. Updated October 2026.</p></footer>
+<dialog id="lb"><img id="lbImg" alt=""><div class="ctl"><button id="lbPrev" type="button">← Prev</button><span id="lbCap"></span><button id="lbNext" type="button">Next →</button><button id="lbClose" type="button">Close</button></div></dialog>
+<script>
+/* shared chrome: theme toggle, lightbox, copy buttons, current-page marker */
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  // current page
+  var page = document.body.getAttribute('data-page');
+  if (page) { var cur = document.querySelector('#siteBar nav a[data-page="' + page + '"]'); if (cur) cur.setAttribute('aria-current', 'page'); }
+  // theme: auto -> dark -> light
+  var btn = $('#themeBtn');
+  var read = function () { try { return localStorage.getItem('fl-theme') || 'auto'; } catch (e) { return document.documentElement.getAttribute('data-theme') || 'auto'; } };
+  var apply = function (t) {
+    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme');
+    try { if (t === 'auto') localStorage.removeItem('fl-theme'); else localStorage.setItem('fl-theme', t); } catch (e) {}
+    if (btn) btn.textContent = 'Theme · ' + t;
+  };
+  if (btn) { btn.textContent = 'Theme · ' + read(); btn.addEventListener('click', function () { var t = read(); apply(t === 'auto' ? 'dark' : t === 'dark' ? 'light' : 'auto'); }); }
+  // lightbox: openLightbox(list, index) where list is [{file, cap}]
+  var lb = $('#lb'), img = $('#lbImg'), cap = $('#lbCap'), list = [], cur = 0;
+  var show = function (i) { if (!list.length) return; cur = (i + list.length) % list.length; img.src = list[cur].file; img.alt = list[cur].cap || ''; cap.textContent = list[cur].cap || ''; if (!lb.open) lb.showModal(); };
+  window.openLightbox = function (l, i) { list = l || []; show(i || 0); };
+  if (lb) {
+    $('#lbPrev').addEventListener('click', function () { show(cur - 1); });
+    $('#lbNext').addEventListener('click', function () { show(cur + 1); });
+    $('#lbClose').addEventListener('click', function () { lb.close(); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) lb.close(); });
+    document.addEventListener('keydown', function (e) { if (!lb.open) return; if (e.key === 'ArrowLeft') show(cur - 1); if (e.key === 'ArrowRight') show(cur + 1); });
+  }
+  // any element with data-lb="groupName" and data-file/data-cap joins a lightbox group
+  var groups = {};
+  document.querySelectorAll('[data-lb]').forEach(function (el) {
+    var g = el.getAttribute('data-lb'); (groups[g] = groups[g] || []).push({ file: el.getAttribute('data-file') || (el.querySelector('img') || {}).src, cap: el.getAttribute('data-cap') || '' });
+  });
+  document.querySelectorAll('[data-lb]').forEach(function (el) {
+    var g = el.getAttribute('data-lb'), i = groups[g].findIndex(function (x) { return x.file === (el.getAttribute('data-file') || (el.querySelector('img') || {}).src); });
+    el.addEventListener('click', function (e) { e.preventDefault(); window.openLightbox(groups[g], i); });
+  });
+  // copy buttons: <button class="copy" data-copy="text">
+  document.querySelectorAll('.copy[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var text = b.getAttribute('data-copy'), done = function () { b.textContent = 'copied'; setTimeout(function () { b.textContent = 'copy'; }, 1500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () {}); else done();
+    });
+  });
+})();
+</script>
+<!-- FOOT v1 end -->
+</div>
+<script>
+/* DOCS v1 start */
+/* The research registry. Edit here (src/docs.js), then run tools/sync.py to copy into every page.
+   Paths are derived, never stored: pdf = proof/research/<slug>.pdf, page i = proof/research/<slug>-pNN.jpg. */
+const LINES = {
+  role: { short: "Investment Research & Product Growth Strategist, Gotrade", anchor: "analyst.html#gotrade" },
+  advisory: { short: "Advises clients above $100k AUM with catalyst-driven equity research", anchor: "analyst.html#gotrade" },
+  alpha: { short: "Runs the Monthly Alpha Selection Book", anchor: "analyst.html#gotrade" },
+  maybank: { short: "Written buy call on ATIC at Rp438, Dec 2024", anchor: "analyst.html#maybank" }
+};
+const ENGINE_LABEL = { "catalyst-projection-valuation": "CPV", "cpv-core": "cpv-core", "gotrade-ic-note": "gotrade-ic-note", "moat-analyzer": "moat-analyzer", "energy-macro-pack": "energy-macro-pack", "energy-sector-analysis": "energy-sector-analysis", "stock-writeup-composer": "stock-writeup-composer", "stock-writeup-pdf": "stock-writeup-pdf", "dhany-writeup-composer": "dhany-writeup-composer", "dhany-writeup-pdf": "dhany-writeup-pdf", "energy-refresh": "energy-refresh", "energy-read": "energy-read", "weekly-market-note": "weekly-market-note" };
+const WRITEUP_ENGINES = ["moat-analyzer", "energy-macro-pack", "energy-sector-analysis", "cpv-core", "stock-writeup-composer", "stock-writeup-pdf"];
+const DOCS = [
+  { slug: "aph-ic-note", title: "Margin durability, not catalysts", ticker: "APH", company: "Amphenol", kind: "ic-note", kindLabel: "IC note", series: "ic", sector: "Tech hardware", date: "2026-08-27", pages: 12, format: "pdf", status: "final", attached: true, rendered: 12, rating: { entrant: "Weak Buy", holder: "Hold" }, spot: 161.34, pv: 170.15, currency: "$", thesis: "The in-window catalyst book is below the materiality gate, so what carries value is the operating margin near 29% and the 27.5x forward multiple. The one-year roll the prior bank dropped is worth $24.77 a share.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.8 → gotrade-ic-note", line: "advisory", companion: "aph-ic-1pager" },
+  { slug: "aph-ic-1pager", title: "IC summary, one page", ticker: "APH", company: "Amphenol", kind: "one-pager", kindLabel: "One-pager", series: "ic", sector: "Tech hardware", date: "2026-08-27", pages: 1, format: "pdf", status: "final", attached: true, rendered: 1, rating: { entrant: "Weak Buy", holder: "Hold" }, spot: 161.34, pv: 170.15, currency: "$", thesis: "The Amphenol IC note projected onto one page: the call, the distribution, the kill switches.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.8 → gotrade-ic-note", line: "advisory", companion: "aph-ic-note" },
+  { slug: "tel-ic-note", title: "Margin plus multiple, not catalysts", ticker: "TEL", company: "TE Connectivity", kind: "ic-note", kindLabel: "IC note", series: "ic", sector: "Tech hardware", date: "2026-08-27", pages: 11, format: "pdf", status: "final", attached: true, rendered: 11, rating: { entrant: "Weak Buy", holder: "Hold" }, spot: 205.03, pv: 210.40, currency: "$", thesis: "In-window catalyst revenue is 1.76% of base, below the materiality gate; the value carriers are the 22.2% adjusted margin and the 16.4x forward multiple. The FY2027 consensus makes the horizon check independent for the first time.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.8 → gotrade-ic-note", line: "advisory", companion: "tel-ic-1pager" },
+  { slug: "tel-ic-1pager", title: "IC summary, one page", ticker: "TEL", company: "TE Connectivity", kind: "one-pager", kindLabel: "One-pager", series: "ic", sector: "Tech hardware", date: "2026-08-27", pages: 1, format: "pdf", status: "final", attached: true, rendered: 1, rating: { entrant: "Weak Buy", holder: "Hold" }, spot: 205.03, pv: 210.40, currency: "$", thesis: "The TE Connectivity IC note projected onto one page: the call, the distribution, the kill switches.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.8 → gotrade-ic-note", line: "advisory", companion: "tel-ic-note" },
+  { slug: "nvda-ic-note", title: "The year the multiple is not paying for", ticker: "NVDA", company: "NVIDIA", kind: "ic-note", kindLabel: "IC note", series: "ic", sector: "Semis", date: "2026-09-02", pages: 26, format: "pdf", status: "final", attached: false, rendered: 0, rating: { entrant: "Strong Buy", holder: "Strong Hold" }, spot: 217.44, pv: 270.32, currency: "$", thesis: "The market pays 18x for the next twelve months of earnings and nothing for the year after. Held at that multiple the base case is worth $331 at exit; probability-weighted and discounted, $270.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.10 → gotrade-ic-note", line: "advisory", companion: "nvda-ic-1pager" },
+  { slug: "nvda-ic-1pager", title: "One-page summary", ticker: "NVDA", company: "NVIDIA", kind: "one-pager", kindLabel: "One-pager", series: "ic", sector: "Semis", date: "2026-09-02", pages: 1, format: "pdf", status: "final", attached: false, rendered: 0, rating: { entrant: "Strong Buy", holder: "Strong Hold" }, spot: 217.44, pv: 270.32, currency: "$", thesis: "The NVIDIA IC note projected onto one page.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.10 → gotrade-ic-note", line: "advisory", companion: "nvda-ic-note" },
+  { slug: "bkr-ic-note", title: "Catalyst, projection and implied valuation", ticker: "BKR", company: "Baker Hughes", kind: "ic-note", kindLabel: "IC note", series: "ic", sector: "Energy services", date: "2026-09-04", pages: 23, format: "pdf", status: "final", attached: false, rendered: 0, rating: { entrant: "No Buy", holder: "Hold" }, spot: 63.64, pv: 68.71, currency: "$", thesis: "The catalysts are real and immaterial. What decides the stock is the multiple paid for a larger, more industrial, more indebted earnings stream, and whether Chart's pre-deal profit survives consolidation. Conviction 2.5 of five.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.10 → gotrade-ic-note", line: "advisory", companion: "bkr-ic-1pager" },
+  { slug: "bkr-ic-1pager", title: "One page", ticker: "BKR", company: "Baker Hughes", kind: "one-pager", kindLabel: "One-pager", series: "ic", sector: "Energy services", date: "2026-09-04", pages: 1, format: "pdf", status: "final", attached: false, rendered: 0, rating: { entrant: "No Buy", holder: "Hold" }, spot: 63.64, pv: 68.71, currency: "$", thesis: "The Baker Hughes IC note projected onto one page.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.10 → gotrade-ic-note", line: "advisory", companion: "bkr-ic-note" },
+  { slug: "cnq-writeup", title: "Company analysis, financial performance and investment plan", ticker: "CNQ", company: "Canadian Natural Resources", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-10", pages: 8, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Canadian Natural Resources in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "cop-writeup", title: "Company analysis, financial performance and investment plan", ticker: "COP", company: "ConocoPhillips", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-10", pages: 7, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "ConocoPhillips in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "cve-writeup", title: "Company analysis, financial performance and investment plan", ticker: "CVE", company: "Cenovus Energy", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-10", pages: 9, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Cenovus Energy in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "cvx-writeup", title: "Company analysis, financial performance and investment plan", ticker: "CVX", company: "Chevron", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-15", pages: 34, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Chevron in the three-stage house format, with the valuation and investment plan stages and the energy store read of 14 September 2026.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "fang-writeup", title: "Company analysis, financial performance and investment plan", ticker: "FANG", company: "Diamondback Energy", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-23", pages: 38, format: "pdf", status: "draft", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Diamondback Energy in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "mpc-writeup", title: "Company analysis, financial performance and investment plan", ticker: "MPC", company: "Marathon Petroleum", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-23", pages: 32, format: "pdf", status: "draft", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Marathon Petroleum in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "oxy-writeup", title: "Company analysis, financial performance and investment plan", ticker: "OXY", company: "Occidental Petroleum", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-23", pages: 35, format: "pdf", status: "draft", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Occidental Petroleum in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "shel-writeup", title: "Company analysis, financial performance and investment plan", ticker: "SHEL", company: "Shell", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-23", pages: 41, format: "pdf", status: "draft", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Shell in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "adbe-research", title: "Undervalued, but AI execution must deliver", ticker: "ADBE", company: "Adobe", kind: "editorial", kindLabel: "Editorial", series: "editorial", sector: "Software", date: "2026-09-16", pages: 10, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "A high-quality subscription business with AI-first ARR above $650 million; the case turns on Firefly deepening workflow ownership.", engines: ["dhany-writeup-composer", "dhany-writeup-pdf"], lineage: "dhany-writeup-composer → dhany-writeup-pdf", line: "advisory", companion: null },
+  { slug: "house-format-sample", title: "A dependable subscription business, priced for a margin recovery it has not yet shown", ticker: "MLSW", company: "Meridian Ledger Software (worked example)", kind: "editorial", kindLabel: "Editorial", series: "editorial", sector: "Software", date: "2026-09-29", pages: 6, format: "pdf", status: "sample", attached: true, rendered: 6, rating: null, spot: null, pv: null, currency: "$", thesis: "The Gotrade Research editorial format demonstrated on a worked-example company: research view, base-case DCF with scenarios, the questions that decide the case, risks and a disclosures page.", engines: ["dhany-writeup-composer", "dhany-writeup-pdf"], lineage: "dhany-writeup-composer → dhany-writeup-pdf", line: "role", companion: null },
+  { slug: "weekly-note-2026-09-27", title: "Weekly Market Note, 21–27 September 2026, oil edition", ticker: "", company: "", kind: "weekly", kindLabel: "Weekly note", series: "weekly", sector: "Macro", date: "2026-09-27", pages: 12, format: "pdf", status: "final", attached: true, rendered: 12, rating: null, spot: null, pv: null, currency: "$", thesis: "Brent dips below $100 and recovers as Saudi Arabia reopens its pipeline. Prices, flows through Hormuz, inventories and what the futures curve is pricing, with every figure sourced and dated.", engines: ["energy-refresh", "energy-read", "weekly-market-note"], lineage: "energy store → weekly-market-note", line: "role", companion: null },
+  { slug: "weekly-note-2026-09-20", title: "Weekly Market Note, 14–20 September 2026", ticker: "", company: "", kind: "weekly", kindLabel: "Weekly note", series: "weekly", sector: "Macro", date: "2026-09-20", pages: 12, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Rate hikes in Washington and Tokyo, a hold in London: three central bank decisions in three days and the bond market's reply.", engines: ["weekly-market-note"], lineage: "weekly-market-note", line: "role", companion: null },
+  { slug: "atic-note", title: "Buy call, December 2024", ticker: "ATIC", company: "PT Anabatic Technologies", kind: "archive", kindLabel: "Archive", series: "archive", sector: "Indonesia", date: "2024-12-02", pages: 7, format: "pdf", status: "final", attached: true, rendered: 7, rating: null, spot: null, pv: null, currency: "Rp", thesis: "Written on the morning of 2 December 2024 at Rp378; the buy was called at Rp438 and a client position of $273k exited at Rp835 within the year, +91% against +22% for the IHSG in 2025.", engines: [], lineage: "Maybank Securities Indonesia", line: "maybank", companion: null, byline: "Prepared by Faldo Lyon, Equity Research Analyst Intern, Maybank Securities Indonesia" }
+];
+const SERIES = [
+  { key: "ic", title: "IC notes", sub: "catalyst-projection-valuation → gotrade-ic-note" },
+  { key: "energy", title: "Energy write-ups", sub: "three-stage house format" },
+  { key: "editorial", title: "Editorial", sub: "Gotrade Research format" },
+  { key: "weekly", title: "Weekly Market Note", sub: "from the energy store" },
+  { key: "archive", title: "Archive", sub: "Maybank Securities Indonesia" }
+];
+/* ---- pure helpers (no DOM access at load) ---- */
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pad2 = (n) => String(n).padStart(2, "0");
+const docPaths = (d) => ({
+  pdf: "proof/research/" + d.slug + ".pdf",
+  cover: "proof/research/" + d.slug + "-p01.jpg",
+  page: (i) => "proof/research/" + d.slug + "-p" + pad2(i) + ".jpg",
+  pages: Array.from({ length: d.rendered || 0 }, (_, i) => ({ file: "proof/research/" + d.slug + "-p" + pad2(i + 1) + ".jpg", cap: (d.ticker || d.kindLabel) + " · page " + (i + 1) + " of " + d.pages }))
+});
+const docBySlug = (slug) => DOCS.find((d) => d.slug === slug) || null;
+const upside = (d) => (d.spot && d.pv) ? ((d.pv / d.spot - 1) * 100) : null;
+const fmtUpside = (d) => { const u = upside(d); return u === null ? "" : (u >= 0 ? "+" : "") + u.toFixed(1) + "%"; };
+const fmtPx = (d) => d.spot && d.pv ? `${d.currency}${d.spot.toFixed(2)} → ${d.currency}${d.pv.toFixed(2)} · ${fmtUpside(d)}` : "";
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const fmtDate = (iso) => { const [y, m, d] = iso.split("-").map(Number); return `${d} ${MONTHS[m - 1]} ${y}`; };
+const fmtMonth = (iso) => { const [y, m] = iso.split("-").map(Number); return `${MONTHS[m - 1]} ${y}`; };
+const stampList = (d) => [d.status === "draft" ? "Draft · not for distribution" : d.status === "sample" ? "Sample · worked example" : null, d.attached === false ? "To be attached" : null].filter(Boolean);
+const statusLabel = (d) => [d.status === "draft" ? "Draft" : d.status === "sample" ? "Sample" : null, d.attached === false ? "To be attached" : null].filter(Boolean).join(" · ") || "Final";
+const stampText = (d) => stampList(d).join(" · ");
+const statusSentence = (d) => [d.status === "draft" ? "This document is a draft stamped NOT FOR DISTRIBUTION; figures may change." : d.status === "sample" ? "The subject is a worked-example company used to demonstrate the format, not a live recommendation." : null, d.attached === false ? "The PDF has not been attached yet; the metadata is from the document itself." : null].filter(Boolean).join(" ");
+const metaLine = (d) => [d.ticker || d.kindLabel.toUpperCase(), d.ticker ? d.kindLabel.toUpperCase() : null, fmtDate(d.date).toUpperCase(), d.format === "html" ? "HTML" : d.pages + " PP"].filter(Boolean).join(" · ");
+const ratingHTML = (d) => d.rating ? `<div class="rating"><span class="chip ent" title="Rating for new money (the engine's entrant rating)">New money · ${esc(d.rating.entrant)}</span><span class="chip hol" title="Rating for existing holders (the engine's holder rating)">Holders · ${esc(d.rating.holder)}</span>${fmtPx(d) ? `<span class="px num" title="Spot price → probability-weighted fair value · upside">${esc(fmtPx(d))}</span>` : ""}</div>` : `<div class="rating"><span class="none">Rating: see document</span></div>`;
+const lineageHTML = (d) => `<div class="lineage mono">${d.engines.length ? d.engines.map((e) => `<a href="engines.html#${esc(e)}" style="color:inherit;text-decoration:none">${esc(ENGINE_LABEL[e] || e)}</a>`).join(" → ") : esc(d.lineage)}</div>`;
+const provesHTML = (d) => `<div class="proves mono">Proves: <a href="${esc(LINES[d.line].anchor)}">${esc(LINES[d.line].short)}</a></div>`;
+/* docCard(d, {open}) where open is 'pane' (same page, #doc=) or 'research' (link to research.html#doc=). */
+const docCard = (d, opts = {}) => {
+  const p = docPaths(d), live = d.attached !== false, href = (opts.open === "research" ? "research.html" : "") + "#doc=" + d.slug;
+  const stamp = stampList(d).map((t) => `<span class="stamp">${esc(t)}</span>`).join("");
+  const cover = live
+    ? `<span class="cover"><img src="${esc(p.cover)}" alt="${esc(d.company || d.title)}, page 1" loading="lazy" decoding="async" width="1000" height="1414" onerror="this.parentNode.className='cover empty';this.parentNode.innerHTML='<b>${esc(d.ticker || d.kindLabel)}</b><i>${esc(d.kindLabel)}</i>';this.closest('.doc').classList.add('slot')">${stamp}</span>`
+    : `<span class="cover empty"><b>${esc(d.ticker || d.kindLabel)}</b><i>${esc(d.kindLabel)}</i>${stamp}</span>`;
+  const openBtn = opts.open === "research"
+    ? `<a class="doc-open" href="${esc(href)}" ${live ? "" : 'aria-disabled="true"'}>${cover}</a>`
+    : `<button class="doc-open" type="button" data-doc="${esc(d.slug)}" ${live ? "" : 'aria-disabled="true"'}>${cover}</button>`;
+  return `<article class="doc${live ? "" : " slot"}" data-slug="${esc(d.slug)}">${openBtn}<div class="meta mono">${esc(metaLine(d))}</div><h3 class="ttl"><a href="${esc(href)}" data-doc="${esc(d.slug)}">${esc(d.title)}</a></h3>${ratingHTML(d)}${lineageHTML(d)}${provesHTML(d)}<p class="thesis">${esc(d.thesis)}</p></article>`;
+};
+const totals = (docs = DOCS) => ({
+  count: docs.length,
+  pages: docs.reduce((s, d) => s + (d.pages || 0), 0),
+  attached: docs.filter((d) => d.attached !== false).length,
+  first: docs.map((d) => d.date).sort()[0],
+  last: docs.map((d) => d.date).sort().slice(-1)[0],
+  names: new Set(docs.filter((d) => d.ticker && d.status !== "sample").map((d) => d.ticker)).size
+});
+/* DOCS v1 end */
+</script>
+<script>
+/* engines.html: the ENGINES registry (one entry per SKILL.md, lifted from the files in October 2026) and the renderers.
+   Fields: slug (= the SKILL.md name and the card id), group, flavor ('A'|'B'|'C'|'D'|'' when the file's first body line declares none),
+   flavorNote (a declared variant, or where the authoring standard's registry files an undeclared skill), version, lines (CONTENT.md),
+   files (on disk), model (only when the file states one), reads, writes, forbidden, authority, rule (verbatim, at most fifteen words), note. */
+const FLAVOR = { A: "analytical / scoring", B: "advisory / interpretive", C: "operational / tracking", D: "transform / render" };
+const ENGINE_GROUPS = [
+  { key: "ladder", title: "Valuation ladder", sub: "one question, three depths; the full engine reads two input models" },
+  { key: "composers", title: "Report writers and PDF layout", sub: "they re-express the model output; they never re-analyse it" },
+  { key: "energy", title: "Energy store skills", sub: "one contract: refresh, explore and read write it, each to named columns; the view and the pack read it" },
+  { key: "sector", title: "Sector", sub: "eleven sectors, one tilt book" },
+  { key: "desk", title: "Desk tools", sub: "messages, situations, proposals, voice" },
+  { key: "governance", title: "Governance", sub: "the file every other skill answers to" },
+  { key: "kopi", title: "Kopi Satset", sub: "the operator for the cart experiments" }
+];
+const ENGINES = [
+  { slug: "quick-stock-verdict", group: "ladder", flavor: "", flavorNote: "undeclared; the rulebook files it as analytical", version: "v4.1", lines: 143, files: 1, model: "Sonnet",
+    reads: "six web searches fired in one parallel block, plus at most one retry for a must-have slot (price, multiple or RSI)",
+    writes: "one fixed card: the 3-month verdict GOOD / MID / BAD, the entry read for two horizons, the numbers behind each state",
+    forbidden: "any figure or catalyst that did not come from a source in this run; a gap filled from memory",
+    rule: "A fast verdict on a stale price is a wrong one." },
+  { slug: "cpv-core", group: "ladder", flavor: "A", version: "v1.3", lines: 121, files: 1,
+    reads: "catalyst-projection-valuation (the SKILL.md version string only, for mirror verification at run start); moat-analyzer (the in-session moat score, proof-of-moat test, direction and confidence, when one exists)",
+    writes: "entry, fair_value, conviction; about fifteen lines plus one line per failed test",
+    forbidden: "none declared; the audited model output, the thesis-break table, hedge construction and execution menu belong to the full engine", authority: "compute",
+    rule: "A stale mirror still runs; it never pretends to be current." },
+  { slug: "catalyst-projection-valuation", group: "ladder", flavor: "A", version: "v4.10-lean", lines: 533, files: 1,
+    reads: "per-growth-checker at Step 6b only (the hurdle-rate surface for inverting a multiple into implied growth; never a cost of equity); moat-analyzer at Step 8 only (score, the proof-of-moat test, direction, confidence)",
+    writes: "the model output in thirteen sections, the completion checklist and the provenance log, under stable field keys",
+    forbidden: "no summary, verdict, headline read or \"final read\" section; those belong to a formatter", authority: "compute and rate",
+    rule: "Copying figures forward is a failed run." },
+  { slug: "moat-analyzer", group: "ladder", flavor: "", flavorNote: "undeclared; the rulebook files it as analytical", lines: 210, files: 1,
+    reads: "public data only: annual reports, 10-K / 20-F, investor presentations, earnings calls, filings, peer financials, public competitor pricing",
+    writes: "a scorecard: seven drivers scored 0–5 or N/A, the financial-proof test PASS / PARTIAL / FAIL, a direction, the conditions that would break the case",
+    forbidden: "buy, sell or hold calls and price targets; an invented number where data is not disclosed",
+    rule: "most companies do not have a moat." },
+  { slug: "per-growth-checker", group: "ladder", flavor: "", flavorNote: "undeclared; the rulebook files it as analytical", lines: 155, files: 1,
+    reads: "company name, sector, current PER and the analyst forecast growth rate, for exactly two companies",
+    writes: "the six-part output in fixed order: input summary, market-expectations table, compounding tables, a grouped bar chart, the final read",
+    forbidden: "buy, sell, better buy, best stock, undervalued, overvalued, recommendation",
+    rule: "Never ask for EPS, price, or revenue." },
+
+  { slug: "stock-writeup-composer", group: "composers", flavor: "D", version: "v2.4", lines: 460, files: 6, model: "Sonnet",
+    reads: "moat-analyzer, energy-macro-pack, energy-sector-analysis, cpv-core or catalyst-projection-valuation, analyst-read, human-voice; the PDF layout's build receipt",
+    writes: "writeup.json to stock-writeup-pdf; the registry and peer registry to the sector engine and analyst-read; prose to human-voice",
+    forbidden: "any figure not in a registered source, fair_value, target_price, entry_price, stop_loss, allocation, rating, conviction, probability, weight, total_return, growth_rate, margin, multiple, …, energy store files, compliance text, PDF layout assets", authority: "none",
+    rule: "Computes nothing, holds no view.", note: "Six files: SKILL, REFERENCE, REVIEW, HANDOFF, a review script and its test." },
+  { slug: "stock-writeup-pdf", group: "composers", flavor: "D", version: "v1.2.0", lines: 178, files: 10, model: "Opus",
+    reads: "writeup.json from stock-writeup-composer (schema stock-writeup/1.2; 1.0 and 1.1 rendered as drafts)",
+    writes: "the Gotrade-branded A4 PDF plus HTML; layout findings that need a structural fix, back to the report writer",
+    forbidden: "meta, sources, screen, evidence, review, blocks", authority: "none",
+    rule: "This skill types no digit." },
+  { slug: "gotrade-ic-note", group: "composers", flavor: "D", version: "v1.3", lines: 350, files: 14, model: "Opus",
+    reads: "the CPV model output, copied into bank.md verbatim, byte for byte; no model output, no run",
+    writes: "note.json, then the IC memorandum PDF and the one-page summary projected off it",
+    forbidden: "no number, no rating, no target, no conclusion of this skill's own",
+    rule: "A refused build is a correct outcome; fix the note spec, never the gate." },
+  { slug: "dhany-writeup-composer", group: "composers", flavor: "A", flavorNote: "question-led scope [PROPOSED]", version: "v1.1", lines: 338, files: 1, model: "Sonnet",
+    reads: "energy-macro-pack and energy-sector-analysis only when a step routes there; cpv-core or the full engine only on escalation; moat-analyzer only when asked, and its score sets no multiple",
+    writes: "the manuscript package (manuscript.md, evidence.json, questions.md, model.json, model_out.json, review.json) to dhany-writeup-pdf",
+    forbidden: "compliance text, PDF layout assets, energy store files, any figure without an evidence row or a model output, a probability weight without a stated basis, a numerical score the sources do not carry", authority: "compute",
+    rule: "Adverse evidence is never cheaper to omit." },
+  { slug: "dhany-writeup-pdf", group: "composers", flavor: "D", version: "v1.1", lines: 186, files: 1, model: "Opus",
+    reads: "the manuscript package from dhany-writeup-composer (contract dhany-writeup/1.0)",
+    writes: "the Gotrade Research editorial A4 PDF; layout findings that need a structural fix, back to the report writer",
+    forbidden: "manuscript.md, evidence.json, model.json, model_out.json, review.json, questions.md, compliance text", authority: "none",
+    rule: "a report with no charts at all is a valid render." },
+  { slug: "weekly-market-note", group: "composers", flavor: "B", flavorNote: "editorial variant [PROPOSED]", version: "v1.0", lines: 101, files: 17, model: "Sonnet",
+    reads: "the prior edition (.docx) supplied this session, for continuity threads and the style template; retrieval through six research slices",
+    writes: "the .docx in the house template plus a content pack with every chart's data points and a figure ledger; no downstream skill",
+    forbidden: "compliance_text, disclaimer_text, preparer_identity_not_given, any figure without a ledger row, any figure from memory", authority: "derive",
+    rule: "\"Not found\" is the only permitted gap." },
+
+  { slug: "energy-refresh", group: "energy", flavor: "C", version: "v1.0", lines: 129, files: 1, model: "Sonnet",
+    reads: "CONTRACT.md, registry.md and ledger.md, whole files, in this session",
+    writes: "ledger rows, appended with a dated source row; registry last_retrieved, last_source, last_id, blocked",
+    forbidden: "graph, theses, gaps and passes; any computed value; a figure from memory, a peer series or a prior run",
+    rule: "It never computes, bands, compares, or says what a number means." },
+  { slug: "energy-read", group: "energy", flavor: "A", version: "v1.1.0", lines: 202, files: 1, model: "Sonnet",
+    reads: "CONTRACT; registry (window_d, cadence); ledger (all rows and sources); graph; theses. Excludes passes, never an input",
+    writes: "the dated pass file P0–PM; new gap rows; graph edge scores; thesis evaluation and last_evaluated",
+    forbidden: "ledger.*, registry.*, graph.nodes.*, graph.edges.status, graph.edges.mechanism, graph.edges.evidence, theses.statement, theses.status, the confirm and kill observables, gaps.status, gaps.outcome", authority: "compute",
+    rule: "Reads are band lookups, never judgment." },
+  { slug: "energy-explore", group: "energy", flavor: "C", version: "v1.0", lines: 131, files: 1, model: "Sonnet",
+    reads: "CONTRACT, gaps, registry, graph, theses, ledger, whole files; the open gaps in priority order, five at a time [PROPOSED]",
+    writes: "ledger rows, node fields, edges at status proposed with the source's own mechanism sentence, agency-attributed theses, follow-on gap rows",
+    forbidden: "an edge sign, a lag, a thesis, a band or a read of its own; the status of any edge or thesis",
+    rule: "No skill-authored sentence enters the store." },
+  { slug: "energy-macro-pack", group: "energy", flavor: "D", version: "v1.0", lines: 103, files: 1, model: "Sonnet",
+    reads: "CONTRACT, registry windows, ledger, graph (promoted edges only), open gaps, and the latest pass under energy/passes/",
+    writes: "the pack: the I1–I7 industry block as dated ledger rows, a sources block, the pass bands verbatim, the transmission edges for the exposure class, the gaps that touch it",
+    forbidden: "no mean, no difference, no percentage, no rounding, no band, no adjective, no sentence that concludes; nothing fetched",
+    rule: "Re-express; never re-analyse." },
+  { slug: "energy-sector-analysis", group: "energy", flavor: "A", version: "v1.2", lines: 200, files: 1, model: "Sonnet",
+    reads: "the report writer's registry (filings, company pages, data pages); the I1–I7 block with ledger ids from energy-macro-pack",
+    writes: "the sector output E0–E6 and its completion checklist EM, to stock-writeup-composer",
+    forbidden: "energy store files, cpv fields, fair value, entry, conviction", authority: "compute",
+    rule: "midstream, refining and services are out of scope." },
+  { slug: "energy-view", group: "energy", flavor: "A", version: "v1.0", lines: 129, files: 1, model: "Sonnet",
+    reads: "the latest energy-read pass P0–PM; the ledger's current rows including the same-day dig; graph, theses, gaps",
+    writes: "section 09 of the read, the price call; thesis rows in Faldo's words only when he says adopt",
+    forbidden: "ledger.*, registry.*, graph.edges.status, theses.status, passes.*, reads.00-08", authority: "compute",
+    rule: "energy-read refuses to say where price goes." },
+
+  { slug: "sector-tilt-book", group: "sector", flavor: "A", version: "v1.0", lines: 179, files: 1, model: "Sonnet",
+    reads: "one search batch of eight fields per sector (dated benchmark weights, forward P/E history, revisions, a mapped macro series, margins, ETF flows, vols, leverage); the mandate size and horizon from Faldo",
+    writes: "one fixed object: scorecard, deployment table, reconciliation, falsifier register, stamps",
+    forbidden: "a beta call, a cash call, a single name; a gap filled from memory",
+    rule: "An unlabeled number is a lie." },
+
+  { slug: "boss-message-compressor", group: "desk", flavor: "", flavorNote: "undeclared; the rulebook files it as advisory, contested", lines: 94, files: 1,
+    reads: "messy work notes, research findings, product updates, compliance notes or internal progress",
+    writes: "one boss or stakeholder update in the default structure: what I did, key finding, blocker or risk, next step",
+    rule: "Compression is still the core. Warmth is the default register, not an exception." },
+  { slug: "situation-reflector-skill", group: "desk", flavor: "B", lines: 60, files: 1,
+    reads: "situation and decision rows from pending-log's active log (never archive.md); faldo-profile.md, loaded first",
+    writes: "a read in six fixed sections, ending in options; at most a Reflection note on the log row",
+    forbidden: "pending-log's Type, Status and Deadline fields; an \"if person does X → it means Y\" table",
+    rule: "Ends in options. Every single time." },
+  { slug: "marketing-proposal-builder", group: "desk", flavor: "", flavorNote: "undeclared; the rulebook files it as analytical", lines: 267, files: 1,
+    reads: "a marketing idea in fragments; stated defaults for anything missing, listed afterwards",
+    writes: "a proposal in markdown: reach ceiling, objective, audience, mechanics, a funnel-to-CAC model, the kill case, tripwires, the ask",
+    forbidden: "an unlabeled number: every figure is [given], [counterparty], [Gotrade default] or [assumed]",
+    rule: "every proposal must be falsifiable." },
+  { slug: "talk-progressor", group: "desk", flavor: "B", version: "v0.6", lines: 249, files: 1,
+    reads: "a profile, the live thread, an in-person meeting in Faldo's words, a tracker row if he supplies one",
+    writes: "one message to one person, plus a chat agenda for a first contact; human-voice runs after it on the text only",
+    forbidden: "the tracker state; a bracketed slot for Faldo to fill; any figure he did not state in the run",
+    rule: "Faldo owns the tracker state." },
+  { slug: "human-voice", group: "desk", flavor: "D", version: "v1.2", lines: 185, files: 1,
+    reads: "rendered prose from Faldo or any upstream skill, excluding the catalyst-projection-valuation model output, cpv-core outputs and [[DISCLAIMER]] slots",
+    writes: "the \"Flags for the source\" line, to the source skill",
+    forbidden: "figures, ratings, targets, names, dates, claims, DISCLAIMER", authority: "none",
+    rule: "It owns how the text sounds. It does not own what the text says." },
+
+  { slug: "skill-authoring-standard", group: "governance", flavor: "", lines: 361, files: 1,
+    reads: "every skill in the library; a skill that contradicts this file is wrong",
+    writes: "Part 0 choosing the skill type, Part 1 the universal core, Part 2 the four skill types, Part 3 what each skill may read, write and never touch, Part 4 the fifteen-check lint, Part 5 the registry",
+    rule: "A proposal that silently becomes a default is a defect." },
+
+  { slug: "coffee-cart-experiment-operator", group: "kopi", flavor: "", flavorNote: "undeclared; the rulebook files it as analytical", lines: 148, files: 1,
+    reads: "the project's master document (designation register, threshold registry) and the daily collection sheet, one row per cart per day",
+    writes: "experiment designs and keep / modify / relocate / stop / replicate / scale reads, facts kept apart from observations, calculations, assumptions and hypotheses",
+    forbidden: "field contribution labelled as net profit; an assumption silently preserved after actual data arrives",
+    rule: "Do not silently preserve an assumption after the founder supplies actual data." }
+];
+
+/* ---- renderers (pure; DOM writes at the end) ---- */
+const producedFor = (slug) => DOCS.filter((d) => d.engines.includes(slug) && d.kind !== "one-pager");
+const chipLabel = (d) => {
+  const base = d.ticker || (d.kindLabel + " " + fmtDate(d.date).slice(0, 6));
+  return d.status === "sample" ? base + " · sample" : d.status === "draft" ? base + " · draft" : base;
+};
+const flavorHTML = (e) => {
+  const out = [];
+  if (e.flavor && FLAVOR[e.flavor]) out.push(`<span class="flavor">${esc(FLAVOR[e.flavor])}<span class="code">${esc(e.flavor)}</span></span>`);
+  if (e.flavorNote) out.push(`<span class="flavor${/PROPOSED/.test(e.flavorNote) ? " prop" : ""}">${esc(e.flavorNote)}</span>`);
+  return out.join(" ");
+};
+const sizeLine = (e) => [e.version, e.lines + " lines", e.model, e.files ? e.files + (e.files === 1 ? " file" : " files") : null].filter(Boolean).join(" · ");
+const kvHTML = (e) => {
+  const rows = [["Reads", e.reads], ["Writes", e.writes], ["Forbidden", e.forbidden], ["Authority", e.authority]].filter((r) => r[1]);
+  return rows.length ? `<div class="kv">${rows.map(([k, v]) => `<span class="k">${k}</span><span>${esc(v)}</span>`).join("")}</div>` : "";
+};
+const engineCard = (e) => {
+  const prod = producedFor(e.slug);
+  const produced = prod.length ? `<div class="produced"><span class="k">Produced</span>${prod.map((d) => `<a class="tk" href="research.html#doc=${esc(d.slug)}" title="${esc(d.company || d.title)} · ${esc(statusLabel(d))}">${esc(chipLabel(d))}</a>`).join("")}</div>` : "";
+  return `<article class="eng" id="${esc(e.slug)}"><div class="head"><span class="name">${esc(e.slug)}</span><span>${flavorHTML(e)}</span></div><div class="size">${esc(sizeLine(e))}</div>${kvHTML(e)}${e.rule ? `<p class="rule">${esc(e.rule)}</p>` : ""}${e.note ? `<p class="note">${esc(e.note)}</p>` : ""}${produced}</article>`;
+};
+const slotCard = (title, cap) => `<figure class="ex todo inline"><div class="lab"><span class="mono">Exhibit</span><span class="mono flag">To add</span></div><div class="empty"></div><figcaption class="cap"><b>${esc(title)}</b> ${esc(cap)}</figcaption></figure>`;
+const groupsHTML = () => ENGINE_GROUPS.map((g) => {
+  const members = ENGINES.filter((e) => e.group === g.key);
+  const extra = g.key === "kopi" ? slotCard("Location Book v13.", "Twenty candidate sites for the Surabaya carts, ranked, with the decision rules (12 August 2026); to be attached.") : "";
+  return `<div class="series"><h3>${esc(g.title)} <span class="mono">${esc(g.sub)} · ${members.length} ${members.length === 1 ? "skill" : "skills"}</span></h3><div class="engs">${members.map(engineCard).join("")}</div>${extra}</div>`;
+}).join("");
+const PRODUCED_SLUGS = ["aph-ic-note", "tel-ic-note", "cvx-writeup", "adbe-research", "weekly-note-2026-09-27"];
+const producedShelfHTML = () => PRODUCED_SLUGS.map(docBySlug).filter(Boolean).map((d) => docCard(d, { open: "research" })).join("");
+
+(function render() {
+  if (typeof document === "undefined") return;
+  const $ = (s) => document.querySelector(s);
+  const groups = $("#engineGroups"); if (groups) groups.innerHTML = groupsHTML();
+  const shelf = $("#producedShelf"); if (shelf) shelf.innerHTML = producedShelfHTML();
+  const tile = $("#tileSkills"); if (tile) tile.textContent = String(ENGINES.length);
+  const statSkills = $("#statSkills"); if (statSkills) statSkills.textContent = String(ENGINES.length);
+  const statStops = $("#statStops"), runRows = document.querySelectorAll("#run table tbody tr"); if (statStops && runRows.length) statStops.textContent = String(runRows.length);
+  const statStore = $("#statStoreDocs"), storeTable = $("#energy-store table"); if (statStore && storeTable) { const n = storeTable.querySelectorAll("tbody tr").length; if (n) statStore.textContent = String(n); }
+  // engine codes: the small tags beside every market term; off hides them for a plain read
+  const sw = $("#codeSwitch");
+  if (sw) {
+    const setCodes = (on) => { document.body.classList.toggle("codes-off", !on); sw.setAttribute("aria-pressed", on ? "true" : "false"); sw.textContent = on ? "Engine codes · on" : "Engine codes · off"; };
+    let on = true; try { on = localStorage.getItem("fl-codes") !== "off"; } catch (e) {}
+    setCodes(on);
+    sw.addEventListener("click", () => { on = !on; setCodes(on); try { localStorage.setItem("fl-codes", on ? "on" : "off"); } catch (e) {} });
+  }
+  const cpvEngine = ENGINES.find((e) => e.slug === "catalyst-projection-valuation"), tileLines = $("#tileLines"); if (tileLines && cpvEngine) tileLines.textContent = String(cpvEngine.lines);
+  // the CPV dossier is open by default on wide screens only
+  const cpv = $("#dossier-cpv");
+  if (cpv) { try { if (window.matchMedia && window.matchMedia("(min-width: 820px)").matches) cpv.open = true; } catch (e) {} }
+  // the engines page prepends one sentence to the shared footnote
+  const foot = $("#footnote");
+  if (foot) { const p = document.createElement("p"); p.textContent = "The engines are work done at Gotrade, described from their own files; nothing in them is investment advice."; foot.insertBefore(p, foot.firstChild); }
+  // a lineage link from another page lands on the card; open the dossier that shares its subject
+  const openFor = { "catalyst-projection-valuation": "dossier-cpv", "gotrade-ic-note": "dossier-ic-note", "quick-stock-verdict": "dossier-qsv" };
+  const onHash = () => { const id = openFor[location.hash.slice(1)]; if (id) { const d = document.getElementById(id); if (d) d.open = true; } };
+  window.addEventListener("hashchange", onHash); onHash();
+})();
+</script>
+</body>
+</html>

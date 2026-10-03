@@ -1,0 +1,59 @@
+<!-- HEAD v1 start -->
+<script>(function(){try{var t=localStorage.getItem('fl-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<!-- HEAD v1 end -->
+
+<!-- CHROME v1 start -->
+<div class="bar" id="siteBar"><a class="who" href="index.html">Faldo Lyon <span class="desk mono">Research desk</span></a><nav aria-label="Site"><a href="research.html" data-page="research">Research</a><a href="engines.html" data-page="engines">Engines</a><a href="cpv.html" data-page="cpv">CPV</a><a href="index.html#clients">Clients</a><a href="analyst.html" data-page="analyst">Analyst</a><a href="kopi.html" data-page="kopi">Kopi Satset</a></nav><button class="theme mono" type="button" id="themeBtn" aria-label="Switch colour theme">Theme · auto</button></div>
+<!-- CHROME v1 end -->
+
+<!-- FOOT v1 start -->
+<footer id="footnote"><p>Nothing on this site is not on my CV or in work I did myself. Gotrade figures and documents are the firm's data, shown with permission pending. Four energy write-ups are drafts and are stamped as such; the house-format report is a sample on a worked-example company; Kopi Satset plan figures are model outputs. Research is for information only and is not investment advice. Updated October 2026.</p></footer>
+<dialog id="lb"><img id="lbImg" alt=""><div class="ctl"><button id="lbPrev" type="button">← Prev</button><span id="lbCap"></span><button id="lbNext" type="button">Next →</button><button id="lbClose" type="button">Close</button></div></dialog>
+<script>
+/* shared chrome: theme toggle, lightbox, copy buttons, current-page marker */
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  // current page
+  var page = document.body.getAttribute('data-page');
+  if (page) { var cur = document.querySelector('#siteBar nav a[data-page="' + page + '"]'); if (cur) cur.setAttribute('aria-current', 'page'); }
+  // theme: auto -> dark -> light
+  var btn = $('#themeBtn');
+  var read = function () { try { return localStorage.getItem('fl-theme') || 'auto'; } catch (e) { return document.documentElement.getAttribute('data-theme') || 'auto'; } };
+  var apply = function (t) {
+    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme');
+    try { if (t === 'auto') localStorage.removeItem('fl-theme'); else localStorage.setItem('fl-theme', t); } catch (e) {}
+    if (btn) btn.textContent = 'Theme · ' + t;
+  };
+  if (btn) { btn.textContent = 'Theme · ' + read(); btn.addEventListener('click', function () { var t = read(); apply(t === 'auto' ? 'dark' : t === 'dark' ? 'light' : 'auto'); }); }
+  // lightbox: openLightbox(list, index) where list is [{file, cap}]
+  var lb = $('#lb'), img = $('#lbImg'), cap = $('#lbCap'), list = [], cur = 0;
+  var show = function (i) { if (!list.length) return; cur = (i + list.length) % list.length; img.src = list[cur].file; img.alt = list[cur].cap || ''; cap.textContent = list[cur].cap || ''; if (!lb.open) lb.showModal(); };
+  window.openLightbox = function (l, i) { list = l || []; show(i || 0); };
+  if (lb) {
+    $('#lbPrev').addEventListener('click', function () { show(cur - 1); });
+    $('#lbNext').addEventListener('click', function () { show(cur + 1); });
+    $('#lbClose').addEventListener('click', function () { lb.close(); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) lb.close(); });
+    document.addEventListener('keydown', function (e) { if (!lb.open) return; if (e.key === 'ArrowLeft') show(cur - 1); if (e.key === 'ArrowRight') show(cur + 1); });
+  }
+  // any element with data-lb="groupName" and data-file/data-cap joins a lightbox group
+  var groups = {};
+  document.querySelectorAll('[data-lb]').forEach(function (el) {
+    var g = el.getAttribute('data-lb'); (groups[g] = groups[g] || []).push({ file: el.getAttribute('data-file') || (el.querySelector('img') || {}).src, cap: el.getAttribute('data-cap') || '' });
+  });
+  document.querySelectorAll('[data-lb]').forEach(function (el) {
+    var g = el.getAttribute('data-lb'), i = groups[g].findIndex(function (x) { return x.file === (el.getAttribute('data-file') || (el.querySelector('img') || {}).src); });
+    el.addEventListener('click', function (e) { e.preventDefault(); window.openLightbox(groups[g], i); });
+  });
+  // copy buttons: <button class="copy" data-copy="text">
+  document.querySelectorAll('.copy[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var text = b.getAttribute('data-copy'), done = function () { b.textContent = 'copied'; setTimeout(function () { b.textContent = 'copy'; }, 1500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () {}); else done();
+    });
+  });
+})();
+</script>
+<!-- FOOT v1 end -->

@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Faldo Lyon</title>
+<meta name="description" content="Faldo Lyon: equity research at Gotrade written with engines he built, eight coffee carts in Surabaya, first year at Bayes. Every number on the page has a source.">
+<!-- HEAD v1 start -->
+<script>(function(){try{var t=localStorage.getItem('fl-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<!-- HEAD v1 end -->
+<style>
+/* BASE v1 start */
+:root {
+  --paper: #F6F1EA; --surface: #FFFDF9; --ink: #141210; --ink-2: #3E3832; --muted: #6E6660; --line: #DED5CA; --line-strong: #141210;
+  --accent: #1F4FD6; --accent-ink: #FFFFFF; --bench: #9A8C7D; --flag: #B8741A; --tint: #EFE6DA;
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif; --sans: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif; --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme: dark; --paper: #15120F; --surface: #1D1915; --ink: #F1EBE3; --ink-2: #CFC6BB; --muted: #9B9187; --line: #332C26; --line-strong: #F1EBE3; --accent: #8DB0FF; --accent-ink: #0B1220; --bench: #7A6E63; --flag: #E0A04A; --tint: #27211B; } }
+:root[data-theme="dark"] { color-scheme: dark; --paper: #15120F; --surface: #1D1915; --ink: #F1EBE3; --ink-2: #CFC6BB; --muted: #9B9187; --line: #332C26; --line-strong: #F1EBE3; --accent: #8DB0FF; --accent-ink: #0B1220; --bench: #7A6E63; --flag: #E0A04A; --tint: #27211B; }
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 72px; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--flag); outline-offset: 3px; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+img { max-width: 100%; height: auto; }
+table { border-collapse: collapse; }
+button { font: inherit; color: inherit; }
+.mono { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.num { font-variant-numeric: tabular-nums; }
+.page { max-width: 1040px; margin: 0 auto; padding-inline: 24px; padding-block: 0 80px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Site bar */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding-block: 12px; }
+.bar .who { font-family: var(--serif); font-size: 18px; font-weight: 500; color: var(--ink); text-decoration: none; display: inline-flex; align-items: baseline; gap: 10px; }
+.bar .who .desk { font-size: 10.5px; }
+.bar nav { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; }
+.bar nav a { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.bar nav a:hover, .bar nav a[aria-current] { color: var(--ink); }
+.bar nav a[aria-current] { border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+.bar .theme { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 4px 8px; cursor: pointer; color: var(--muted); font-size: 10.5px; }
+.bar .theme:hover { color: var(--ink); border-color: var(--line-strong); }
+.onpage { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 48px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.onpage span { color: var(--muted); }
+.onpage a { color: var(--muted); text-decoration: none; }
+.onpage a:hover { color: var(--ink); }
+
+/* Masthead */
+.mast { padding-block: 56px 36px; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 40px; align-items: end; }
+.mast.narrow { grid-template-columns: minmax(0, 1fr) 260px; }
+.wordmark { font-family: var(--serif); font-weight: 500; font-size: clamp(64px, 11vw, 132px); line-height: 0.88; letter-spacing: -0.04em; }
+.wordmark span { color: var(--bench); }
+.wordmark em { font-style: italic; font-weight: 400; color: var(--accent); }
+.mast .back { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; display: inline-block; margin-bottom: 18px; }
+.mast .thesis, .thesis { margin-top: 22px; font-family: var(--serif); font-size: clamp(20px, 2.4vw, 25px); line-height: 1.35; max-width: 34ch; color: var(--ink-2); border-left: 2px solid var(--line-strong); padding-left: 18px; }
+.mast .role { font-family: var(--mono); font-size: 12px; color: var(--ink); margin-top: 18px; max-width: 60ch; line-height: 1.6; }
+.mast figure { margin: 0; }
+.mast figure img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; display: block; border-radius: 2px; }
+.mast figcaption { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+.sheet { border-top: 2px solid var(--line-strong); font-size: 13.5px; margin-top: 28px; }
+.sheet > div { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding-block: 8px; border-bottom: 1px solid var(--line); }
+.sheet > div > span:first-child { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+.sheet code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); user-select: all; }
+.copy { font: 500 10.5px var(--mono); letter-spacing: 0.05em; text-transform: uppercase; border: 0; background: transparent; color: var(--accent); cursor: pointer; padding: 0; margin-left: 8px; }
+.tiles { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 2px solid var(--line-strong); border-left: 1px solid var(--line); }
+.tiles > div { padding: 16px 14px 18px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+.tiles strong { font-family: var(--serif); font-size: 38px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.tiles.row4 { grid-template-columns: repeat(4, 1fr); }
+
+.price { display: flex; align-items: baseline; gap: 14px; margin-top: 18px; border-left: 2px solid var(--line-strong); padding-left: 18px; }
+.price strong { font-family: var(--serif); font-size: 56px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.price span { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+
+/* Figures tape */
+.figures { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 2px solid var(--line-strong); border-bottom: 1px solid var(--line); margin-bottom: 56px; }
+.figures.four { grid-template-columns: repeat(4, 1fr); }
+.figures > * { color: inherit; text-decoration: none; padding: 18px 18px 18px 0; border-left: 1px solid var(--line); padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.figures > *:first-child { border-left: 0; padding-left: 0; }
+.figures a:hover strong { color: var(--accent); }
+.figures strong { font-family: var(--serif); font-size: 38px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.figures .mono { line-height: 1.35; }
+
+/* Sections and text */
+section { margin-bottom: 64px; }
+section > header { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; align-items: baseline; padding-bottom: 12px; border-bottom: 2px solid var(--line-strong); margin-bottom: 24px; }
+section > header h2 { font-family: var(--serif); font-size: 34px; font-weight: 400; letter-spacing: -0.02em; line-height: 1; }
+.lede { font-size: 17px; color: var(--ink-2); max-width: 66ch; }
+.lede b { color: var(--ink); font-weight: 600; }
+.note { font-size: 13px; color: var(--muted); max-width: 70ch; margin-top: 10px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; align-items: start; }
+.block h3, h3.h { font-family: var(--serif); font-size: 22px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 10px; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 36px; margin: 18px 0; }
+.stats > div { display: flex; flex-direction: column; gap: 2px; }
+.stats strong { font-family: var(--serif); font-size: 32px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.stats strong.up { color: var(--accent); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
+.steps.five { grid-template-columns: repeat(5, 1fr); }
+.step { border-top: 2px solid var(--line-strong); padding-top: 10px; }
+.step .mono { color: var(--ink); }
+.step strong { display: block; font-family: var(--serif); font-size: 20px; font-weight: 500; margin: 4px 0 6px; }
+.step p { font-size: 14px; color: var(--ink-2); }
+.t { width: 100%; font-size: 14px; }
+.t th, .t td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.t th { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.t th button { background: transparent; border: 0; padding: 0; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.t th button:hover { color: var(--ink); }
+.t td.n, .t th.n { text-align: right; font-variant-numeric: tabular-nums; }
+.t td.m { font-family: var(--mono); font-size: 12px; }
+.t tr.hi td { font-weight: 600; color: var(--ink); background: var(--tint); }
+.t tr.sum td { border-top: 2px solid var(--line-strong); font-weight: 600; }
+.tscroll { overflow-x: auto; }
+.chart { margin-top: 8px; }
+.chart .ttl { font-size: 13.5px; font-weight: 600; margin-bottom: 8px; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .src { font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+.bands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.band { border: 1px solid var(--line); background: var(--surface); padding: 12px 14px; border-radius: 3px; }
+.band strong { display: block; font-family: var(--serif); font-size: 20px; font-weight: 500; }
+.band .act { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--flag); margin-top: 6px; display: block; }
+.band p { font-size: 13.5px; color: var(--ink-2); margin-top: 6px; }
+.bullets { margin: 12px 0 0; padding-left: 18px; max-width: 64ch; display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: var(--ink-2); }
+.bullets li::marker { color: var(--accent); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.tag { font-family: var(--mono); font-size: 11.5px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 2px 8px; text-decoration: none; }
+.tag:hover { border-color: var(--line-strong); }
+.more { display: inline-block; margin-top: 18px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.more.big { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 22px; padding: 14px 16px; border: 1px solid var(--line-strong); color: var(--ink); text-decoration: none; max-width: 760px; font-family: var(--serif); font-size: 19px; letter-spacing: 0; text-transform: none; }
+.more.big span { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.more.big:hover { background: var(--tint); }
+
+/* Entries (experience ledger) */
+.entry { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; padding-block: 30px; border-bottom: 1px solid var(--line); }
+.entry > *, .claim > * { min-width: 0; }
+.entry .side { display: flex; flex-direction: column; gap: 4px; }
+.entry .side .when { font-family: var(--mono); font-size: 12px; color: var(--ink); }
+.entry h3 { font-family: var(--serif); font-size: 26px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.15; }
+.entry .org { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.entry .what { margin-top: 14px; max-width: 62ch; font-size: 16px; color: var(--ink-2); }
+.entry .what b { color: var(--ink); font-weight: 600; }
+
+/* Photos */
+.slides { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 8px; }
+.slides.portrait { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+.slide { margin: 0; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; cursor: zoom-in; padding: 0; text-align: left; font: inherit; color: inherit; display: block; width: 100%; }
+.slide img { width: 100%; display: block; aspect-ratio: 16 / 9; object-fit: cover; }
+.slides.portrait .slide img { aspect-ratio: 3 / 4; }
+.slide span { display: block; padding: 6px 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--line); }
+.wall { columns: 3; column-gap: 8px; margin-top: 8px; }
+.wall figure { margin: 0 0 8px; break-inside: avoid; }
+.wall img { width: 100%; display: block; border-radius: 2px; }
+.wall figcaption { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.dl { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; font-size: 14px; }
+.strip { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 22px; max-width: 760px; }
+.strip figure { margin: 0; }
+.strip img { width: 100%; height: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; border-radius: 2px; }
+.strip figure.tall img { aspect-ratio: 3 / 4; }
+.strip figcaption { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+.sheet-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; max-width: 760px; }
+.sheet-row figure { margin: 0; }
+.sheet-row img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; border-radius: 2px; }
+.sheet-row .wide img { aspect-ratio: 3 / 2; }
+.sheet-row figcaption { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+/* Exhibits */
+.exhibits { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; max-width: 760px; }
+.ex { border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; display: flex; flex-direction: column; margin: 0; }
+.ex .lab { display: flex; justify-content: space-between; gap: 8px; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+.ex .lab .mono { color: var(--ink); }
+.ex .lab .flag { color: var(--flag); }
+.ex img { display: block; width: 100%; height: 150px; object-fit: cover; }
+.ex .empty { height: 150px; background: repeating-linear-gradient(135deg, transparent 0 9px, var(--line) 9px 10px); opacity: 0.6; }
+.ex .cap { padding: 8px 10px; font-size: 13px; color: var(--ink-2); line-height: 1.4; }
+.ex.todo { border-style: dashed; background: transparent; }
+.ex.todo .cap { color: var(--muted); }
+.ex a, .ex button.slide { cursor: zoom-in; }
+
+/* Stamps, banners, chips */
+.stamp { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--flag); border: 1px solid var(--flag); padding: 2px 6px; border-radius: 2px; background: var(--surface); white-space: nowrap; }
+.banner { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--tint); border: 1px solid var(--line); padding: 10px 14px; font-size: 13.5px; color: var(--ink-2); margin-bottom: 24px; }
+.tk { display: inline-block; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line); padding: 1px 6px; border-radius: 2px; color: var(--ink); text-decoration: none; }
+a.tk:hover { color: var(--accent); border-color: var(--accent); }
+.rating { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.chip { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 2px; border: 1px solid var(--bench); color: var(--ink-2); white-space: nowrap; }
+.chip.ent { border-color: var(--accent); color: var(--accent); }
+.rating .px { font-family: var(--mono); font-size: 11.5px; color: var(--ink); }
+.rating .none { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--muted); }
+
+/* Document cards */
+.shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.doc { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; padding: 0 0 12px; display: flex; flex-direction: column; gap: 6px; position: relative; }
+.doc .doc-open { display: block; width: 100%; border: 0; padding: 0; background: transparent; cursor: pointer; text-align: left; position: relative; }
+.doc .doc-open[aria-disabled="true"] { cursor: default; }
+.doc .cover { display: block; aspect-ratio: 1 / 1.414; background: #FFFFFF; border-bottom: 1px solid var(--line); overflow: hidden; position: relative; }
+.doc .cover img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.doc .cover.empty { background: var(--paper); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.doc .cover.empty::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, transparent 0 9px, var(--line) 9px 10px); opacity: 0.5; }
+.doc .cover.empty b { position: relative; font-family: var(--serif); font-weight: 500; font-size: 40px; color: var(--bench); letter-spacing: -0.02em; }
+.doc .cover.empty i { position: relative; font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.doc .cover .stamp { position: absolute; top: 8px; right: 8px; }
+.doc .meta { padding: 8px 12px 0; font-size: 11px; line-height: 1.5; }
+.doc .ttl { font-family: var(--serif); font-size: 18px; font-weight: 500; line-height: 1.2; padding: 0 12px; letter-spacing: -0.01em; }
+.doc .ttl a { color: var(--ink); text-decoration: none; }
+.doc .ttl a:hover { color: var(--accent); }
+.doc .rating { padding: 0 12px; }
+.doc .lineage, .doc .proves { padding: 0 12px; font-size: 10.5px; line-height: 1.5; }
+.doc .proves a { color: var(--muted); }
+.doc .proves a:hover { color: var(--ink); }
+.doc .thesis { padding: 0 12px; margin: 0; font-family: var(--sans); font-size: 13.5px; color: var(--ink-2); border: 0; max-width: none; line-height: 1.45; }
+.doc.slot { border-style: dashed; }
+.doc.slot .ttl a { color: var(--ink-2); }
+
+/* Library layout */
+.lib { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; align-items: start; }
+.rail { position: sticky; top: 64px; display: flex; flex-direction: column; gap: 18px; font-size: 13.5px; }
+.rail .grp { display: flex; flex-direction: column; gap: 4px; }
+.rail .grp .mono { margin-bottom: 4px; }
+.rail label { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+.rail input[type="checkbox"] { accent-color: var(--accent); margin: 0; }
+.rail select, .search input { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 2px; padding: 8px 10px; }
+.rail .count { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.rail .clear { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.railscroll { display: none; }
+.search { margin-top: 18px; max-width: 420px; }
+.search input { width: 100%; font-family: var(--mono); font-size: 13px; }
+.search input::placeholder { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.views { display: inline-flex; gap: 0; margin-top: 14px; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
+.views button { border: 0; background: transparent; padding: 6px 12px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.views button[aria-pressed="true"] { background: var(--tint); color: var(--ink); }
+.series { margin-bottom: 36px; }
+.series > h3 { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 14px; font-family: var(--serif); font-size: 22px; font-weight: 500; }
+.series > h3 .mono { font-size: 10.5px; }
+.catalogue { margin-top: 24px; font-size: 13.5px; }
+.catalogue summary { cursor: pointer; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.catalogue ul { padding-left: 18px; }
+.catalogue li { margin: 4px 0; }
+
+/* Document pane */
+.pane-back { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.35); z-index: 20; display: none; }
+.pane { position: fixed; top: 0; right: 0; bottom: 0; width: 480px; max-width: 100vw; background: var(--surface); border-left: 1px solid var(--line); z-index: 21; overflow-y: auto; padding: 16px 20px 40px; transform: translateX(100%); display: none; }
+.pane.open, .pane-back.open { display: block; }
+.pane.open { transform: none; }
+.pane .pane-ctl { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+.pane .pane-ctl button { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 5px 10px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.pane .pane-ctl button:hover { color: var(--ink); border-color: var(--line-strong); }
+.pane .cover { display: block; max-height: 48vh; background: #FFFFFF; border: 1px solid var(--line); overflow: hidden; }
+.pane .cover img { width: 100%; height: auto; max-height: 48vh; object-fit: contain; object-position: top; display: block; }
+.pane .cover.empty { aspect-ratio: 1.414 / 1; background: var(--paper); display: flex; align-items: center; justify-content: center; gap: 10px; position: relative; }
+.pane .cover.empty::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, transparent 0 9px, var(--line) 9px 10px); opacity: 0.5; }
+.pane .cover.empty b { position: relative; font-family: var(--serif); font-weight: 500; font-size: 40px; color: var(--bench); }
+.pane .cover.empty i { position: relative; font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.pane h2 { font-family: var(--serif); font-size: 24px; font-weight: 500; line-height: 1.2; margin-top: 10px; letter-spacing: -0.01em; }
+.pane .meta { margin-top: 12px; }
+.pane .byline { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.pane .call { border-top: 2px solid var(--line-strong); margin-top: 14px; padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.pane .call p { font-size: 14.5px; color: var(--ink-2); }
+.pane .status { font-size: 13px; color: var(--flag); margin-top: 10px; }
+.pane .lineage, .pane .proves { margin-top: 10px; font-size: 11px; line-height: 1.8; }
+.pane .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.pane .actions a, .pane .actions span { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line-strong); color: var(--ink); text-decoration: none; padding: 7px 10px; border-radius: 2px; }
+.pane .actions a:hover { background: var(--tint); }
+.pane .actions span { color: var(--muted); border-color: var(--line); }
+.pane .pages { margin-top: 18px; }
+.pane .pages .slides.portrait { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+body.pane-open { overflow: hidden; }
+
+/* Engines */
+.eng { background: var(--surface); border: 1px solid var(--line); border-left: 2px solid var(--accent); border-radius: 3px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.eng .head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.eng .name { font-family: var(--mono); font-size: 13px; color: var(--ink); }
+.eng .flavor { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line); padding: 1px 6px; border-radius: 2px; color: var(--muted); }
+.eng .size { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.eng .kv { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 4px 10px; font-size: 13.5px; color: var(--ink-2); }
+.eng .kv .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.eng .rule { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--ink); border-left: 2px solid var(--line); padding-left: 10px; }
+.eng .produced { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.engs { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+details.dossier { border-top: 1px solid var(--line); padding: 14px 0; }
+details.dossier summary { cursor: pointer; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+details.dossier summary::-webkit-details-marker { display: none; }
+details.dossier summary h3 { font-family: var(--serif); font-size: 22px; font-weight: 500; }
+details.dossier summary h3::after { content: " +"; color: var(--muted); }
+details.dossier[open] summary h3::after { content: " −"; }
+details.dossier .body { margin-top: 16px; display: flex; flex-direction: column; gap: 18px; }
+.diagram { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; padding: 12px; margin-top: 16px; }
+.diagram svg { min-width: 640px; width: 100%; height: auto; display: block; }
+.diagram .node { fill: var(--paper); stroke: var(--line); }
+.diagram .hub { fill: var(--accent); stroke: var(--accent); }
+.diagram .store { fill: var(--paper); stroke: var(--line); stroke-dasharray: 4 3; }
+.diagram .edge { stroke: var(--muted); fill: none; stroke-width: 1; }
+.diagram text { fill: var(--ink); font-family: var(--sans); font-size: 13px; }
+.diagram text.mono { fill: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.diagram .hub + text, .diagram text.on { fill: var(--accent-ink); }
+.diagram a { cursor: pointer; }
+.frame { aspect-ratio: 16 / 10; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; margin-top: 14px; }
+.frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+/* Claims (CV line + evidence), ventures, certificates */
+.claim { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; padding-block: 28px; border-bottom: 1px solid var(--line); }
+.claim blockquote { margin: 0; font-family: var(--serif); font-size: 19px; line-height: 1.4; color: var(--ink); max-width: 60ch; }
+.claim blockquote p + p { margin-top: 6px; }
+.ventures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.venture { border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; display: flex; flex-direction: column; }
+.venture img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; }
+.venture .vbody { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.venture h3 { font-family: var(--serif); font-size: 22px; font-weight: 500; }
+.venture p { font-size: 14px; color: var(--ink-2); }
+.venture .stats { margin: 8px 0 0; gap: 6px 22px; }
+.venture .stats strong { font-size: 26px; }
+.venture .more { margin-top: 10px; }
+.certs .fam { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 12px; }
+.certs .fam button { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 3px 9px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.certs .fam button[aria-pressed="true"] { background: var(--tint); color: var(--ink); border-color: var(--line-strong); }
+.certs .slides { grid-template-columns: repeat(6, 1fr); }
+.certs .slide img { aspect-ratio: 4 / 3; }
+.certs .showall { margin-top: 12px; border: 1px solid var(--line-strong); background: transparent; border-radius: 2px; padding: 7px 12px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); }
+.thumb { width: 56px; height: 56px; object-fit: cover; border: 1px solid var(--line); border-radius: 2px; display: inline-block; vertical-align: middle; margin-right: 4px; cursor: zoom-in; }
+
+/* Lightbox */
+dialog#lb { border: 0; padding: 0; background: transparent; max-width: min(96vw, 1200px); }
+dialog#lb::backdrop { background: rgba(0, 0, 0, 0.85); }
+dialog#lb img { max-width: 96vw; max-height: 86vh; display: block; border-radius: 2px; margin: 0 auto; }
+dialog#lb .ctl { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; color: #fff; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+dialog#lb button { font: inherit; color: #fff; background: transparent; border: 1px solid rgba(255, 255, 255, 0.5); padding: 6px 12px; cursor: pointer; border-radius: 2px; }
+
+/* Promoted from the page builds */
+.doc .cover .stamp + .stamp { top: 32px; }
+.ledger .t { min-width: 860px; }
+.ledger .t th, .ledger .t td { white-space: nowrap; }
+.ledger .t td.tt { white-space: normal; min-width: 240px; }
+.ledger .t th.on button { color: var(--ink); }
+.pane button.cover { width: 100%; padding: 0; cursor: zoom-in; text-align: left; border: 1px solid var(--line); }
+.exhibits { align-items: start; }
+.certs .slide[hidden], .certs .showall[hidden] { display: none; }
+.t .flag { color: var(--flag); }
+.cov { min-width: 820px; }
+.cov.macro { min-width: 560px; }
+.cov .rating { flex-wrap: wrap; }
+.cov .stamp { white-space: nowrap; }
+.cov td .stamp { display: block; width: fit-content; max-width: 150px; white-space: normal; line-height: 1.3; margin: 0 0 4px; }
+.cov td.num { white-space: nowrap; }
+.band strong a { color: inherit; text-decoration: none; }
+.band strong a:hover { color: var(--accent); }
+.claim .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.claim > div > .stats { margin-top: 16px; }
+.sheet-row a, .strip figure a { display: block; }
+.venture .side { display: block; margin-top: -2px; }
+.eng .note { font-size: 13px; color: var(--muted); margin: 0; max-width: none; }
+.eng .produced .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.eng .flavor.prop { color: var(--flag); border-color: var(--flag); }
+.dossier .body h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 6px; }
+.formula { font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
+.dossier .body .line { font-family: var(--serif); font-size: 17px; font-style: italic; color: var(--ink); max-width: 60ch; }
+.frame .fallback { display: none; }
+.frame.failed { aspect-ratio: auto; border: 0; background: transparent; }
+.frame.failed iframe { display: none; }
+.frame.failed .fallback { display: block; }
+
+/* Claim plates: a claim set beside its evidence, with a source line */
+.plate { padding-block: 72px 64px; border-top: 1px solid var(--line); margin: 0; }
+.plate:first-of-type { border-top: 0; }
+.plate .idx { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.plate .idx::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.claim-x { font-family: var(--serif); font-weight: 400; font-size: clamp(36px, 5.2vw, 68px); line-height: 1.02; letter-spacing: -0.03em; max-width: 16ch; text-wrap: balance; }
+.claim-x .num { font-weight: 500; font-variant-numeric: tabular-nums; }
+.claim-x em { font-style: italic; color: var(--accent); }
+.claim-x .arrow { color: var(--bench); font-weight: 400; }
+.sub { margin-top: 20px; font-family: var(--serif); font-size: clamp(18px, 2vw, 22px); line-height: 1.4; color: var(--ink-2); max-width: 40ch; }
+.sub b { color: var(--ink); font-weight: 500; }
+.srcline { display: inline-flex; align-items: baseline; gap: 10px; margin-top: 22px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-top: 1px solid var(--line-strong); padding-top: 10px; }
+.srcline::before { content: "↳"; color: var(--bench); }
+.srcline .go { color: var(--accent); }
+.srcline:hover .go { text-decoration: underline; text-underline-offset: 3px; }
+.plate .side { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: start; }
+.plate .side.flip { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.plate figure { margin: 0; }
+.plate figure img { width: 100%; display: block; border-radius: 2px; }
+.plate figcaption, .cap-m { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+.pageimg { border: 1px solid var(--line); background: #FFFFFF; }
+.bleed { margin-inline: calc(50% - 50vw); padding-inline: calc(50vw - 50%); }
+.triptych { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 28px; }
+.triptych img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; border-radius: 2px; }
+.wide { margin-top: 8px; }
+.wide img { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; object-position: center 40%; display: block; border-radius: 2px; }
+.fan { display: flex; align-items: flex-end; margin-top: 36px; padding-bottom: 12px; min-height: 240px; }
+.fan a { display: block; width: 170px; flex: 0 0 auto; margin-right: -46px; border: 1px solid var(--line); background: #FFFFFF; box-shadow: 0 1px 0 var(--line); transform: rotate(var(--r, 0deg)) translateY(var(--y, 0px)); transform-origin: bottom center; }
+.fan a img { width: 100%; aspect-ratio: 1 / 1.414; object-fit: cover; object-position: top; display: block; }
+.fan a:nth-child(1) { --r: -6deg; --y: 6px; } .fan a:nth-child(2) { --r: -3deg; } .fan a:nth-child(3) { --r: -1deg; --y: 4px; } .fan a:nth-child(4) { --r: 1deg; } .fan a:nth-child(5) { --r: 3deg; --y: 6px; } .fan a:nth-child(6) { --r: 5deg; } .fan a:nth-child(7) { --r: 7deg; --y: 8px; }
+.fan a:hover, .fan a:focus-visible { z-index: 2; transform: rotate(0deg) translateY(-14px); border-color: var(--line-strong); }
+.fan .more-fan { width: auto; margin-left: 72px; margin-right: 0; align-self: center; border: 0; background: transparent; box-shadow: none; transform: none; white-space: nowrap; }
+.lines { margin-top: 28px; border-top: 2px solid var(--line-strong); max-width: 760px; }
+.lines > a, .lines > div { display: grid; grid-template-columns: 84px minmax(0, 1fr) minmax(0, 300px); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); color: inherit; text-decoration: none; align-items: baseline; font-size: 15px; }
+.lines > a:hover .ttl { color: var(--accent); }
+.lines .tk { justify-self: start; }
+.lines .ttl { font-family: var(--serif); font-size: 19px; }
+.lines .r { font-family: var(--mono); font-size: 11px; line-height: 1.6; color: var(--muted); text-align: right; }
+.trace { margin-top: 36px; overflow-x: auto; }
+.trace svg { min-width: 760px; width: 100%; height: auto; display: block; }
+.trace .rail { stroke: var(--line-strong); stroke-width: 2; fill: none; }
+.trace .stop { fill: var(--paper); stroke: var(--line-strong); stroke-width: 2; }
+.trace .stop.hub { fill: var(--accent); stroke: var(--accent); }
+.trace .gate { fill: var(--flag); }
+.trace text { font-family: var(--sans); font-size: 13px; fill: var(--ink); }
+.trace text.mono { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; fill: var(--muted); }
+.trace text.flag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.04em; fill: var(--flag); }
+.write { padding-block: 80px 40px; border-top: 1px solid var(--line); }
+.write .mail { display: inline-flex; align-items: baseline; gap: 14px; margin-top: 24px; font-family: var(--mono); font-size: clamp(18px, 3vw, 30px); color: var(--ink); word-break: break-all; }
+.write .mail code { font-family: inherit; user-select: all; }
+.write .meta { margin-top: 18px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; gap: 20px; flex-wrap: wrap; }
+.write .meta a { color: var(--ink); }
+.toc { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 2px solid var(--line-strong); border-bottom: 1px solid var(--line); margin-top: 56px; }
+.toc a { color: inherit; text-decoration: none; padding: 18px 16px 18px 0; border-left: 1px solid var(--line); padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
+.toc a:first-child { border-left: 0; padding-left: 0; }
+.toc strong { font-family: var(--serif); font-size: clamp(30px, 3.4vw, 40px); font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.toc a:hover strong { color: var(--accent); }
+.toc .mono { line-height: 1.4; }
+.toc .mono em { font-style: normal; color: var(--ink); }
+@media (max-width: 900px) { .toc { grid-template-columns: repeat(2, 1fr); } .toc a { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); } .toc a:nth-child(-n+2) { border-top: 0; } .toc a:nth-child(2n) { border-left: 1px solid var(--line); padding-left: 16px; } }
+@media (max-width: 820px) {
+  .plate { padding-block: 48px 40px; }
+  .plate .side, .plate .side.flip { grid-template-columns: 1fr; gap: 24px; }
+  .plate .side.flip > :first-child { order: 2; }
+  .triptych { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .wide img { aspect-ratio: 4 / 3; }
+  .fan { overflow-x: auto; padding-bottom: 20px; min-height: 0; }
+  .fan a { width: 120px; margin-right: -24px; }
+  .lines > a, .lines > div { grid-template-columns: 64px minmax(0, 1fr); }
+  .lines .r { grid-column: 2; text-align: left; }
+  .write { padding-block: 64px 56px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fan a { transition: transform .25s ease, border-color .15s; }
+  .srcline::before { transition: transform .2s; display: inline-block; }
+  .srcline:hover::before { transform: translateX(3px); }
+  .open .wordmark, .open .intro { animation: rise .7s ease both; }
+  .open .intro { animation-delay: .12s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+}
+
+/* Two registers: market term as text, engine code as a tag; a page can switch the tags off */
+.code { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.04em; text-transform: none; color: var(--muted); border: 1px solid var(--line); border-radius: 2px; padding: 0 5px; line-height: 1.6; vertical-align: 0.15em; margin-left: 6px; white-space: nowrap; font-weight: 500; font-style: normal; }
+h1 .code, h2 .code, .claim-x .code { font-size: 12px; vertical-align: 0.6em; margin-left: 10px; letter-spacing: 0.06em; }
+.mono .code { margin-left: 4px; }
+.codes-off .code { display: none; }
+.codeswitch { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 2px; padding: 5px 10px; background: transparent; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.codeswitch[aria-pressed="true"] { color: var(--ink); border-color: var(--line-strong); }
+.codeswitch:hover { color: var(--ink); }
+.gloss { margin-top: 20px; max-width: 760px; }
+.gloss .t td:first-child { font-weight: 600; color: var(--ink); width: 34%; }
+.gloss .t td.m { color: var(--muted); }
+
+footer { color: var(--muted); font-size: 13px; max-width: 64ch; line-height: 1.5; }
+footer p + p { margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .lib { grid-template-columns: 1fr; gap: 16px; }
+  .rail { position: static; display: none; }
+  .railscroll { display: flex; gap: 6px; overflow-x: auto; white-space: nowrap; padding-bottom: 8px; align-items: center; }
+  .railscroll button, .railscroll select { flex: 0 0 auto; border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 4px 9px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+  .railscroll button[aria-pressed="true"] { background: var(--tint); color: var(--ink); border-color: var(--line-strong); }
+  .shelf { grid-template-columns: repeat(2, 1fr); }
+  .engs { grid-template-columns: 1fr; }
+}
+@media (max-width: 820px) {
+  .page { padding-inline: 16px; }
+  .bar { gap: 8px 14px; }
+  .bar .who .desk { display: none; }
+  .bar .theme { margin-left: auto; order: 2; }
+  .bar nav { order: 3; flex-basis: 100%; margin-left: 0; gap: 12px; }
+  .bar nav a { font-size: 11px; }
+  .mast, .mast.narrow { grid-template-columns: 1fr; gap: 28px; padding-block: 36px 28px; }
+  .mast figure { max-width: 300px; order: 2; }
+  .figures, .figures.four { grid-template-columns: repeat(2, 1fr); margin-bottom: 48px; }
+  .figures > * { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); }
+  .figures > *:nth-child(-n+2) { border-top: 0; }
+  .figures > *:nth-child(2n) { border-left: 1px solid var(--line); padding-left: 16px; }
+  .figures strong, .tiles strong { font-size: 32px; }
+  .tiles.row4 { grid-template-columns: repeat(2, 1fr); }
+  section { margin-bottom: 48px; }
+  section > header { grid-template-columns: 1fr; gap: 8px; }
+  .grid2, .bands, .ventures, .steps, .steps.five { grid-template-columns: 1fr; }
+  .steps, .steps.five { grid-template-columns: repeat(2, 1fr); }
+  .entry, .claim { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .entry > *, .claim > *, .grid2 > * { min-width: 0; }
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .entry .side { flex-direction: row; gap: 14px; align-items: baseline; }
+  .strip { grid-template-columns: 1fr; }
+  .sheet-row { grid-template-columns: repeat(2, 1fr); }
+  .wall { columns: 2; }
+  .t { font-size: 13px; }
+  .pane { width: 100vw; border-left: 0; }
+  .certs .slides { grid-template-columns: repeat(3, 1fr); }
+  .shelf { grid-template-columns: repeat(2, 1fr); }
+  .frame { aspect-ratio: 3 / 4; }
+}
+@media (max-width: 820px) { .pane.open { animation: none; } .sheet-row figure:nth-child(3) { grid-column: 1 / -1; max-width: calc(50% - 4px); } }
+@media (max-width: 480px) { .bar .who .desk { display: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .figures strong, .bar nav a, .copy, .tag, .tk, .doc, .doc .ttl a { transition: color .15s, border-color .15s, transform .15s; }
+  .doc:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+  .pane.open { animation: paneIn .2s ease; }
+  @keyframes paneIn { from { transform: translateX(100%); } to { transform: none; } }
+}
+@media print {
+  .bar, .pane, .pane-back, .rail, .railscroll, .views, .search, dialog { display: none !important; }
+  .catalogue { display: block; }
+  .catalogue[open], .catalogue { open: true; }
+  .page { max-width: none; padding: 0; }
+}
+/* BASE v1 end */
+</style>
+<style>
+/* home page */
+.open { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: end; padding-block: 64px 0; }
+.open .intro { margin-top: 28px; font-family: var(--serif); font-size: clamp(20px, 2.3vw, 26px); line-height: 1.35; max-width: 32ch; color: var(--ink-2); }
+.open .intro b { color: var(--ink); font-weight: 500; }
+.open .where { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.open .where code { font-family: inherit; color: var(--ink); text-transform: none; letter-spacing: 0.02em; font-size: 12.5px; user-select: all; }
+.open .where a { color: var(--ink); }
+.open figure img { aspect-ratio: 4 / 5; object-fit: cover; }
+#call .side.compact { grid-template-columns: minmax(0, 8fr) minmax(0, 3fr); align-items: start; }
+#call .claim-x.small { font-size: clamp(26px, 3.2vw, 40px); max-width: 24ch; }
+#call .pageimg { max-width: 260px; }
+.pageimg img { aspect-ratio: 1 / 1.414; object-fit: cover; object-position: top; }
+.engine-rules { margin-top: 22px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 760px; }
+.engine-rules div { border-top: 2px solid var(--line-strong); padding-top: 10px; font-size: 14px; color: var(--ink-2); }
+.engine-rules strong { display: block; font-family: var(--serif); font-size: 19px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+#clients .banner { margin: 0 0 28px; }
+#record .side { align-items: center; }
+@media (max-width: 820px) {
+  .open { grid-template-columns: 1fr; gap: 28px; padding-block: 36px 0; }
+  .open figure { max-width: 320px; }
+  .engine-rules { grid-template-columns: 1fr; }
+  .pageimg img { aspect-ratio: auto; }
+}
+</style>
+</head>
+<body data-page="home">
+<div class="page">
+<!-- CHROME v1 start -->
+<div class="bar" id="siteBar"><a class="who" href="index.html">Faldo Lyon <span class="desk mono">Research desk</span></a><nav aria-label="Site"><a href="research.html" data-page="research">Research</a><a href="engines.html" data-page="engines">Engines</a><a href="cpv.html" data-page="cpv">CPV</a><a href="index.html#clients">Clients</a><a href="analyst.html" data-page="analyst">Analyst</a><a href="kopi.html" data-page="kopi">Kopi Satset</a></nav><button class="theme mono" type="button" id="themeBtn" aria-label="Switch colour theme">Theme · auto</button></div>
+<!-- CHROME v1 end -->
+
+<main id="main">
+
+  <header class="open" id="top">
+    <div>
+      <h1 class="wordmark">Faldo<br>Lyon<span>.</span></h1>
+      <p class="intro">Equity research at Gotrade, written with <b>engines I built</b>. Eight coffee carts in Surabaya, run by a manager. First year at Bayes, class of 2029.</p>
+      <div class="where"><span>London</span><span><code>lyonfaldo@gmail.com</code><button class="copy" type="button" data-copy="lyonfaldo@gmail.com">copy</button></span><a href="https://www.linkedin.com/in/faldo-prasetyo-0382aa18a" target="_blank" rel="noopener">LinkedIn</a></div>
+    </div>
+    <figure><img src="proof/portrait.jpg" alt="Faldo Lyon speaking with a microphone at the Gotrade Prestige Roundtable"><figcaption>Plate 00 · Presenting at the Gotrade Prestige Roundtable, 2026</figcaption></figure>
+  </header>
+
+  <nav class="toc" aria-label="On this page">
+    <a href="#library"><strong class="num" id="tocDocs">–</strong><span class="mono"><em>The research.</em> <span id="tocPages">documents</span></span></a>
+    <a href="#engine"><strong class="num">25</strong><span class="mono"><em>The engine.</em> skills under one rulebook, and the valuation model you can drive</span></a>
+    <a href="#clients"><strong class="num">$500k</strong><span class="mono"><em>Clients.</em> three portfolios rebalanced after ten meetings</span></a>
+    <a href="#surabaya"><strong class="num">8</strong><span class="mono"><em>Surabaya.</em> coffee carts, about 300 cups a day</span></a>
+    <a href="#call"><strong class="num">+91%</strong><span class="mono"><em>Before Gotrade.</em> the ATIC call at Maybank, against +22% for the IHSG</span></a>
+  </nav>
+
+  <section class="plate" id="library">
+    <div class="idx">01 · The research</div>
+    <h2 class="claim-x">Twenty-one documents, one engine.</h2>
+    <p class="sub">IC notes, energy write-ups, editorial research and the weekly market note, all written at Gotrade this year, plus the Maybank note from 2024. In the IC notes and write-ups, every printed number is a reference to a named field in the model output. Nothing is typed in. <b id="libAttached">Seven</b> are attached so far; the rest appear as the PDFs land.</p>
+    <div class="fan" id="fan"></div>
+    <div class="lines" id="icLines"></div>
+    <a class="srcline" href="research.html">Source<span class="go">The library, with filters, a ledger and a reader →</span></a>
+  </section>
+
+  <section class="plate" id="engine">
+    <div class="idx">02 · The engine</div>
+    <h2 class="claim-x">I built the engine before I wrote the research.</h2>
+    <p class="sub">Twenty-five Claude skills under one rulebook, built at Gotrade this year. Each declares what it reads and what it writes, and most name the fields they may never touch. One run takes a ticker through twelve steps, three scenarios and 53 checked constants to a probability-weighted fair value and two ratings.</p>
+    <div class="engine-rules">
+      <div><strong>The engines do the arithmetic.<span class="code">A · analytical</span></strong>Catalysts sized and probability-weighted, three scenarios to one probability-weighted fair value, a conviction score out of five, a rating for new money and one for existing holders.</div>
+      <div><strong>The report writer types no number.<span class="code">composer · D</span></strong>Every figure in an IC note is a reference to a named field in the model output, resolved and stamped at build. A typed number fails the build.</div>
+      <div><strong>Tests can stop a run.<span class="code">gates</span></strong>Five thesis-break conditions, a completeness test before any report is written, four checks that no untraced number reaches the page. A refused build is the correct outcome.</div>
+    </div>
+    <div class="trace" aria-label="From a ticker to a PDF in one run">
+      <svg viewBox="0 0 1000 184" role="img" aria-label="Ticker, source registry, input models, model output, report writer, PDF; the tests between them">
+        <line class="rail" x1="80" y1="84" x2="920" y2="84"/>
+        <g><circle class="stop" cx="90" cy="84" r="9"/><text x="90" y="118" text-anchor="middle">Ticker</text><text class="mono" x="90" y="136" text-anchor="middle">filings, risk budget</text></g>
+        <g><circle class="stop" cx="254" cy="84" r="9"/><text x="254" y="118" text-anchor="middle">Registry</text><text class="mono" x="254" y="136" text-anchor="middle">sources with ids</text></g>
+        <g><circle class="stop" cx="418" cy="84" r="9"/><text x="418" y="118" text-anchor="middle">Input models</text><text class="mono" x="418" y="136" text-anchor="middle">moat · hurdle · data</text></g>
+        <g><circle class="stop hub" cx="582" cy="84" r="12"/><text x="582" y="118" text-anchor="middle">Model output</text><text class="mono" x="582" y="136" text-anchor="middle">13 sections · checklist</text></g>
+        <g><circle class="stop" cx="746" cy="84" r="9"/><text x="746" y="118" text-anchor="middle">Report writer</text><text class="mono" x="746" y="136" text-anchor="middle">numbers by reference</text></g>
+        <g><circle class="stop" cx="910" cy="84" r="9"/><text x="910" y="118" text-anchor="middle">PDF</text><text class="mono" x="910" y="136" text-anchor="middle">house format</text></g>
+        <g><rect class="gate" x="329" y="77" width="14" height="14" transform="rotate(45 336 84)"/><text class="flag" x="336" y="62" text-anchor="middle">data in date?</text></g>
+        <g><rect class="gate" x="493" y="77" width="14" height="14" transform="rotate(45 500 84)"/><text class="flag" x="500" y="30" text-anchor="middle">matches last quarter?</text><text class="flag" x="500" y="44" text-anchor="middle">not just today's price?</text></g>
+        <g><rect class="gate" x="657" y="77" width="14" height="14" transform="rotate(45 664 84)"/><text class="flag" x="664" y="62" text-anchor="middle">output complete?</text></g>
+        <g><rect class="gate" x="821" y="77" width="14" height="14" transform="rotate(45 828 84)"/><text class="flag" x="828" y="30" text-anchor="middle">any untraced</text><text class="flag" x="828" y="44" text-anchor="middle">number?</text></g>
+        <text class="mono" x="80" y="172">One run, fixed order. The orange diamonds are the tests that can stop it.</text>
+      </svg>
+    </div>
+    <a class="srcline" href="engines.html">Source<span class="go">Twenty-five contracts and four dossiers →</span></a>
+    <a class="srcline" href="cpv.html" style="margin-left:28px">Drive it<span class="go">The valuation model, live on this site →</span></a>
+  </section>
+
+  <section class="plate" id="clients">
+    <div class="idx">03 · Clients</div>
+    <div class="banner"><span class="stamp">Pending approval</span><span>Gotrade figures and documents are the firm's data, shown with permission pending.</span></div>
+    <h2 class="claim-x">Ten meetings. Three portfolios. <span class="num">$500k</span>.</h2>
+    <p class="sub">Three client portfolios totalling $500k, rebalanced after ten in-person meetings in three months. The amounts are client data, so the figure stays a claim. The meetings are pictured.</p>
+    <div class="triptych">
+      <figure><a href="#" data-lb="meetings" data-file="proof/gotrade/meetings/meeting-1.jpg" data-cap="Client meeting, 2026. Faldo second from right."><img src="proof/gotrade/meetings/meeting-1.jpg" alt="Four people at a table in a conveyor-sushi restaurant" loading="lazy"></a><figcaption>Client meeting, 2026. Faldo second from right.</figcaption></figure>
+      <figure><a href="#" data-lb="meetings" data-file="proof/gotrade/meetings/meeting-2.jpg" data-cap="Client lunch, 2026. Faldo second from left."><img src="proof/gotrade/meetings/meeting-2.jpg" alt="Four people in a wood-panelled restaurant booth" loading="lazy"></a><figcaption>Client lunch, 2026. Faldo second from left.</figcaption></figure>
+      <figure><a href="#" data-lb="meetings" data-file="proof/gotrade/meetings/meeting-3.jpg" data-cap="The People's Cafe, 2026. Faldo centre right."><img src="proof/gotrade/meetings/meeting-3.jpg" alt="Three people at a cafe table" loading="lazy"></a><figcaption>The People's Cafe, 2026. Faldo centre right.</figcaption></figure>
+    </div>
+    <figure class="wide"><a href="#" data-lb="roundtable" data-file="proof/roundtable-wide.jpg" data-cap="Prestige Roundtable, 2026. Inside a real portfolio: 23 holdings, about five genuinely different bets."><img src="proof/roundtable-wide.jpg" alt="Faldo presenting a slide titled Inside a real portfolio to a room of clients" loading="lazy"></a><figcaption>Prestige Roundtable, 2026. Inside a real portfolio: 23 holdings, about five genuinely different bets.</figcaption></figure>
+    <div class="lines">
+      <div><span class="tk">+600 bps</span><span class="ttl">Net against SPY in the Monthly Alpha Selection Book's first two months, a live nine-factor US large-cap book on the app</span><span class="r">Gotrade data · approval pending</span></div>
+      <div><span class="tk">33</span><span class="ttl">Markets scored for entry; Kora Pay and Lime Pay taken from first contact to launch; product requirements for House of Gains</span><span class="r">Business development</span></div>
+      <div><span class="tk">1M+</span><span class="ttl">Views in two months from a zero-budget social campaign with the lead brand ambassador, up 400% on the prior two</span><span class="r">Screenshot to add</span></div>
+    </div>
+    <a class="srcline" href="analyst.html#gotrade">Source<span class="go">The six Gotrade bullets, verbatim from the CV →</span></a>
+  </section>
+
+  <section class="plate" id="surabaya">
+    <div class="idx">04 · Surabaya</div>
+    <div class="side flip">
+      <figure><a href="kopi.html"><img src="proof/kopi/rider.jpg" alt="A Kopi Satset electric cart with its rider leaving the base" loading="lazy"></a><figcaption>Plate 05 · A cart leaving the base on Raya Satelit Utara. Rp6,000 a cup, ten seconds to pour.</figcaption></figure>
+      <div>
+        <h2 class="claim-x">Eight carts. About <span class="num">300</span> cups a day.</h2>
+        <p class="sub">Kopi Satset: iced coffee at Rp6,000 from electric carts, cold-brewed in one kitchen and poured at the kerb. I raised <b>£14k</b> at a £100k valuation, set the site rules and the unit economics, and delegated the day to a manager. No marketing spend.</p>
+        <div class="lines">
+          <div><span class="tk">Sportfit</span><span class="ttl">Physiotherapy, about 60 patients a day across two branches, the second in soft launch</span><span class="r">Co-founder and owner</span></div>
+          <div><span class="tk">Saat Seduh</span><span class="ttl">A 20-staff coffee shop in Pasuruan</span><span class="r">Land partner</span></div>
+        </div>
+        <p class="note">The three ventures employ about 60 people and return about £10k a month in profit.</p>
+        <a class="srcline" href="kopi.html">Source<span class="go">The plan, the model and both decks →</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="plate" id="record">
+    <div class="idx">05 · The record</div>
+    <div class="side">
+      <div>
+        <h2 class="claim-x"><span class="num">1510</span>. A, A. Twenty-two golds.</h2>
+        <p class="sub">SAT 1510. A-Level H2 Mathematics A, Economics A. ASEAN Scholarship from Singapore's Ministry of Education, 2022: 40 selected from 1,000+ applicants, one of three placed in the Integrated Programme. Twenty-two gold medals across WMI, TIMO, SASMO and HKIMO from 2016 to 2025, and a bronze at the Singapore Mathematical Olympiad, Open Section, 2025.</p>
+        <a class="srcline" href="analyst.html#awards">Source<span class="go">Seventeen certificates and the score report →</span></a>
+      </div>
+      <figure><a href="#" data-lb="record" data-file="proof/awards/timo-final-2019.jpg" data-cap="TIMO Final, Phuket, April 2019. Gold."><img src="proof/awards/timo-final-2019.jpg" alt="Faldo holding a gold medal and certificate at the TIMO Final in Phuket, 2019" loading="lazy"></a><figcaption>TIMO Final, Phuket, April 2019. Gold.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="plate" id="call">
+    <div class="idx">06 · Before Gotrade</div>
+    <div class="side compact">
+      <div>
+        <h2 class="claim-x small">Maybank, December 2024: a buy call at <span class="num">Rp438</span> that exited at <span class="num">Rp835</span>.</h2>
+        <p class="sub">A written buy call on ATIC at Maybank Securities Indonesia, December 2024. A client put <b>$273k</b> in and exited at Rp835 within the year: <b>+91%</b> against +22% for the IHSG in 2025. Maybank offered me a return position.</p>
+        <a class="srcline" href="research.html#doc=atic-note">Source<span class="go">The seven-page note →</span></a>
+      </div>
+      <figure class="pageimg"><a href="research.html#doc=atic-note"><img src="proof/research/atic-note-p01.jpg" alt="Page one of the ATIC note, December 2024" loading="lazy"></a><figcaption>The note, page 1 of 7. Written on the morning of 2 December 2024 at Rp378; the call went out at Rp438.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="write" id="write">
+    <div class="idx">07 · Write to me</div>
+    <h2 class="claim-x">Write to me.</h2>
+    <p class="sub">I am applying for summer 2027 internships in equity research and markets. Email is the fastest way to reach me; I reply from London.</p>
+    <p class="mail"><code>lyonfaldo@gmail.com</code><button class="copy" type="button" data-copy="lyonfaldo@gmail.com">copy</button></p>
+    <div class="meta"><span>London</span><span>Bayes Business School, class of 2029</span><a href="https://www.linkedin.com/in/faldo-prasetyo-0382aa18a" target="_blank" rel="noopener">LinkedIn</a><a href="research.html">Research</a><a href="engines.html">Engines</a><a href="analyst.html">The full record</a></div>
+  </section>
+
+</main>
+
+<!-- FOOT v1 start -->
+<footer id="footnote"><p>Nothing on this site is not on my CV or in work I did myself. Gotrade figures and documents are the firm's data, shown with permission pending. Four energy write-ups are drafts and are stamped as such; the house-format report is a sample on a worked-example company; Kopi Satset plan figures are model outputs. Research is for information only and is not investment advice. Updated October 2026.</p></footer>
+<dialog id="lb"><img id="lbImg" alt=""><div class="ctl"><button id="lbPrev" type="button">← Prev</button><span id="lbCap"></span><button id="lbNext" type="button">Next →</button><button id="lbClose" type="button">Close</button></div></dialog>
+<script>
+/* shared chrome: theme toggle, lightbox, copy buttons, current-page marker */
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  // current page
+  var page = document.body.getAttribute('data-page');
+  if (page) { var cur = document.querySelector('#siteBar nav a[data-page="' + page + '"]'); if (cur) cur.setAttribute('aria-current', 'page'); }
+  // theme: auto -> dark -> light
+  var btn = $('#themeBtn');
+  var read = function () { try { return localStorage.getItem('fl-theme') || 'auto'; } catch (e) { return document.documentElement.getAttribute('data-theme') || 'auto'; } };
+  var apply = function (t) {
+    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme');
+    try { if (t === 'auto') localStorage.removeItem('fl-theme'); else localStorage.setItem('fl-theme', t); } catch (e) {}
+    if (btn) btn.textContent = 'Theme · ' + t;
+  };
+  if (btn) { btn.textContent = 'Theme · ' + read(); btn.addEventListener('click', function () { var t = read(); apply(t === 'auto' ? 'dark' : t === 'dark' ? 'light' : 'auto'); }); }
+  // lightbox: openLightbox(list, index) where list is [{file, cap}]
+  var lb = $('#lb'), img = $('#lbImg'), cap = $('#lbCap'), list = [], cur = 0;
+  var show = function (i) { if (!list.length) return; cur = (i + list.length) % list.length; img.src = list[cur].file; img.alt = list[cur].cap || ''; cap.textContent = list[cur].cap || ''; if (!lb.open) lb.showModal(); };
+  window.openLightbox = function (l, i) { list = l || []; show(i || 0); };
+  if (lb) {
+    $('#lbPrev').addEventListener('click', function () { show(cur - 1); });
+    $('#lbNext').addEventListener('click', function () { show(cur + 1); });
+    $('#lbClose').addEventListener('click', function () { lb.close(); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) lb.close(); });
+    document.addEventListener('keydown', function (e) { if (!lb.open) return; if (e.key === 'ArrowLeft') show(cur - 1); if (e.key === 'ArrowRight') show(cur + 1); });
+  }
+  // any element with data-lb="groupName" and data-file/data-cap joins a lightbox group
+  var groups = {};
+  document.querySelectorAll('[data-lb]').forEach(function (el) {
+    var g = el.getAttribute('data-lb'); (groups[g] = groups[g] || []).push({ file: el.getAttribute('data-file') || (el.querySelector('img') || {}).src, cap: el.getAttribute('data-cap') || '' });
+  });
+  document.querySelectorAll('[data-lb]').forEach(function (el) {
+    var g = el.getAttribute('data-lb'), i = groups[g].findIndex(function (x) { return x.file === (el.getAttribute('data-file') || (el.querySelector('img') || {}).src); });
+    el.addEventListener('click', function (e) { e.preventDefault(); window.openLightbox(groups[g], i); });
+  });
+  // copy buttons: <button class="copy" data-copy="text">
+  document.querySelectorAll('.copy[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var text = b.getAttribute('data-copy'), done = function () { b.textContent = 'copied'; setTimeout(function () { b.textContent = 'copy'; }, 1500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () {}); else done();
+    });
+  });
+})();
+</script>
+<!-- FOOT v1 end -->
+</div>
+<script>
+/* DOCS v1 start */
+/* The research registry. Edit here (src/docs.js), then run tools/sync.py to copy into every page.
+   Paths are derived, never stored: pdf = proof/research/<slug>.pdf, page i = proof/research/<slug>-pNN.jpg. */
+const LINES = {
+  role: { short: "Investment Research & Product Growth Strategist, Gotrade", anchor: "analyst.html#gotrade" },
+  advisory: { short: "Advises clients above $100k AUM with catalyst-driven equity research", anchor: "analyst.html#gotrade" },
+  alpha: { short: "Runs the Monthly Alpha Selection Book", anchor: "analyst.html#gotrade" },
+  maybank: { short: "Written buy call on ATIC at Rp438, Dec 2024", anchor: "analyst.html#maybank" }
+};
+const ENGINE_LABEL = { "catalyst-projection-valuation": "CPV", "cpv-core": "cpv-core", "gotrade-ic-note": "gotrade-ic-note", "moat-analyzer": "moat-analyzer", "energy-macro-pack": "energy-macro-pack", "energy-sector-analysis": "energy-sector-analysis", "stock-writeup-composer": "stock-writeup-composer", "stock-writeup-pdf": "stock-writeup-pdf", "dhany-writeup-composer": "dhany-writeup-composer", "dhany-writeup-pdf": "dhany-writeup-pdf", "energy-refresh": "energy-refresh", "energy-read": "energy-read", "weekly-market-note": "weekly-market-note" };
+const WRITEUP_ENGINES = ["moat-analyzer", "energy-macro-pack", "energy-sector-analysis", "cpv-core", "stock-writeup-composer", "stock-writeup-pdf"];
+const DOCS = [
+  { slug: "aph-ic-note", title: "Margin durability, not catalysts", ticker: "APH", company: "Amphenol", kind: "ic-note", kindLabel: "IC note", series: "ic", sector: "Tech hardware", date: "2026-08-27", pages: 12, format: "pdf", status: "final", attached: true, rendered: 12, rating: { entrant: "Weak Buy", holder: "Hold" }, spot: 161.34, pv: 170.15, currency: "$", thesis: "The in-window catalyst book is below the materiality gate, so what carries value is the operating margin near 29% and the 27.5x forward multiple. The one-year roll the prior bank dropped is worth $24.77 a share.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.8 → gotrade-ic-note", line: "advisory", companion: "aph-ic-1pager" },
+  { slug: "aph-ic-1pager", title: "IC summary, one page", ticker: "APH", company: "Amphenol", kind: "one-pager", kindLabel: "One-pager", series: "ic", sector: "Tech hardware", date: "2026-08-27", pages: 1, format: "pdf", status: "final", attached: true, rendered: 1, rating: { entrant: "Weak Buy", holder: "Hold" }, spot: 161.34, pv: 170.15, currency: "$", thesis: "The Amphenol IC note projected onto one page: the call, the distribution, the kill switches.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.8 → gotrade-ic-note", line: "advisory", companion: "aph-ic-note" },
+  { slug: "tel-ic-note", title: "Margin plus multiple, not catalysts", ticker: "TEL", company: "TE Connectivity", kind: "ic-note", kindLabel: "IC note", series: "ic", sector: "Tech hardware", date: "2026-08-27", pages: 11, format: "pdf", status: "final", attached: true, rendered: 11, rating: { entrant: "Weak Buy", holder: "Hold" }, spot: 205.03, pv: 210.40, currency: "$", thesis: "In-window catalyst revenue is 1.76% of base, below the materiality gate; the value carriers are the 22.2% adjusted margin and the 16.4x forward multiple. The FY2027 consensus makes the horizon check independent for the first time.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.8 → gotrade-ic-note", line: "advisory", companion: "tel-ic-1pager" },
+  { slug: "tel-ic-1pager", title: "IC summary, one page", ticker: "TEL", company: "TE Connectivity", kind: "one-pager", kindLabel: "One-pager", series: "ic", sector: "Tech hardware", date: "2026-08-27", pages: 1, format: "pdf", status: "final", attached: true, rendered: 1, rating: { entrant: "Weak Buy", holder: "Hold" }, spot: 205.03, pv: 210.40, currency: "$", thesis: "The TE Connectivity IC note projected onto one page: the call, the distribution, the kill switches.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.8 → gotrade-ic-note", line: "advisory", companion: "tel-ic-note" },
+  { slug: "nvda-ic-note", title: "The year the multiple is not paying for", ticker: "NVDA", company: "NVIDIA", kind: "ic-note", kindLabel: "IC note", series: "ic", sector: "Semis", date: "2026-09-02", pages: 26, format: "pdf", status: "final", attached: false, rendered: 0, rating: { entrant: "Strong Buy", holder: "Strong Hold" }, spot: 217.44, pv: 270.32, currency: "$", thesis: "The market pays 18x for the next twelve months of earnings and nothing for the year after. Held at that multiple the base case is worth $331 at exit; probability-weighted and discounted, $270.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.10 → gotrade-ic-note", line: "advisory", companion: "nvda-ic-1pager" },
+  { slug: "nvda-ic-1pager", title: "One-page summary", ticker: "NVDA", company: "NVIDIA", kind: "one-pager", kindLabel: "One-pager", series: "ic", sector: "Semis", date: "2026-09-02", pages: 1, format: "pdf", status: "final", attached: false, rendered: 0, rating: { entrant: "Strong Buy", holder: "Strong Hold" }, spot: 217.44, pv: 270.32, currency: "$", thesis: "The NVIDIA IC note projected onto one page.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.10 → gotrade-ic-note", line: "advisory", companion: "nvda-ic-note" },
+  { slug: "bkr-ic-note", title: "Catalyst, projection and implied valuation", ticker: "BKR", company: "Baker Hughes", kind: "ic-note", kindLabel: "IC note", series: "ic", sector: "Energy services", date: "2026-09-04", pages: 23, format: "pdf", status: "final", attached: false, rendered: 0, rating: { entrant: "No Buy", holder: "Hold" }, spot: 63.64, pv: 68.71, currency: "$", thesis: "The catalysts are real and immaterial. What decides the stock is the multiple paid for a larger, more industrial, more indebted earnings stream, and whether Chart's pre-deal profit survives consolidation. Conviction 2.5 of five.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.10 → gotrade-ic-note", line: "advisory", companion: "bkr-ic-1pager" },
+  { slug: "bkr-ic-1pager", title: "One page", ticker: "BKR", company: "Baker Hughes", kind: "one-pager", kindLabel: "One-pager", series: "ic", sector: "Energy services", date: "2026-09-04", pages: 1, format: "pdf", status: "final", attached: false, rendered: 0, rating: { entrant: "No Buy", holder: "Hold" }, spot: 63.64, pv: 68.71, currency: "$", thesis: "The Baker Hughes IC note projected onto one page.", engines: ["catalyst-projection-valuation", "gotrade-ic-note"], lineage: "CPV v4.10 → gotrade-ic-note", line: "advisory", companion: "bkr-ic-note" },
+  { slug: "cnq-writeup", title: "Company analysis, financial performance and investment plan", ticker: "CNQ", company: "Canadian Natural Resources", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-10", pages: 8, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Canadian Natural Resources in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "cop-writeup", title: "Company analysis, financial performance and investment plan", ticker: "COP", company: "ConocoPhillips", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-10", pages: 7, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "ConocoPhillips in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "cve-writeup", title: "Company analysis, financial performance and investment plan", ticker: "CVE", company: "Cenovus Energy", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-10", pages: 9, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Cenovus Energy in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "cvx-writeup", title: "Company analysis, financial performance and investment plan", ticker: "CVX", company: "Chevron", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-15", pages: 34, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Chevron in the three-stage house format, with the valuation and investment plan stages and the energy store read of 14 September 2026.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "fang-writeup", title: "Company analysis, financial performance and investment plan", ticker: "FANG", company: "Diamondback Energy", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-23", pages: 38, format: "pdf", status: "draft", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Diamondback Energy in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "mpc-writeup", title: "Company analysis, financial performance and investment plan", ticker: "MPC", company: "Marathon Petroleum", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-23", pages: 32, format: "pdf", status: "draft", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Marathon Petroleum in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "oxy-writeup", title: "Company analysis, financial performance and investment plan", ticker: "OXY", company: "Occidental Petroleum", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-23", pages: 35, format: "pdf", status: "draft", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Occidental Petroleum in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "shel-writeup", title: "Company analysis, financial performance and investment plan", ticker: "SHEL", company: "Shell", kind: "writeup", kindLabel: "Write-up", series: "energy", sector: "Energy", date: "2026-09-23", pages: 41, format: "pdf", status: "draft", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Shell in the three-stage house format.", engines: WRITEUP_ENGINES, lineage: "stock-writeup-composer → stock-writeup-pdf", line: "advisory", companion: null },
+  { slug: "adbe-research", title: "Undervalued, but AI execution must deliver", ticker: "ADBE", company: "Adobe", kind: "editorial", kindLabel: "Editorial", series: "editorial", sector: "Software", date: "2026-09-16", pages: 10, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "A high-quality subscription business with AI-first ARR above $650 million; the case turns on Firefly deepening workflow ownership.", engines: ["dhany-writeup-composer", "dhany-writeup-pdf"], lineage: "dhany-writeup-composer → dhany-writeup-pdf", line: "advisory", companion: null },
+  { slug: "house-format-sample", title: "A dependable subscription business, priced for a margin recovery it has not yet shown", ticker: "MLSW", company: "Meridian Ledger Software (worked example)", kind: "editorial", kindLabel: "Editorial", series: "editorial", sector: "Software", date: "2026-09-29", pages: 6, format: "pdf", status: "sample", attached: true, rendered: 6, rating: null, spot: null, pv: null, currency: "$", thesis: "The Gotrade Research editorial format demonstrated on a worked-example company: research view, base-case DCF with scenarios, the questions that decide the case, risks and a disclosures page.", engines: ["dhany-writeup-composer", "dhany-writeup-pdf"], lineage: "dhany-writeup-composer → dhany-writeup-pdf", line: "role", companion: null },
+  { slug: "weekly-note-2026-09-27", title: "Weekly Market Note, 21–27 September 2026, oil edition", ticker: "", company: "", kind: "weekly", kindLabel: "Weekly note", series: "weekly", sector: "Macro", date: "2026-09-27", pages: 12, format: "pdf", status: "final", attached: true, rendered: 12, rating: null, spot: null, pv: null, currency: "$", thesis: "Brent dips below $100 and recovers as Saudi Arabia reopens its pipeline. Prices, flows through Hormuz, inventories and what the futures curve is pricing, with every figure sourced and dated.", engines: ["energy-refresh", "energy-read", "weekly-market-note"], lineage: "energy store → weekly-market-note", line: "role", companion: null },
+  { slug: "weekly-note-2026-09-20", title: "Weekly Market Note, 14–20 September 2026", ticker: "", company: "", kind: "weekly", kindLabel: "Weekly note", series: "weekly", sector: "Macro", date: "2026-09-20", pages: 12, format: "pdf", status: "final", attached: false, rendered: 0, rating: null, spot: null, pv: null, currency: "$", thesis: "Rate hikes in Washington and Tokyo, a hold in London: three central bank decisions in three days and the bond market's reply.", engines: ["weekly-market-note"], lineage: "weekly-market-note", line: "role", companion: null },
+  { slug: "atic-note", title: "Buy call, December 2024", ticker: "ATIC", company: "PT Anabatic Technologies", kind: "archive", kindLabel: "Archive", series: "archive", sector: "Indonesia", date: "2024-12-02", pages: 7, format: "pdf", status: "final", attached: true, rendered: 7, rating: null, spot: null, pv: null, currency: "Rp", thesis: "Written on the morning of 2 December 2024 at Rp378; the buy was called at Rp438 and a client position of $273k exited at Rp835 within the year, +91% against +22% for the IHSG in 2025.", engines: [], lineage: "Maybank Securities Indonesia", line: "maybank", companion: null, byline: "Prepared by Faldo Lyon, Equity Research Analyst Intern, Maybank Securities Indonesia" }
+];
+const SERIES = [
+  { key: "ic", title: "IC notes", sub: "catalyst-projection-valuation → gotrade-ic-note" },
+  { key: "energy", title: "Energy write-ups", sub: "three-stage house format" },
+  { key: "editorial", title: "Editorial", sub: "Gotrade Research format" },
+  { key: "weekly", title: "Weekly Market Note", sub: "from the energy store" },
+  { key: "archive", title: "Archive", sub: "Maybank Securities Indonesia" }
+];
+/* ---- pure helpers (no DOM access at load) ---- */
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pad2 = (n) => String(n).padStart(2, "0");
+const docPaths = (d) => ({
+  pdf: "proof/research/" + d.slug + ".pdf",
+  cover: "proof/research/" + d.slug + "-p01.jpg",
+  page: (i) => "proof/research/" + d.slug + "-p" + pad2(i) + ".jpg",
+  pages: Array.from({ length: d.rendered || 0 }, (_, i) => ({ file: "proof/research/" + d.slug + "-p" + pad2(i + 1) + ".jpg", cap: (d.ticker || d.kindLabel) + " · page " + (i + 1) + " of " + d.pages }))
+});
+const docBySlug = (slug) => DOCS.find((d) => d.slug === slug) || null;
+const upside = (d) => (d.spot && d.pv) ? ((d.pv / d.spot - 1) * 100) : null;
+const fmtUpside = (d) => { const u = upside(d); return u === null ? "" : (u >= 0 ? "+" : "") + u.toFixed(1) + "%"; };
+const fmtPx = (d) => d.spot && d.pv ? `${d.currency}${d.spot.toFixed(2)} → ${d.currency}${d.pv.toFixed(2)} · ${fmtUpside(d)}` : "";
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const fmtDate = (iso) => { const [y, m, d] = iso.split("-").map(Number); return `${d} ${MONTHS[m - 1]} ${y}`; };
+const fmtMonth = (iso) => { const [y, m] = iso.split("-").map(Number); return `${MONTHS[m - 1]} ${y}`; };
+const stampList = (d) => [d.status === "draft" ? "Draft · not for distribution" : d.status === "sample" ? "Sample · worked example" : null, d.attached === false ? "To be attached" : null].filter(Boolean);
+const statusLabel = (d) => [d.status === "draft" ? "Draft" : d.status === "sample" ? "Sample" : null, d.attached === false ? "To be attached" : null].filter(Boolean).join(" · ") || "Final";
+const stampText = (d) => stampList(d).join(" · ");
+const statusSentence = (d) => [d.status === "draft" ? "This document is a draft stamped NOT FOR DISTRIBUTION; figures may change." : d.status === "sample" ? "The subject is a worked-example company used to demonstrate the format, not a live recommendation." : null, d.attached === false ? "The PDF has not been attached yet; the metadata is from the document itself." : null].filter(Boolean).join(" ");
+const metaLine = (d) => [d.ticker || d.kindLabel.toUpperCase(), d.ticker ? d.kindLabel.toUpperCase() : null, fmtDate(d.date).toUpperCase(), d.format === "html" ? "HTML" : d.pages + " PP"].filter(Boolean).join(" · ");
+const ratingHTML = (d) => d.rating ? `<div class="rating"><span class="chip ent" title="Rating for new money (the engine's entrant rating)">New money · ${esc(d.rating.entrant)}</span><span class="chip hol" title="Rating for existing holders (the engine's holder rating)">Holders · ${esc(d.rating.holder)}</span>${fmtPx(d) ? `<span class="px num" title="Spot price → probability-weighted fair value · upside">${esc(fmtPx(d))}</span>` : ""}</div>` : `<div class="rating"><span class="none">Rating: see document</span></div>`;
+const lineageHTML = (d) => `<div class="lineage mono">${d.engines.length ? d.engines.map((e) => `<a href="engines.html#${esc(e)}" style="color:inherit;text-decoration:none">${esc(ENGINE_LABEL[e] || e)}</a>`).join(" → ") : esc(d.lineage)}</div>`;
+const provesHTML = (d) => `<div class="proves mono">Proves: <a href="${esc(LINES[d.line].anchor)}">${esc(LINES[d.line].short)}</a></div>`;
+/* docCard(d, {open}) where open is 'pane' (same page, #doc=) or 'research' (link to research.html#doc=). */
+const docCard = (d, opts = {}) => {
+  const p = docPaths(d), live = d.attached !== false, href = (opts.open === "research" ? "research.html" : "") + "#doc=" + d.slug;
+  const stamp = stampList(d).map((t) => `<span class="stamp">${esc(t)}</span>`).join("");
+  const cover = live
+    ? `<span class="cover"><img src="${esc(p.cover)}" alt="${esc(d.company || d.title)}, page 1" loading="lazy" decoding="async" width="1000" height="1414" onerror="this.parentNode.className='cover empty';this.parentNode.innerHTML='<b>${esc(d.ticker || d.kindLabel)}</b><i>${esc(d.kindLabel)}</i>';this.closest('.doc').classList.add('slot')">${stamp}</span>`
+    : `<span class="cover empty"><b>${esc(d.ticker || d.kindLabel)}</b><i>${esc(d.kindLabel)}</i>${stamp}</span>`;
+  const openBtn = opts.open === "research"
+    ? `<a class="doc-open" href="${esc(href)}" ${live ? "" : 'aria-disabled="true"'}>${cover}</a>`
+    : `<button class="doc-open" type="button" data-doc="${esc(d.slug)}" ${live ? "" : 'aria-disabled="true"'}>${cover}</button>`;
+  return `<article class="doc${live ? "" : " slot"}" data-slug="${esc(d.slug)}">${openBtn}<div class="meta mono">${esc(metaLine(d))}</div><h3 class="ttl"><a href="${esc(href)}" data-doc="${esc(d.slug)}">${esc(d.title)}</a></h3>${ratingHTML(d)}${lineageHTML(d)}${provesHTML(d)}<p class="thesis">${esc(d.thesis)}</p></article>`;
+};
+const totals = (docs = DOCS) => ({
+  count: docs.length,
+  pages: docs.reduce((s, d) => s + (d.pages || 0), 0),
+  attached: docs.filter((d) => d.attached !== false).length,
+  first: docs.map((d) => d.date).sort()[0],
+  last: docs.map((d) => d.date).sort().slice(-1)[0],
+  names: new Set(docs.filter((d) => d.ticker && d.status !== "sample").map((d) => d.ticker)).size
+});
+/* DOCS v1 end */
+</script>
+<script>
+/* HOME v1 */
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var t = totals(DOCS);
+  $("#tocDocs").textContent = t.count;
+  $("#tocPages").innerHTML = "documents · " + t.pages + " pages, " + t.attached + " attached";
+  var words = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty", "Twenty-one"];
+  $("#libAttached").textContent = words[t.attached] || String(t.attached);
+
+  var order = ["aph-ic-note", "tel-ic-note", "weekly-note-2026-09-27", "house-format-sample", "atic-note", "aph-ic-1pager", "tel-ic-1pager"];
+  var fanDocs = order.map(docBySlug).filter(function (d) { return d && d.attached !== false; });
+  DOCS.forEach(function (d) { if (d.attached !== false && fanDocs.indexOf(d) < 0) fanDocs.push(d); });
+  $("#fan").innerHTML = fanDocs.slice(0, 7).map(function (d) {
+    var p = docPaths(d);
+    return '<a href="research.html#doc=' + esc(d.slug) + '" title="' + esc((d.ticker ? d.ticker + " · " : "") + d.title) + '"><img src="' + esc(p.cover) + '" alt="' + esc((d.company || d.kindLabel) + ", page 1") + '" loading="lazy"></a>';
+  }).join("") + '<a class="more-fan srcline" href="research.html">All ' + t.count + ' →</a>';
+
+  var ic = DOCS.filter(function (d) { return d.kind === "ic-note"; });
+  $("#icLines").innerHTML = ic.map(function (d) {
+    var r = d.rating ? "New money " + d.rating.entrant + " · Holders " + d.rating.holder : "see document";
+    var px = fmtPx(d) ? " · " + fmtPx(d) : "";
+    return '<a href="research.html#doc=' + esc(d.slug) + '"><span class="tk">' + esc(d.ticker) + '</span><span class="ttl">' + esc(d.company) + ": " + esc(d.title) + '</span><span class="r">' + esc(r + px + (d.attached === false ? " · to be attached" : "")) + "</span></a>";
+  }).join("");
+
+})();
+</script>
+</body>
+</html>

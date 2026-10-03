@@ -1,0 +1,873 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kopi Satset</title>
+<meta name="description" content="Kopi Satset, iced coffee from electric carts in Surabaya: the plan, the model, both decks and the photos.">
+<!-- HEAD v1 start -->
+<script>(function(){try{var t=localStorage.getItem('fl-theme');if(t==='dark'||t==='light'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<!-- HEAD v1 end -->
+<style>
+/* BASE v1 start */
+:root {
+  --paper: #F6F1EA; --surface: #FFFDF9; --ink: #141210; --ink-2: #3E3832; --muted: #6E6660; --line: #DED5CA; --line-strong: #141210;
+  --accent: #1F4FD6; --accent-ink: #FFFFFF; --bench: #9A8C7D; --flag: #B8741A; --tint: #EFE6DA;
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif; --sans: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif; --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme: dark; --paper: #15120F; --surface: #1D1915; --ink: #F1EBE3; --ink-2: #CFC6BB; --muted: #9B9187; --line: #332C26; --line-strong: #F1EBE3; --accent: #8DB0FF; --accent-ink: #0B1220; --bench: #7A6E63; --flag: #E0A04A; --tint: #27211B; } }
+:root[data-theme="dark"] { color-scheme: dark; --paper: #15120F; --surface: #1D1915; --ink: #F1EBE3; --ink-2: #CFC6BB; --muted: #9B9187; --line: #332C26; --line-strong: #F1EBE3; --accent: #8DB0FF; --accent-ink: #0B1220; --bench: #7A6E63; --flag: #E0A04A; --tint: #27211B; }
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 72px; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--flag); outline-offset: 3px; }
+h1, h2, h3, h4 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+img { max-width: 100%; height: auto; }
+table { border-collapse: collapse; }
+button { font: inherit; color: inherit; }
+.mono { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.num { font-variant-numeric: tabular-nums; }
+.page { max-width: 1040px; margin: 0 auto; padding-inline: 24px; padding-block: 0 80px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Site bar */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding-block: 12px; }
+.bar .who { font-family: var(--serif); font-size: 18px; font-weight: 500; color: var(--ink); text-decoration: none; display: inline-flex; align-items: baseline; gap: 10px; }
+.bar .who .desk { font-size: 10.5px; }
+.bar nav { margin-left: auto; display: flex; gap: 18px; flex-wrap: wrap; }
+.bar nav a { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
+.bar nav a:hover, .bar nav a[aria-current] { color: var(--ink); }
+.bar nav a[aria-current] { border-bottom: 1px solid var(--ink); padding-bottom: 2px; }
+.bar .theme { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 4px 8px; cursor: pointer; color: var(--muted); font-size: 10.5px; }
+.bar .theme:hover { color: var(--ink); border-color: var(--line-strong); }
+.onpage { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 48px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.onpage span { color: var(--muted); }
+.onpage a { color: var(--muted); text-decoration: none; }
+.onpage a:hover { color: var(--ink); }
+
+/* Masthead */
+.mast { padding-block: 56px 36px; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 40px; align-items: end; }
+.mast.narrow { grid-template-columns: minmax(0, 1fr) 260px; }
+.wordmark { font-family: var(--serif); font-weight: 500; font-size: clamp(64px, 11vw, 132px); line-height: 0.88; letter-spacing: -0.04em; }
+.wordmark span { color: var(--bench); }
+.wordmark em { font-style: italic; font-weight: 400; color: var(--accent); }
+.mast .back { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; display: inline-block; margin-bottom: 18px; }
+.mast .thesis, .thesis { margin-top: 22px; font-family: var(--serif); font-size: clamp(20px, 2.4vw, 25px); line-height: 1.35; max-width: 34ch; color: var(--ink-2); border-left: 2px solid var(--line-strong); padding-left: 18px; }
+.mast .role { font-family: var(--mono); font-size: 12px; color: var(--ink); margin-top: 18px; max-width: 60ch; line-height: 1.6; }
+.mast figure { margin: 0; }
+.mast figure img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; display: block; border-radius: 2px; }
+.mast figcaption { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+.sheet { border-top: 2px solid var(--line-strong); font-size: 13.5px; margin-top: 28px; }
+.sheet > div { display: grid; grid-template-columns: 92px 1fr; gap: 12px; padding-block: 8px; border-bottom: 1px solid var(--line); }
+.sheet > div > span:first-child { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+.sheet code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); user-select: all; }
+.copy { font: 500 10.5px var(--mono); letter-spacing: 0.05em; text-transform: uppercase; border: 0; background: transparent; color: var(--accent); cursor: pointer; padding: 0; margin-left: 8px; }
+.tiles { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 2px solid var(--line-strong); border-left: 1px solid var(--line); }
+.tiles > div { padding: 16px 14px 18px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+.tiles strong { font-family: var(--serif); font-size: 38px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.tiles.row4 { grid-template-columns: repeat(4, 1fr); }
+
+.price { display: flex; align-items: baseline; gap: 14px; margin-top: 18px; border-left: 2px solid var(--line-strong); padding-left: 18px; }
+.price strong { font-family: var(--serif); font-size: 56px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.price span { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+
+/* Figures tape */
+.figures { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 2px solid var(--line-strong); border-bottom: 1px solid var(--line); margin-bottom: 56px; }
+.figures.four { grid-template-columns: repeat(4, 1fr); }
+.figures > * { color: inherit; text-decoration: none; padding: 18px 18px 18px 0; border-left: 1px solid var(--line); padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.figures > *:first-child { border-left: 0; padding-left: 0; }
+.figures a:hover strong { color: var(--accent); }
+.figures strong { font-family: var(--serif); font-size: 38px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.figures .mono { line-height: 1.35; }
+
+/* Sections and text */
+section { margin-bottom: 64px; }
+section > header { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; align-items: baseline; padding-bottom: 12px; border-bottom: 2px solid var(--line-strong); margin-bottom: 24px; }
+section > header h2 { font-family: var(--serif); font-size: 34px; font-weight: 400; letter-spacing: -0.02em; line-height: 1; }
+.lede { font-size: 17px; color: var(--ink-2); max-width: 66ch; }
+.lede b { color: var(--ink); font-weight: 600; }
+.note { font-size: 13px; color: var(--muted); max-width: 70ch; margin-top: 10px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; align-items: start; }
+.block h3, h3.h { font-family: var(--serif); font-size: 22px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 10px; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 36px; margin: 18px 0; }
+.stats > div { display: flex; flex-direction: column; gap: 2px; }
+.stats strong { font-family: var(--serif); font-size: 32px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.stats strong.up { color: var(--accent); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
+.steps.five { grid-template-columns: repeat(5, 1fr); }
+.step { border-top: 2px solid var(--line-strong); padding-top: 10px; }
+.step .mono { color: var(--ink); }
+.step strong { display: block; font-family: var(--serif); font-size: 20px; font-weight: 500; margin: 4px 0 6px; }
+.step p { font-size: 14px; color: var(--ink-2); }
+.t { width: 100%; font-size: 14px; }
+.t th, .t td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.t th { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.t th button { background: transparent; border: 0; padding: 0; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; }
+.t th button:hover { color: var(--ink); }
+.t td.n, .t th.n { text-align: right; font-variant-numeric: tabular-nums; }
+.t td.m { font-family: var(--mono); font-size: 12px; }
+.t tr.hi td { font-weight: 600; color: var(--ink); background: var(--tint); }
+.t tr.sum td { border-top: 2px solid var(--line-strong); font-weight: 600; }
+.tscroll { overflow-x: auto; }
+.chart { margin-top: 8px; }
+.chart .ttl { font-size: 13.5px; font-weight: 600; margin-bottom: 8px; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .src { font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+.bands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.band { border: 1px solid var(--line); background: var(--surface); padding: 12px 14px; border-radius: 3px; }
+.band strong { display: block; font-family: var(--serif); font-size: 20px; font-weight: 500; }
+.band .act { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--flag); margin-top: 6px; display: block; }
+.band p { font-size: 13.5px; color: var(--ink-2); margin-top: 6px; }
+.bullets { margin: 12px 0 0; padding-left: 18px; max-width: 64ch; display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: var(--ink-2); }
+.bullets li::marker { color: var(--accent); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.tag { font-family: var(--mono); font-size: 11.5px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 2px 8px; text-decoration: none; }
+.tag:hover { border-color: var(--line-strong); }
+.more { display: inline-block; margin-top: 18px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; }
+.more.big { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 22px; padding: 14px 16px; border: 1px solid var(--line-strong); color: var(--ink); text-decoration: none; max-width: 760px; font-family: var(--serif); font-size: 19px; letter-spacing: 0; text-transform: none; }
+.more.big span { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.more.big:hover { background: var(--tint); }
+
+/* Entries (experience ledger) */
+.entry { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; padding-block: 30px; border-bottom: 1px solid var(--line); }
+.entry > *, .claim > * { min-width: 0; }
+.entry .side { display: flex; flex-direction: column; gap: 4px; }
+.entry .side .when { font-family: var(--mono); font-size: 12px; color: var(--ink); }
+.entry h3 { font-family: var(--serif); font-size: 26px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.15; }
+.entry .org { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.entry .what { margin-top: 14px; max-width: 62ch; font-size: 16px; color: var(--ink-2); }
+.entry .what b { color: var(--ink); font-weight: 600; }
+
+/* Photos */
+.slides { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 8px; }
+.slides.portrait { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+.slide { margin: 0; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; cursor: zoom-in; padding: 0; text-align: left; font: inherit; color: inherit; display: block; width: 100%; }
+.slide img { width: 100%; display: block; aspect-ratio: 16 / 9; object-fit: cover; }
+.slides.portrait .slide img { aspect-ratio: 3 / 4; }
+.slide span { display: block; padding: 6px 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--line); }
+.wall { columns: 3; column-gap: 8px; margin-top: 8px; }
+.wall figure { margin: 0 0 8px; break-inside: avoid; }
+.wall img { width: 100%; display: block; border-radius: 2px; }
+.wall figcaption { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.dl { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 14px; font-size: 14px; }
+.strip { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 22px; max-width: 760px; }
+.strip figure { margin: 0; }
+.strip img { width: 100%; height: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; border-radius: 2px; }
+.strip figure.tall img { aspect-ratio: 3 / 4; }
+.strip figcaption { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+.sheet-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; max-width: 760px; }
+.sheet-row figure { margin: 0; }
+.sheet-row img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; border-radius: 2px; }
+.sheet-row .wide img { aspect-ratio: 3 / 2; }
+.sheet-row figcaption { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+/* Exhibits */
+.exhibits { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; max-width: 760px; }
+.ex { border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; display: flex; flex-direction: column; margin: 0; }
+.ex .lab { display: flex; justify-content: space-between; gap: 8px; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+.ex .lab .mono { color: var(--ink); }
+.ex .lab .flag { color: var(--flag); }
+.ex img { display: block; width: 100%; height: 150px; object-fit: cover; }
+.ex .empty { height: 150px; background: repeating-linear-gradient(135deg, transparent 0 9px, var(--line) 9px 10px); opacity: 0.6; }
+.ex .cap { padding: 8px 10px; font-size: 13px; color: var(--ink-2); line-height: 1.4; }
+.ex.todo { border-style: dashed; background: transparent; }
+.ex.todo .cap { color: var(--muted); }
+.ex a, .ex button.slide { cursor: zoom-in; }
+
+/* Stamps, banners, chips */
+.stamp { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--flag); border: 1px solid var(--flag); padding: 2px 6px; border-radius: 2px; background: var(--surface); white-space: nowrap; }
+.banner { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--tint); border: 1px solid var(--line); padding: 10px 14px; font-size: 13.5px; color: var(--ink-2); margin-bottom: 24px; }
+.tk { display: inline-block; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line); padding: 1px 6px; border-radius: 2px; color: var(--ink); text-decoration: none; }
+a.tk:hover { color: var(--accent); border-color: var(--accent); }
+.rating { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.chip { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 2px; border: 1px solid var(--bench); color: var(--ink-2); white-space: nowrap; }
+.chip.ent { border-color: var(--accent); color: var(--accent); }
+.rating .px { font-family: var(--mono); font-size: 11.5px; color: var(--ink); }
+.rating .none { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--muted); }
+
+/* Document cards */
+.shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.doc { background: var(--surface); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; padding: 0 0 12px; display: flex; flex-direction: column; gap: 6px; position: relative; }
+.doc .doc-open { display: block; width: 100%; border: 0; padding: 0; background: transparent; cursor: pointer; text-align: left; position: relative; }
+.doc .doc-open[aria-disabled="true"] { cursor: default; }
+.doc .cover { display: block; aspect-ratio: 1 / 1.414; background: #FFFFFF; border-bottom: 1px solid var(--line); overflow: hidden; position: relative; }
+.doc .cover img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.doc .cover.empty { background: var(--paper); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.doc .cover.empty::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, transparent 0 9px, var(--line) 9px 10px); opacity: 0.5; }
+.doc .cover.empty b { position: relative; font-family: var(--serif); font-weight: 500; font-size: 40px; color: var(--bench); letter-spacing: -0.02em; }
+.doc .cover.empty i { position: relative; font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.doc .cover .stamp { position: absolute; top: 8px; right: 8px; }
+.doc .meta { padding: 8px 12px 0; font-size: 11px; line-height: 1.5; }
+.doc .ttl { font-family: var(--serif); font-size: 18px; font-weight: 500; line-height: 1.2; padding: 0 12px; letter-spacing: -0.01em; }
+.doc .ttl a { color: var(--ink); text-decoration: none; }
+.doc .ttl a:hover { color: var(--accent); }
+.doc .rating { padding: 0 12px; }
+.doc .lineage, .doc .proves { padding: 0 12px; font-size: 10.5px; line-height: 1.5; }
+.doc .proves a { color: var(--muted); }
+.doc .proves a:hover { color: var(--ink); }
+.doc .thesis { padding: 0 12px; margin: 0; font-family: var(--sans); font-size: 13.5px; color: var(--ink-2); border: 0; max-width: none; line-height: 1.45; }
+.doc.slot { border-style: dashed; }
+.doc.slot .ttl a { color: var(--ink-2); }
+
+/* Library layout */
+.lib { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; align-items: start; }
+.rail { position: sticky; top: 64px; display: flex; flex-direction: column; gap: 18px; font-size: 13.5px; }
+.rail .grp { display: flex; flex-direction: column; gap: 4px; }
+.rail .grp .mono { margin-bottom: 4px; }
+.rail label { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+.rail input[type="checkbox"] { accent-color: var(--accent); margin: 0; }
+.rail select, .search input { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 2px; padding: 8px 10px; }
+.rail .count { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.rail .clear { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.railscroll { display: none; }
+.search { margin-top: 18px; max-width: 420px; }
+.search input { width: 100%; font-family: var(--mono); font-size: 13px; }
+.search input::placeholder { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.views { display: inline-flex; gap: 0; margin-top: 14px; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
+.views button { border: 0; background: transparent; padding: 6px 12px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.views button[aria-pressed="true"] { background: var(--tint); color: var(--ink); }
+.series { margin-bottom: 36px; }
+.series > h3 { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 14px; font-family: var(--serif); font-size: 22px; font-weight: 500; }
+.series > h3 .mono { font-size: 10.5px; }
+.catalogue { margin-top: 24px; font-size: 13.5px; }
+.catalogue summary { cursor: pointer; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.catalogue ul { padding-left: 18px; }
+.catalogue li { margin: 4px 0; }
+
+/* Document pane */
+.pane-back { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.35); z-index: 20; display: none; }
+.pane { position: fixed; top: 0; right: 0; bottom: 0; width: 480px; max-width: 100vw; background: var(--surface); border-left: 1px solid var(--line); z-index: 21; overflow-y: auto; padding: 16px 20px 40px; transform: translateX(100%); display: none; }
+.pane.open, .pane-back.open { display: block; }
+.pane.open { transform: none; }
+.pane .pane-ctl { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+.pane .pane-ctl button { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 5px 10px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.pane .pane-ctl button:hover { color: var(--ink); border-color: var(--line-strong); }
+.pane .cover { display: block; max-height: 48vh; background: #FFFFFF; border: 1px solid var(--line); overflow: hidden; }
+.pane .cover img { width: 100%; height: auto; max-height: 48vh; object-fit: contain; object-position: top; display: block; }
+.pane .cover.empty { aspect-ratio: 1.414 / 1; background: var(--paper); display: flex; align-items: center; justify-content: center; gap: 10px; position: relative; }
+.pane .cover.empty::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, transparent 0 9px, var(--line) 9px 10px); opacity: 0.5; }
+.pane .cover.empty b { position: relative; font-family: var(--serif); font-weight: 500; font-size: 40px; color: var(--bench); }
+.pane .cover.empty i { position: relative; font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.pane h2 { font-family: var(--serif); font-size: 24px; font-weight: 500; line-height: 1.2; margin-top: 10px; letter-spacing: -0.01em; }
+.pane .meta { margin-top: 12px; }
+.pane .byline { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.pane .call { border-top: 2px solid var(--line-strong); margin-top: 14px; padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.pane .call p { font-size: 14.5px; color: var(--ink-2); }
+.pane .status { font-size: 13px; color: var(--flag); margin-top: 10px; }
+.pane .lineage, .pane .proves { margin-top: 10px; font-size: 11px; line-height: 1.8; }
+.pane .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.pane .actions a, .pane .actions span { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line-strong); color: var(--ink); text-decoration: none; padding: 7px 10px; border-radius: 2px; }
+.pane .actions a:hover { background: var(--tint); }
+.pane .actions span { color: var(--muted); border-color: var(--line); }
+.pane .pages { margin-top: 18px; }
+.pane .pages .slides.portrait { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+body.pane-open { overflow: hidden; }
+
+/* Engines */
+.eng { background: var(--surface); border: 1px solid var(--line); border-left: 2px solid var(--accent); border-radius: 3px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.eng .head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.eng .name { font-family: var(--mono); font-size: 13px; color: var(--ink); }
+.eng .flavor { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; border: 1px solid var(--line); padding: 1px 6px; border-radius: 2px; color: var(--muted); }
+.eng .size { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.eng .kv { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 4px 10px; font-size: 13.5px; color: var(--ink-2); }
+.eng .kv .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.eng .rule { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--ink); border-left: 2px solid var(--line); padding-left: 10px; }
+.eng .produced { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.engs { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+details.dossier { border-top: 1px solid var(--line); padding: 14px 0; }
+details.dossier summary { cursor: pointer; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+details.dossier summary::-webkit-details-marker { display: none; }
+details.dossier summary h3 { font-family: var(--serif); font-size: 22px; font-weight: 500; }
+details.dossier summary h3::after { content: " +"; color: var(--muted); }
+details.dossier[open] summary h3::after { content: " −"; }
+details.dossier .body { margin-top: 16px; display: flex; flex-direction: column; gap: 18px; }
+.diagram { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; padding: 12px; margin-top: 16px; }
+.diagram svg { min-width: 640px; width: 100%; height: auto; display: block; }
+.diagram .node { fill: var(--paper); stroke: var(--line); }
+.diagram .hub { fill: var(--accent); stroke: var(--accent); }
+.diagram .store { fill: var(--paper); stroke: var(--line); stroke-dasharray: 4 3; }
+.diagram .edge { stroke: var(--muted); fill: none; stroke-width: 1; }
+.diagram text { fill: var(--ink); font-family: var(--sans); font-size: 13px; }
+.diagram text.mono { fill: var(--muted); font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.diagram .hub + text, .diagram text.on { fill: var(--accent-ink); }
+.diagram a { cursor: pointer; }
+.frame { aspect-ratio: 16 / 10; border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; margin-top: 14px; }
+.frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+/* Claims (CV line + evidence), ventures, certificates */
+.claim { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 32px; padding-block: 28px; border-bottom: 1px solid var(--line); }
+.claim blockquote { margin: 0; font-family: var(--serif); font-size: 19px; line-height: 1.4; color: var(--ink); max-width: 60ch; }
+.claim blockquote p + p { margin-top: 6px; }
+.ventures { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.venture { border: 1px solid var(--line); background: var(--surface); border-radius: 3px; overflow: hidden; display: flex; flex-direction: column; }
+.venture img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; }
+.venture .vbody { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; }
+.venture h3 { font-family: var(--serif); font-size: 22px; font-weight: 500; }
+.venture p { font-size: 14px; color: var(--ink-2); }
+.venture .stats { margin: 8px 0 0; gap: 6px 22px; }
+.venture .stats strong { font-size: 26px; }
+.venture .more { margin-top: 10px; }
+.certs .fam { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 12px; }
+.certs .fam button { border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 3px 9px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.certs .fam button[aria-pressed="true"] { background: var(--tint); color: var(--ink); border-color: var(--line-strong); }
+.certs .slides { grid-template-columns: repeat(6, 1fr); }
+.certs .slide img { aspect-ratio: 4 / 3; }
+.certs .showall { margin-top: 12px; border: 1px solid var(--line-strong); background: transparent; border-radius: 2px; padding: 7px 12px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); }
+.thumb { width: 56px; height: 56px; object-fit: cover; border: 1px solid var(--line); border-radius: 2px; display: inline-block; vertical-align: middle; margin-right: 4px; cursor: zoom-in; }
+
+/* Lightbox */
+dialog#lb { border: 0; padding: 0; background: transparent; max-width: min(96vw, 1200px); }
+dialog#lb::backdrop { background: rgba(0, 0, 0, 0.85); }
+dialog#lb img { max-width: 96vw; max-height: 86vh; display: block; border-radius: 2px; margin: 0 auto; }
+dialog#lb .ctl { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; color: #fff; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+dialog#lb button { font: inherit; color: #fff; background: transparent; border: 1px solid rgba(255, 255, 255, 0.5); padding: 6px 12px; cursor: pointer; border-radius: 2px; }
+
+/* Promoted from the page builds */
+.doc .cover .stamp + .stamp { top: 32px; }
+.ledger .t { min-width: 860px; }
+.ledger .t th, .ledger .t td { white-space: nowrap; }
+.ledger .t td.tt { white-space: normal; min-width: 240px; }
+.ledger .t th.on button { color: var(--ink); }
+.pane button.cover { width: 100%; padding: 0; cursor: zoom-in; text-align: left; border: 1px solid var(--line); }
+.exhibits { align-items: start; }
+.certs .slide[hidden], .certs .showall[hidden] { display: none; }
+.t .flag { color: var(--flag); }
+.cov { min-width: 820px; }
+.cov.macro { min-width: 560px; }
+.cov .rating { flex-wrap: wrap; }
+.cov .stamp { white-space: nowrap; }
+.cov td .stamp { display: block; width: fit-content; max-width: 150px; white-space: normal; line-height: 1.3; margin: 0 0 4px; }
+.cov td.num { white-space: nowrap; }
+.band strong a { color: inherit; text-decoration: none; }
+.band strong a:hover { color: var(--accent); }
+.claim .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.claim > div > .stats { margin-top: 16px; }
+.sheet-row a, .strip figure a { display: block; }
+.venture .side { display: block; margin-top: -2px; }
+.eng .note { font-size: 13px; color: var(--muted); margin: 0; max-width: none; }
+.eng .produced .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.eng .flavor.prop { color: var(--flag); border-color: var(--flag); }
+.dossier .body h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 6px; }
+.formula { font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
+.dossier .body .line { font-family: var(--serif); font-size: 17px; font-style: italic; color: var(--ink); max-width: 60ch; }
+.frame .fallback { display: none; }
+.frame.failed { aspect-ratio: auto; border: 0; background: transparent; }
+.frame.failed iframe { display: none; }
+.frame.failed .fallback { display: block; }
+
+/* Claim plates: a claim set beside its evidence, with a source line */
+.plate { padding-block: 72px 64px; border-top: 1px solid var(--line); margin: 0; }
+.plate:first-of-type { border-top: 0; }
+.plate .idx { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.plate .idx::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.claim-x { font-family: var(--serif); font-weight: 400; font-size: clamp(36px, 5.2vw, 68px); line-height: 1.02; letter-spacing: -0.03em; max-width: 16ch; text-wrap: balance; }
+.claim-x .num { font-weight: 500; font-variant-numeric: tabular-nums; }
+.claim-x em { font-style: italic; color: var(--accent); }
+.claim-x .arrow { color: var(--bench); font-weight: 400; }
+.sub { margin-top: 20px; font-family: var(--serif); font-size: clamp(18px, 2vw, 22px); line-height: 1.4; color: var(--ink-2); max-width: 40ch; }
+.sub b { color: var(--ink); font-weight: 500; }
+.srcline { display: inline-flex; align-items: baseline; gap: 10px; margin-top: 22px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-top: 1px solid var(--line-strong); padding-top: 10px; }
+.srcline::before { content: "↳"; color: var(--bench); }
+.srcline .go { color: var(--accent); }
+.srcline:hover .go { text-decoration: underline; text-underline-offset: 3px; }
+.plate .side { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: start; }
+.plate .side.flip { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.plate figure { margin: 0; }
+.plate figure img { width: 100%; display: block; border-radius: 2px; }
+.plate figcaption, .cap-m { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+.pageimg { border: 1px solid var(--line); background: #FFFFFF; }
+.bleed { margin-inline: calc(50% - 50vw); padding-inline: calc(50vw - 50%); }
+.triptych { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 28px; }
+.triptych img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; border-radius: 2px; }
+.wide { margin-top: 8px; }
+.wide img { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; object-position: center 40%; display: block; border-radius: 2px; }
+.fan { display: flex; align-items: flex-end; margin-top: 36px; padding-bottom: 12px; min-height: 240px; }
+.fan a { display: block; width: 170px; flex: 0 0 auto; margin-right: -46px; border: 1px solid var(--line); background: #FFFFFF; box-shadow: 0 1px 0 var(--line); transform: rotate(var(--r, 0deg)) translateY(var(--y, 0px)); transform-origin: bottom center; }
+.fan a img { width: 100%; aspect-ratio: 1 / 1.414; object-fit: cover; object-position: top; display: block; }
+.fan a:nth-child(1) { --r: -6deg; --y: 6px; } .fan a:nth-child(2) { --r: -3deg; } .fan a:nth-child(3) { --r: -1deg; --y: 4px; } .fan a:nth-child(4) { --r: 1deg; } .fan a:nth-child(5) { --r: 3deg; --y: 6px; } .fan a:nth-child(6) { --r: 5deg; } .fan a:nth-child(7) { --r: 7deg; --y: 8px; }
+.fan a:hover, .fan a:focus-visible { z-index: 2; transform: rotate(0deg) translateY(-14px); border-color: var(--line-strong); }
+.fan .more-fan { width: auto; margin-left: 72px; margin-right: 0; align-self: center; border: 0; background: transparent; box-shadow: none; transform: none; white-space: nowrap; }
+.lines { margin-top: 28px; border-top: 2px solid var(--line-strong); max-width: 760px; }
+.lines > a, .lines > div { display: grid; grid-template-columns: 84px minmax(0, 1fr) minmax(0, 300px); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); color: inherit; text-decoration: none; align-items: baseline; font-size: 15px; }
+.lines > a:hover .ttl { color: var(--accent); }
+.lines .tk { justify-self: start; }
+.lines .ttl { font-family: var(--serif); font-size: 19px; }
+.lines .r { font-family: var(--mono); font-size: 11px; line-height: 1.6; color: var(--muted); text-align: right; }
+.trace { margin-top: 36px; overflow-x: auto; }
+.trace svg { min-width: 760px; width: 100%; height: auto; display: block; }
+.trace .rail { stroke: var(--line-strong); stroke-width: 2; fill: none; }
+.trace .stop { fill: var(--paper); stroke: var(--line-strong); stroke-width: 2; }
+.trace .stop.hub { fill: var(--accent); stroke: var(--accent); }
+.trace .gate { fill: var(--flag); }
+.trace text { font-family: var(--sans); font-size: 13px; fill: var(--ink); }
+.trace text.mono { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; fill: var(--muted); }
+.trace text.flag { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.04em; fill: var(--flag); }
+.write { padding-block: 80px 40px; border-top: 1px solid var(--line); }
+.write .mail { display: inline-flex; align-items: baseline; gap: 14px; margin-top: 24px; font-family: var(--mono); font-size: clamp(18px, 3vw, 30px); color: var(--ink); word-break: break-all; }
+.write .mail code { font-family: inherit; user-select: all; }
+.write .meta { margin-top: 18px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); display: flex; gap: 20px; flex-wrap: wrap; }
+.write .meta a { color: var(--ink); }
+.toc { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 2px solid var(--line-strong); border-bottom: 1px solid var(--line); margin-top: 56px; }
+.toc a { color: inherit; text-decoration: none; padding: 18px 16px 18px 0; border-left: 1px solid var(--line); padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
+.toc a:first-child { border-left: 0; padding-left: 0; }
+.toc strong { font-family: var(--serif); font-size: clamp(30px, 3.4vw, 40px); font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.toc a:hover strong { color: var(--accent); }
+.toc .mono { line-height: 1.4; }
+.toc .mono em { font-style: normal; color: var(--ink); }
+@media (max-width: 900px) { .toc { grid-template-columns: repeat(2, 1fr); } .toc a { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); } .toc a:nth-child(-n+2) { border-top: 0; } .toc a:nth-child(2n) { border-left: 1px solid var(--line); padding-left: 16px; } }
+@media (max-width: 820px) {
+  .plate { padding-block: 48px 40px; }
+  .plate .side, .plate .side.flip { grid-template-columns: 1fr; gap: 24px; }
+  .plate .side.flip > :first-child { order: 2; }
+  .triptych { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .wide img { aspect-ratio: 4 / 3; }
+  .fan { overflow-x: auto; padding-bottom: 20px; min-height: 0; }
+  .fan a { width: 120px; margin-right: -24px; }
+  .lines > a, .lines > div { grid-template-columns: 64px minmax(0, 1fr); }
+  .lines .r { grid-column: 2; text-align: left; }
+  .write { padding-block: 64px 56px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fan a { transition: transform .25s ease, border-color .15s; }
+  .srcline::before { transition: transform .2s; display: inline-block; }
+  .srcline:hover::before { transform: translateX(3px); }
+  .open .wordmark, .open .intro { animation: rise .7s ease both; }
+  .open .intro { animation-delay: .12s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+}
+
+/* Two registers: market term as text, engine code as a tag; a page can switch the tags off */
+.code { display: inline-block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.04em; text-transform: none; color: var(--muted); border: 1px solid var(--line); border-radius: 2px; padding: 0 5px; line-height: 1.6; vertical-align: 0.15em; margin-left: 6px; white-space: nowrap; font-weight: 500; font-style: normal; }
+h1 .code, h2 .code, .claim-x .code { font-size: 12px; vertical-align: 0.6em; margin-left: 10px; letter-spacing: 0.06em; }
+.mono .code { margin-left: 4px; }
+.codes-off .code { display: none; }
+.codeswitch { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 2px; padding: 5px 10px; background: transparent; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.codeswitch[aria-pressed="true"] { color: var(--ink); border-color: var(--line-strong); }
+.codeswitch:hover { color: var(--ink); }
+.gloss { margin-top: 20px; max-width: 760px; }
+.gloss .t td:first-child { font-weight: 600; color: var(--ink); width: 34%; }
+.gloss .t td.m { color: var(--muted); }
+
+footer { color: var(--muted); font-size: 13px; max-width: 64ch; line-height: 1.5; }
+footer p + p { margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .lib { grid-template-columns: 1fr; gap: 16px; }
+  .rail { position: static; display: none; }
+  .railscroll { display: flex; gap: 6px; overflow-x: auto; white-space: nowrap; padding-bottom: 8px; align-items: center; }
+  .railscroll button, .railscroll select { flex: 0 0 auto; border: 1px solid var(--line); background: transparent; border-radius: 2px; padding: 4px 9px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+  .railscroll button[aria-pressed="true"] { background: var(--tint); color: var(--ink); border-color: var(--line-strong); }
+  .shelf { grid-template-columns: repeat(2, 1fr); }
+  .engs { grid-template-columns: 1fr; }
+}
+@media (max-width: 820px) {
+  .page { padding-inline: 16px; }
+  .bar { gap: 8px 14px; }
+  .bar .who .desk { display: none; }
+  .bar .theme { margin-left: auto; order: 2; }
+  .bar nav { order: 3; flex-basis: 100%; margin-left: 0; gap: 12px; }
+  .bar nav a { font-size: 11px; }
+  .mast, .mast.narrow { grid-template-columns: 1fr; gap: 28px; padding-block: 36px 28px; }
+  .mast figure { max-width: 300px; order: 2; }
+  .figures, .figures.four { grid-template-columns: repeat(2, 1fr); margin-bottom: 48px; }
+  .figures > * { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); }
+  .figures > *:nth-child(-n+2) { border-top: 0; }
+  .figures > *:nth-child(2n) { border-left: 1px solid var(--line); padding-left: 16px; }
+  .figures strong, .tiles strong { font-size: 32px; }
+  .tiles.row4 { grid-template-columns: repeat(2, 1fr); }
+  section { margin-bottom: 48px; }
+  section > header { grid-template-columns: 1fr; gap: 8px; }
+  .grid2, .bands, .ventures, .steps, .steps.five { grid-template-columns: 1fr; }
+  .steps, .steps.five { grid-template-columns: repeat(2, 1fr); }
+  .entry, .claim { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .entry > *, .claim > *, .grid2 > * { min-width: 0; }
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+  .entry .side { flex-direction: row; gap: 14px; align-items: baseline; }
+  .strip { grid-template-columns: 1fr; }
+  .sheet-row { grid-template-columns: repeat(2, 1fr); }
+  .wall { columns: 2; }
+  .t { font-size: 13px; }
+  .pane { width: 100vw; border-left: 0; }
+  .certs .slides { grid-template-columns: repeat(3, 1fr); }
+  .shelf { grid-template-columns: repeat(2, 1fr); }
+  .frame { aspect-ratio: 3 / 4; }
+}
+@media (max-width: 820px) { .pane.open { animation: none; } .sheet-row figure:nth-child(3) { grid-column: 1 / -1; max-width: calc(50% - 4px); } }
+@media (max-width: 480px) { .bar .who .desk { display: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .figures strong, .bar nav a, .copy, .tag, .tk, .doc, .doc .ttl a { transition: color .15s, border-color .15s, transform .15s; }
+  .doc:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+  .pane.open { animation: paneIn .2s ease; }
+  @keyframes paneIn { from { transform: translateX(100%); } to { transform: none; } }
+}
+@media print {
+  .bar, .pane, .pane-back, .rail, .railscroll, .views, .search, dialog { display: none !important; }
+  .catalogue { display: block; }
+  .catalogue[open], .catalogue { open: true; }
+  .page { max-width: none; padding: 0; }
+}
+/* BASE v1 end */
+</style>
+<style>
+/* kopi.html page styles */
+.mast .price { margin-top: 18px; }
+.team { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.team div { border-top: 1px solid var(--line); padding-top: 10px; font-size: 14px; color: var(--ink-2); }
+.team strong { display: block; color: var(--ink); font-weight: 600; }
+.mast .thesis { border-left: 0; padding-left: 0; }
+@media (max-width: 820px) { .team { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-page="kopi">
+<div class="page">
+  <!-- CHROME v1 start -->
+<div class="bar" id="siteBar"><a class="who" href="index.html">Faldo Lyon <span class="desk mono">Research desk</span></a><nav aria-label="Site"><a href="research.html" data-page="research">Research</a><a href="engines.html" data-page="engines">Engines</a><a href="cpv.html" data-page="cpv">CPV</a><a href="index.html#clients">Clients</a><a href="analyst.html" data-page="analyst">Analyst</a><a href="kopi.html" data-page="kopi">Kopi Satset</a></nav><button class="theme mono" type="button" id="themeBtn" aria-label="Switch colour theme">Theme · auto</button></div>
+<!-- CHROME v1 end -->
+
+  <header class="mast" id="top">
+    <div>
+      <a class="back" href="index.html">← Research Desk</a>
+      <h1 class="wordmark" style="margin-top:18px">kopi<br>satset<span>.</span></h1>
+      <div class="price"><strong class="num">6000</strong><span>10 detik</span></div>
+      <p class="thesis">Iced coffee from Rp6,000, poured in ten seconds from electric carts in Surabaya. Owner, 71%. Operations delegated to a manager.</p>
+    </div>
+    <figure><img src="proof/kopi/rider.jpg" alt="A Kopi Satset cart heading out"><figcaption>A cart heading out for the morning run</figcaption></figure>
+  </header>
+
+  <div class="figures four">
+    <div><strong class="num">8</strong><span class="mono">locations trading</span></div>
+    <div><strong class="num">~300</strong><span class="mono">cups a day across the fleet</span></div>
+    <div><strong class="num">£14k</strong><span class="mono">raised</span></div>
+    <div><strong class="num">41.4%</strong><span class="mono">plan EBITDA margin at 70 cups a cart</span></div>
+  </div>
+
+  <p class="onpage"><span style="color:var(--muted)">On this page</span><a href="#model">Unit economics</a><a href="#pnl">One month</a><a href="#growth">Growth</a><a href="#sites">Sites</a><a href="#round">Round</a><a href="#decks">Decks</a><a href="#photos">Photos</a></p>
+
+  <section id="what">
+    <header><span class="mono">The business</span><h2>Brewed once, poured at the kerb</h2></header>
+    <p class="lede">Coffee is cold-brewed in batches at one kitchen, carried in sealed jugs and poured over ice at the point of sale. Nothing is brewed on the cart, so a queue is never waiting on a machine. The cart is the shop: <b>no lease, no receivables, and a weak site costs a relocation</b>, not a lost fit-out. Two drinks, es kopi at Rp6,000 and kopi susu manis at Rp8,000 after a capped run of entry cups, paid in cash or by QRIS.</p>
+    <div class="steps">
+      <div class="step"><span class="mono">1 · Kitchen</span><strong>Brew the day before</strong><p>Cold brew in batches. One kitchen is planned for up to 1,200 cups a day.</p></div>
+      <div class="step"><span class="mono">2 · Jugs</span><strong>Load at dawn</strong><p>Sealed jugs onto each cart in the morning, sized from the site's trailing seven-day median.</p></div>
+      <div class="step"><span class="mono">3 · Cart</span><strong>Ride to the site</strong><p>An electric cart with a GPS tracker. It can work two or three sites in a day.</p></div>
+      <div class="step"><span class="mono">4 · Kerb</span><strong>Pour and settle</strong><p>About ten seconds a cup. Every sale is paid on the spot.</p></div>
+    </div>
+    <p class="note">Where it stands: eight locations and about 300 cups a day, which is roughly 37 cups per site. In the plan's own bands that is inside the "retain and analyse" range that starts at 34. Figures on the rest of this page are from the operating plan and investor deck of August 2026, revision C. They are model outputs, not forecasts, and the trading record replaces them as it comes in.</p>
+  </section>
+
+  <section id="model">
+    <header><span class="mono">Unit economics</span><h2>What one cup leaves behind</h2></header>
+    <div class="grid2">
+      <div class="block">
+        <h3>Per cup, before overheads</h3>
+        <table class="t">
+          <thead><tr><th>Rupiah per cup</th><th class="n">Rp6,000 cup</th><th class="n">Rp8,000 cup</th></tr></thead>
+          <tbody>
+            <tr><td>Selling price</td><td class="n">6,000</td><td class="n">8,000</td></tr>
+            <tr><td>Cost of goods, all in</td><td class="n">(2,000)</td><td class="n">(2,200)</td></tr>
+            <tr><td>Seller commission</td><td class="n">(700)</td><td class="n">(1,000)</td></tr>
+            <tr class="sum"><td>Contribution before wastage</td><td class="n">3,300</td><td class="n">4,800</td></tr>
+            <tr><td>Gross margin</td><td class="n">66.7%</td><td class="n">72.5%</td></tr>
+          </tbody>
+        </table>
+        <p class="note">Cost of goods covers ingredients, packaging, water, ice and payment fees. The Rp6,000 cup is capped at 15 a cart-day, so growth arrives at Rp8,000 and blended contribution rises from Rp3,900 a cup at 25 cups to Rp4,479 at 70.</p>
+      </div>
+      <div class="block">
+        <h3>Where each Rp8,000 goes</h3>
+        <div class="chart" id="splitChart"></div>
+        <p class="note">Ten carts at 70 cups a cart-day. Of each Rp8,000 sold, Rp2,931 is net profit after every cost in the model, including depreciation and tax.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="pnl">
+    <header><span class="mono">Ten carts, one month</span><h2>From revenue to net profit</h2></header>
+    <div class="chart" id="waterfall"></div>
+    <div class="stats">
+      <div><strong class="num">Rp137.8m</strong><span class="mono">revenue</span></div>
+      <div><strong class="num up">Rp57.1m</strong><span class="mono">EBITDA, 41.4%</span></div>
+      <div><strong class="num">Rp50.5m</strong><span class="mono">net profit, 36.6%</span></div>
+      <div><strong class="num">6.9</strong><span class="mono">cups a cart-day to break even</span></div>
+    </div>
+    <div class="grid2">
+      <div class="block">
+        <h3>Volume sets what the fleet earns</h3>
+        <div class="tscroll"><table class="t">
+          <thead><tr><th>Cups a cart-day</th><th class="n">Revenue</th><th class="n">EBITDA</th><th class="n">Margin</th></tr></thead>
+          <tbody id="sensBody"></tbody>
+        </table></div>
+        <p class="note">Ten carts, 26 trading days, steady state from month 3. The two plan cases are 50 (conservative) and 70 (base). Margin rises with volume because the entry cup dilutes less and seller cost settles at 18 to 20% of revenue.</p>
+      </div>
+      <div class="block">
+        <h3>Monthly EBITDA by cups a cart-day</h3>
+        <div class="chart" id="sensChart"></div>
+        <p class="note">Operating leverage is low by design: about 45% of revenue is variable and under 3% is fixed cash cost, so a 10% move in revenue moves EBITDA by about 13%.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="growth">
+    <header><span class="mono">Reinvestment</span><h2>Investors first, then the fleet</h2></header>
+    <p class="lede">Investors receive the first <b>Rp100m</b> of operating cash. After that every rupiah goes into carts, up to ten new carts a month. A cart funded from one month's cash trades the next month at 60% of mature volume, then 85%, then full.</p>
+    <div class="grid2" style="margin-top:20px">
+      <div class="block"><h3>Carts trading, by month</h3><div class="chart" id="cartsChart"></div></div>
+      <div class="block"><h3>Monthly EBITDA, Rp million</h3><div class="chart" id="ebitdaChart"></div></div>
+    </div>
+    <table class="t" style="margin-top:20px">
+      <thead><tr><th>Position at month 12</th><th class="n">Conservative, 50 cups</th><th class="n">Base, 70 cups</th></tr></thead>
+      <tbody>
+        <tr><td>Carts trading</td><td class="n">44</td><td class="n">78</td></tr>
+        <tr><td>Revenue a month</td><td class="n">Rp385m</td><td class="n">Rp995m</td></tr>
+        <tr><td>EBITDA a month</td><td class="n">Rp129m</td><td class="n">Rp384m</td></tr>
+        <tr><td>Revenue in year one</td><td class="n">Rp2.18bn</td><td class="n">Rp5.04bn</td></tr>
+        <tr><td>EBITDA in year one</td><td class="n">Rp0.76bn</td><td class="n">Rp1.95bn</td></tr>
+        <tr><td>Investors paid their first Rp100m</td><td class="n">Month 3</td><td class="n">Month 2</td></tr>
+      </tbody>
+    </table>
+    <div class="stats" style="margin-top:24px">
+      <div><strong class="num up">307%</strong><span class="mono">return on capital employed</span></div>
+      <div><strong class="num">Rp14.3m</strong><span class="mono">to put one more cart on the street</span></div>
+      <div><strong class="num">Rp5.8m</strong><span class="mono">EBITDA a month from that cart</span></div>
+      <div><strong class="num">2.5</strong><span class="mono">months to pay it back</span></div>
+    </div>
+    <p class="note">Annualised EBIT of Rp614m on Rp200m employed. The constraint is pavements and the pace at which carts can be built and staffed, not cash.</p>
+  </section>
+
+  <section id="sites">
+    <header><span class="mono">Site selection</span><h2>Carts go where people pass at set hours</h2></header>
+    <div class="grid2">
+      <div class="block">
+        <table class="t">
+          <thead><tr><th>Site type</th><th>Peak window</th><th class="n">Est. cups a day</th></tr></thead>
+          <tbody>
+            <tr><td>Factory gate</td><td>06:00–08:00, 15:00–17:00</td><td class="n">80–140</td></tr>
+            <tr><td>Campus</td><td>11:00–14:00</td><td class="n">60–110</td></tr>
+            <tr><td>Market</td><td>05:00–09:00</td><td class="n">60–100</td></tr>
+            <tr><td>Commuter node</td><td>06:00–09:00</td><td class="n">50–90</td></tr>
+            <tr><td>Office frontage</td><td>07:00–09:00, 12:00–13:00</td><td class="n">40–80</td></tr>
+            <tr><td>Residential</td><td>Flat</td><td class="n">20–40</td></tr>
+          </tbody>
+        </table>
+        <p class="note">Opening allocation: four factory gates, two campus sites, two markets, two commuter nodes. Estimates are hypotheses, replaced by the daily record within the first fortnight. Days 1 and 2 are excluded as novelty.</p>
+      </div>
+      <div class="block">
+        <h3>The cull rule, set before the data</h3>
+        <div class="bands">
+          <div class="band"><strong>Below 25</strong><span class="act">Relocate without delay</span><p>Cannot be staffed at that pay whatever the reported margin.</p></div>
+          <div class="band"><strong>25 to 33</strong><span class="act">Intervene within 14 days</span><p>Change one variable, usually the daypart. Relocate if it has not cleared 34 by fee expiry.</p></div>
+          <div class="band"><strong>34 and up</strong><span class="act">Retain and analyse</span><p>The structure works as designed. Only the strongest sites yield a pattern that can be repeated.</p></div>
+        </div>
+        <p class="note">Every cart carries a GPS tracker. Sales are logged by hour, by cart and by seller, so a weak site and a weak seller can be told apart. No site is culled for good without trading under two sellers.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="round">
+    <header><span class="mono">Capital</span><h2>Rp200m funds ten carts, one kitchen and the launch</h2></header>
+    <div class="grid2">
+      <div class="block">
+        <div class="chart" id="fundsChart"></div>
+        <p class="note">In Rp million. Fixed assets take Rp140.65m, launch costs, working capital and contingency Rp59.35m. Carts and trackers depreciate over 24 months, other assets over 36.</p>
+      </div>
+      <div class="block">
+        <h3>Terms of the initial round</h3>
+        <table class="t">
+          <tbody>
+            <tr><td>Sought, in equity</td><td class="n">Rp200m</td></tr>
+            <tr><td>Committed to date</td><td class="n">Rp150m</td></tr>
+            <tr><td>Still open</td><td class="n">Rp50m</td></tr>
+            <tr><td>Equity for the round, at 1% per Rp10m</td><td class="n">20%</td></tr>
+            <tr><td>Implied value of the whole company</td><td class="n">Rp1bn</td></tr>
+            <tr><td>First dividends to investors</td><td class="n">Rp100m</td></tr>
+          </tbody>
+        </table>
+        <h3 style="margin-top:24px">Five risks tested first</h3>
+        <table class="t">
+          <tbody>
+            <tr><td><b>Site quality</b></td><td>Sites will differ more than the model assumes. Each is reviewed on a schedule and weak ones replaced.</td></tr>
+            <tr><td><b>Site tenure</b></td><td>A kerbside spot is used at the discretion of others. Carts are mobile and each route has backup sites.</td></tr>
+            <tr><td><b>Trading days</b></td><td>Rain and holidays cut selling days. The model is re-based on days actually traded.</td></tr>
+            <tr><td><b>Kitchen</b></td><td>One kitchen supplies every cart. Planned for 1,200 cups a day, with a second kitchen in the growth plan.</td></tr>
+            <tr><td><b>Sellers</b></td><td>A weak site and a weak seller look alike in the numbers. Sales are logged by seller as well as by site.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <h3 style="font-family:var(--serif);font-size:22px;font-weight:500;margin:32px 0 10px">Four people run kitchen, fleet and sites</h3>
+    <div class="team">
+      <div><strong>Faldo, founder</strong>Owns the plan, the model and the site decisions.</div>
+      <div><strong>Jason, chief operating officer</strong>Runs operations and the fleet-tracking system.</div>
+      <div><strong>Louis, field scouting</strong>Scouts sites and competitors on the ground.</div>
+      <div><strong>Andrew, operations lead, launch month</strong>Runs the kitchen and the carts day to day.</div>
+    </div>
+  </section>
+
+  <section id="decks">
+    <header><span class="mono">The documents</span><h2>Investor deck and operating plan</h2></header>
+    <p class="lede">Both documents were written for the initial round in August 2026. The deck is the pitch; the plan is the model behind it, sixteen pages with every figure labelled as fact, calculation, assumption, hypothesis or model output. Click a page to read it.</p>
+    <div class="dl" style="margin-top:16px"><a href="proof/kopi/Kopi-Satset-investor-deck.pdf">Investor deck, PDF, 22 pages</a><a href="proof/kopi/Kopi-Satset-operating-plan.pdf">Operating plan and financial model, PDF, 16 pages</a><span class="mono"><span class="stamp">To be attached</span> Location Book v13, the Top 20 candidate sites with decision rules</span></div>
+    <h3 style="font-family:var(--serif);font-size:22px;font-weight:500;margin:8px 0 10px">Investor deck</h3>
+    <div class="slides" id="deckSlides"></div>
+    <h3 style="font-family:var(--serif);font-size:22px;font-weight:500;margin:32px 0 10px">Operating plan and financial model</h3>
+    <div class="slides portrait" id="planSlides"></div>
+  </section>
+
+  <section id="photos">
+    <header><span class="mono">On the ground</span><h2>The fleet</h2></header>
+    <div class="wall" id="wall"></div>
+  </section>
+
+  <p class="note" style="margin-bottom:24px">Plan figures are from the Kopi Satset operating plan and investor deck, revision C, August 2026. They are model outputs, not forecasts, and are shown here because the venture is mine. Trading figures (locations, cups a day, capital raised) are as stated on my CV.</p>
+<!-- FOOT v1 start -->
+<footer id="footnote"><p>Nothing on this site is not on my CV or in work I did myself. Gotrade figures and documents are the firm's data, shown with permission pending. Four energy write-ups are drafts and are stamped as such; the house-format report is a sample on a worked-example company; Kopi Satset plan figures are model outputs. Research is for information only and is not investment advice. Updated October 2026.</p></footer>
+<dialog id="lb"><img id="lbImg" alt=""><div class="ctl"><button id="lbPrev" type="button">← Prev</button><span id="lbCap"></span><button id="lbNext" type="button">Next →</button><button id="lbClose" type="button">Close</button></div></dialog>
+<script>
+/* shared chrome: theme toggle, lightbox, copy buttons, current-page marker */
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  // current page
+  var page = document.body.getAttribute('data-page');
+  if (page) { var cur = document.querySelector('#siteBar nav a[data-page="' + page + '"]'); if (cur) cur.setAttribute('aria-current', 'page'); }
+  // theme: auto -> dark -> light
+  var btn = $('#themeBtn');
+  var read = function () { try { return localStorage.getItem('fl-theme') || 'auto'; } catch (e) { return document.documentElement.getAttribute('data-theme') || 'auto'; } };
+  var apply = function (t) {
+    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme');
+    try { if (t === 'auto') localStorage.removeItem('fl-theme'); else localStorage.setItem('fl-theme', t); } catch (e) {}
+    if (btn) btn.textContent = 'Theme · ' + t;
+  };
+  if (btn) { btn.textContent = 'Theme · ' + read(); btn.addEventListener('click', function () { var t = read(); apply(t === 'auto' ? 'dark' : t === 'dark' ? 'light' : 'auto'); }); }
+  // lightbox: openLightbox(list, index) where list is [{file, cap}]
+  var lb = $('#lb'), img = $('#lbImg'), cap = $('#lbCap'), list = [], cur = 0;
+  var show = function (i) { if (!list.length) return; cur = (i + list.length) % list.length; img.src = list[cur].file; img.alt = list[cur].cap || ''; cap.textContent = list[cur].cap || ''; if (!lb.open) lb.showModal(); };
+  window.openLightbox = function (l, i) { list = l || []; show(i || 0); };
+  if (lb) {
+    $('#lbPrev').addEventListener('click', function () { show(cur - 1); });
+    $('#lbNext').addEventListener('click', function () { show(cur + 1); });
+    $('#lbClose').addEventListener('click', function () { lb.close(); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) lb.close(); });
+    document.addEventListener('keydown', function (e) { if (!lb.open) return; if (e.key === 'ArrowLeft') show(cur - 1); if (e.key === 'ArrowRight') show(cur + 1); });
+  }
+  // any element with data-lb="groupName" and data-file/data-cap joins a lightbox group
+  var groups = {};
+  document.querySelectorAll('[data-lb]').forEach(function (el) {
+    var g = el.getAttribute('data-lb'); (groups[g] = groups[g] || []).push({ file: el.getAttribute('data-file') || (el.querySelector('img') || {}).src, cap: el.getAttribute('data-cap') || '' });
+  });
+  document.querySelectorAll('[data-lb]').forEach(function (el) {
+    var g = el.getAttribute('data-lb'), i = groups[g].findIndex(function (x) { return x.file === (el.getAttribute('data-file') || (el.querySelector('img') || {}).src); });
+    el.addEventListener('click', function (e) { e.preventDefault(); window.openLightbox(groups[g], i); });
+  });
+  // copy buttons: <button class="copy" data-copy="text">
+  document.querySelectorAll('.copy[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var text = b.getAttribute('data-copy'), done = function () { b.textContent = 'copied'; setTimeout(function () { b.textContent = 'copy'; }, 1500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () {}); else done();
+    });
+  });
+})();
+</script>
+<!-- FOOT v1 end -->
+
+<script>
+(function () {
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const F = { sans: "Schibsted Grotesk, sans-serif", mono: "JetBrains Mono, monospace" };
+  const fmt = (v) => (Math.round(v * 10) / 10).toLocaleString("en-GB");
+
+  /* Where each Rp8,000 goes: one stacked bar */
+  (function () {
+    const parts = [["Ingredients and packaging", 2280, "var(--bench)"], ["Commission", 989, "var(--bench)"], ["Wastage", 314, "var(--bench)"], ["Bonus", 581, "var(--bench)"], ["Kitchen labour", 302, "var(--bench)"], ["Replenishment, charging, telemetry", 222, "var(--bench)"], ["Depreciation and tax", 382, "var(--bench)"], ["Net profit", 2931, "var(--accent)"]];
+    const W = 520, H = 40 + parts.length * 22, barH = 36;
+    let x = 0; const bars = [], legend = [];
+    parts.forEach(([n, v, c], i) => {
+      const w = (v / 8000) * W;
+      bars.push(`<rect x="${x}" y="0" width="${Math.max(0, w - 1)}" height="${barH}" fill="${c}" opacity="${c.includes("accent") ? 1 : 0.35 + i * 0.07}"><title>${esc(n)}: Rp${v.toLocaleString()}</title></rect>`);
+      legend.push(`<rect x="0" y="${barH + 14 + i * 22}" width="10" height="10" fill="${c}" opacity="${c.includes("accent") ? 1 : 0.35 + i * 0.07}"/><text x="18" y="${barH + 23 + i * 22}" font-size="12.5" font-family="${F.sans}" fill="var(--ink)">${esc(n)}</text><text x="${W}" y="${barH + 23 + i * 22}" font-size="12.5" font-family="${F.mono}" fill="var(--ink)" text-anchor="end">${v.toLocaleString()}</text>`);
+      x += w;
+    });
+    $("#splitChart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Where each Rp8,000 of revenue goes">${bars.join("")}${legend.join("")}</svg>`;
+  })();
+
+  /* Waterfall */
+  (function () {
+    const steps = [["Revenue", 137.8, "total"], ["Cost of goods", -39.3], ["Commission and wastage", -22.4], ["Contribution", 76.1, "total"], ["Bonus and kitchen labour", -15.2], ["Other fixed costs", -3.8], ["EBITDA", 57.1, "total"], ["Depreciation and tax", -6.6], ["Net profit", 50.5, "total"]];
+    const W = 960, H = 300, top = 20, bottom = 60, plotH = H - top - bottom, max = 140, gap = 14;
+    const colW = (W - gap * (steps.length - 1)) / steps.length;
+    const y = (v) => top + plotH - (v / max) * plotH;
+    let run = 0; const out = [];
+    steps.forEach(([n, v, t], i) => {
+      const x = i * (colW + gap);
+      let y0, y1;
+      if (t === "total") { y0 = y(v); y1 = y(0); run = v; }
+      else { y0 = y(run); y1 = y(run + v); run += v; }
+      const fill = t === "total" ? (n === "EBITDA" || n === "Net profit" ? "var(--accent)" : "var(--ink)") : "var(--bench)";
+      out.push(`<rect x="${x}" y="${Math.min(y0, y1)}" width="${colW}" height="${Math.max(1, Math.abs(y1 - y0))}" fill="${fill}"><title>${esc(n)}: ${v}</title></rect>`);
+      out.push(`<text x="${x + colW / 2}" y="${Math.min(y0, y1) - 6}" font-size="12.5" font-weight="600" font-family="${F.mono}" fill="var(--ink)" text-anchor="middle">${v < 0 ? "(" + fmt(-v) + ")" : fmt(v)}</text>`);
+      const words = n.split(" "); const lines = words.length > 2 ? [words.slice(0, 2).join(" "), words.slice(2).join(" ")] : [n];
+      lines.forEach((l, k) => out.push(`<text x="${x + colW / 2}" y="${H - bottom + 18 + k * 14}" font-size="12" font-family="${F.sans}" fill="var(--muted)" text-anchor="middle">${esc(l)}</text>`));
+    });
+    $("#waterfall").innerHTML = `<div class="ttl">Ten carts at 70 cups a cart-day, one month of 26 trading days, Rp million</div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Waterfall from revenue 137.8 to net profit 50.5">${out.join("")}<line x1="0" y1="${y(0)}" x2="${W}" y2="${y(0)}" stroke="var(--line-strong)"/></svg><div class="src">Plan model, August 2026. EBITDA margin 41.4%, net margin 36.6%.</div>`;
+  })();
+
+  /* Sensitivity */
+  const sens = [[30, 54.6, 17.9, 32.7], [40, 75.4, 29.1, 38.6], [50, 96.2, 37.2, 38.6], [60, 117.0, 47.4, 40.5], [70, 137.8, 57.1, 41.4], [80, 158.6, 66.8, 42.1], [100, 200.2, 85.6, 42.7], [120, 241.8, 108.0, 44.7], [140, 283.4, 127.8, 45.1]];
+  $("#sensBody").innerHTML = sens.map(([c, r, e, m]) => `<tr${c === 50 || c === 70 ? ' class="hi"' : ""}><td>${c}${c === 50 ? ", conservative case" : c === 70 ? ", base case" : ""}</td><td class="n">Rp${fmt(r)}m</td><td class="n">Rp${fmt(e)}m</td><td class="n">${m}%</td></tr>`).join("");
+  (function () {
+    const W = 480, H = 220, top = 16, bottom = 36, plotH = H - top - bottom, max = 140, gap = 10, colW = (W - gap * (sens.length - 1)) / sens.length;
+    const out = sens.map(([c, , e], i) => {
+      const x = i * (colW + gap), h = (e / max) * plotH, hi = c === 50 || c === 70;
+      return `<rect x="${x}" y="${top + plotH - h}" width="${colW}" height="${h}" fill="${hi ? "var(--accent)" : "var(--bench)"}"><title>${c} cups: Rp${e}m</title></rect><text x="${x + colW / 2}" y="${top + plotH - h - 5}" font-size="11.5" font-family="${F.mono}" fill="var(--ink)" text-anchor="middle">${fmt(e)}</text><text x="${x + colW / 2}" y="${H - 14}" font-size="12" font-family="${F.sans}" fill="var(--muted)" text-anchor="middle">${c}</text>`;
+    });
+    $("#sensChart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly EBITDA by cups per cart-day">${out.join("")}<line x1="0" y1="${top + plotH}" x2="${W}" y2="${top + plotH}" stroke="var(--line-strong)"/><text x="${W / 2}" y="${H}" font-size="11" font-family="${F.mono}" fill="var(--muted)" text-anchor="middle">CUPS A CART-DAY</text></svg><div class="src">Ten carts, Rp million. Plan cases in blue.</div>`;
+  })();
+
+  /* Growth lines */
+  const line = (el, label, base, cons, max, unit) => {
+    const W = 480, H = 220, top = 16, bottom = 36, left = 36, plotW = W - left, plotH = H - top - bottom;
+    const x = (i) => left + (i / 11) * plotW, y = (v) => top + plotH - (v / max) * plotH;
+    const path = (a) => a.map((v, i) => `${i ? "L" : "M"}${x(i)},${y(v)}`).join(" ");
+    const ticks = [0, max / 2, max].map((t) => `<line x1="${left}" y1="${y(t)}" x2="${W}" y2="${y(t)}" stroke="var(--line)"/><text x="${left - 6}" y="${y(t) + 4}" font-size="11" font-family="${F.mono}" fill="var(--muted)" text-anchor="end">${t}</text>`).join("");
+    const months = [1, 3, 6, 9, 12].map((m) => `<text x="${x(m - 1)}" y="${H - 14}" font-size="11.5" font-family="${F.sans}" fill="var(--muted)" text-anchor="middle">${m}</text>`).join("");
+    const end = (a, c) => `<text x="${x(11) - 4}" y="${y(a[11]) - 8}" font-size="12" font-weight="600" font-family="${F.mono}" fill="${c}" text-anchor="end">${a[11]}${unit}</text>`;
+    $(el).innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">${ticks}<path d="${path(cons)}" fill="none" stroke="var(--bench)" stroke-width="2.5"/><path d="${path(base)}" fill="none" stroke="var(--accent)" stroke-width="2.5"/>${end(base, "var(--accent)")}${end(cons, "var(--bench)")}${months}<text x="${left + plotW / 2}" y="${H}" font-size="11" font-family="${F.mono}" fill="var(--muted)" text-anchor="middle">MONTH OF TRADING</text></svg><div class="src">Blue: 70 cups a cart-day. Grey: 50 cups.</div>`;
+  };
+  line("#cartsChart", "Carts trading by month", [10, 10, 10, 14, 17, 23, 30, 38, 48, 58, 68, 78], [10, 10, 10, 10, 13, 15, 19, 22, 25, 31, 37, 44], 80, "");
+  line("#ebitdaChart", "Monthly EBITDA by month, Rp million", [57, 57, 57, 63, 81, 103, 138, 178, 224, 275, 331, 384], [37, 37, 37, 37, 38, 45, 55, 65, 78, 89, 108, 129], 400, "");
+
+  /* Use of funds */
+  (function () {
+    const rows = [["Ten carts, with transport", 99.0, 1], ["Brewing and cold-chain equipment", 20.0, 1], ["Operations set-up", 20.0, 0], ["Kitchen fit-out", 18.0, 1], ["Contingency", 16.35, 0], ["Opening stock", 12.0, 0], ["Launch kit", 6.0, 0], ["GPS trackers", 3.65, 1], ["Seller float", 3.0, 0], ["Registration and legal", 2.0, 0]];
+    const W = 480, labelW = 200, valW = 50, plotW = W - labelW - valW, rowH = 20, gap = 6, H = rows.length * (rowH + gap);
+    const out = rows.map(([n, v, fixed], i) => { const y = i * (rowH + gap), w = (v / 100) * plotW; return `<text x="${labelW - 10}" y="${y + 14}" font-size="12.5" font-family="${F.sans}" fill="var(--ink)" text-anchor="end">${esc(n)}</text><rect x="${labelW}" y="${y}" width="${w}" height="${rowH}" fill="${fixed ? "var(--accent)" : "var(--bench)"}"><title>${esc(n)}: ${v}</title></rect><text x="${labelW + w + 6}" y="${y + 14}" font-size="12" font-family="${F.mono}" fill="var(--ink)">${v}</text>`; });
+    $("#fundsChart").innerHTML = `<div class="ttl">Use of the Rp200m, Rp million. Fixed assets in blue.</div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Use of funds">${out.join("")}</svg>`;
+  })();
+
+  /* Slides and lightbox */
+  const deck = Array.from({ length: 22 }, (_, i) => ({ file: `proof/kopi/deck/deck-p${String(i + 1).padStart(2, "0")}.jpg`, cap: `Deck, page ${i + 1} of 22` }));
+  const plan = Array.from({ length: 16 }, (_, i) => ({ file: `proof/kopi/plan/plan-p${String(i + 1).padStart(2, "0")}.jpg`, cap: `Plan, page ${i + 1} of 16` }));
+  const all = [...deck, ...plan];
+  const slide = (s, idx) => `<button class="slide" type="button" data-i="${idx}"><img src="${esc(s.file)}" alt="${esc(s.cap)}" loading="lazy"><span>${esc(s.cap)}</span></button>`;
+  $("#deckSlides").innerHTML = deck.map((s, i) => slide(s, i)).join("");
+  $("#planSlides").innerHTML = plan.map((s, i) => slide(s, deck.length + i)).join("");
+  document.querySelectorAll(".slide").forEach((b) => b.addEventListener("click", () => window.openLightbox(all, +b.dataset.i)));
+
+  /* Photo wall */
+  const photos = [
+    { file: "proof/kopi/kopi-base.jpg", caption: "The fleet at the base on Raya Satelit Utara before the morning run." },
+    { file: "proof/kopi/site.jpg", caption: "Two carts set up at a site." },
+    { file: "proof/kopi/leaving-base.jpg", caption: "Leaving the base for the morning shift." },
+    { file: "proof/kopi/fleet-delivery.jpg", caption: "The new fleet, still wrapped, on delivery day." },
+    { file: "proof/kopi/truck.jpg", caption: "Carts arriving in Surabaya by truck." },
+    { file: "proof/kopi/supplies.jpg", caption: "Stock for the week." }
+  ];
+  $("#wall").innerHTML = photos.map((p) => `<figure><img src="${esc(p.file)}" alt="${esc(p.caption)}" loading="lazy"><figcaption>${esc(p.caption)}</figcaption></figure>`).join("");
+})();
+</script>
+</body>
+</html>
