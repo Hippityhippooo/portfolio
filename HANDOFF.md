@@ -57,8 +57,9 @@ engine-term → market-term table, taken from Faldo's own lexicon in the gotrade
 with a T-code or an S-key; the threshold register keeps its codes as table data.
 
 ## GitHub Pages (second home for the site, alongside the artifact)
-GitHub account: Hippityhippooo (the puffy-bunny repo is already served from Pages; its token sits in the macOS
-keychain via credential.helper=osxkeychain). The folder is not a git repo until Faldo runs `git init`. `.nojekyll`
+Repo: https://github.com/Hippityhippooo/portfolio (public, branch main, Pages from main / root). Live URL:
+https://hippityhippooo.github.io/portfolio/ . Faldo pushes with GitHub Desktop (commit to main, Push origin);
+every push redeploys Pages. Auto mode blocks Claude from creating repos, pushing or toggling Pages. `.nojekyll`
 is present so Pages serves the files untouched; `.gitignore` excludes `proof/originals/`, `.claude/`, `.DS_Store`.
 All links are relative, so the site works under `https://hippityhippooo.github.io/<repo>/`. Publishable set is
 about 45 MB in 179 files. A public repo makes every PDF and certificate crawlable: the Gotrade approval gate
